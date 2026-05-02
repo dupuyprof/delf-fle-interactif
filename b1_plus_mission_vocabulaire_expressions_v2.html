@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELF B1+ - Mission vocabulaire & expressions</title>
+<style>
+:root{--blue:#174ea6;--bg:#f3f6fb;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--purple:#7c3aed;--dark:#1e293b;--pink:#db2777}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:var(--bg);color:#111827;line-height:1.55}
+.container{max-width:1120px;margin:auto;background:white;padding:30px;border-radius:22px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{text-align:center;color:var(--dark);margin-top:0;font-size:2.2rem}
+h2{color:var(--blue);margin-top:0}
+.card{border:2px solid #e5e7eb;border-radius:18px;padding:18px;margin:18px 0;background:white}
+.intro{background:#eef6ff;border:3px solid #93c5fd}.expression{background:#fff7ed;border-color:#f59e0b}.synonymes{background:#f0fdf4;border-color:#22c55e}.contexte{background:#f5f3ff;border-color:#a78bfa}.defi{background:#fff1f2;border-color:#fb7185}.boss{background:#ecfeff;border-color:#06b6d4}.bilan{background:#eef6ff;border:3px solid #60a5fa}
+.badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;font-weight:bold;color:white;background:var(--blue);margin-bottom:8px}
+select{width:100%;padding:10px;border:1px solid #b8c4d4;border-radius:10px;font-size:1rem;background:white;margin:6px 0 12px}
+button{background:#2563eb;color:white;border:none;padding:10px 15px;border-radius:10px;cursor:pointer;margin:8px 6px 0 0;font-weight:bold}
+button:hover{filter:brightness(.95)}.audio{background:#7c3aed}.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}.timerBtn{background:#db2777}
+.feedback{margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f9}
+.rule{background:#ffffff;border-left:6px solid #174ea6;padding:12px;border-radius:12px;margin:10px 0}.warning{background:#fff7ed;border-left:6px solid #f97316;padding:12px;border-radius:12px;margin:10px 0}.registre{display:inline-block;border-radius:999px;padding:3px 9px;margin-left:6px;font-size:.85rem;font-weight:bold}.familier{background:#fee2e2;color:#991b1b}.courant{background:#dcfce7;color:#166534}.oral{background:#fef3c7;color:#92400e}
+.wordbank span{display:inline-block;background:#e0f2fe;border:1px solid #7dd3fc;border-radius:999px;padding:5px 10px;margin:4px;font-weight:bold}.unlock{background:#ecfdf5;border:2px dashed #22c55e;border-radius:14px;padding:12px;margin-top:10px}
+.score-line{background:white;border:1px solid #dbeafe;border-radius:12px;padding:10px;margin:8px 0}.score-ok{color:#15803d;font-weight:bold}.score-mid{color:#f97316;font-weight:bold}.score-low{color:#dc2626;font-weight:bold}
+.grade-box{background:white;border:2px solid #dbeafe;border-radius:16px;padding:14px;margin:12px 0}.grade-title{font-size:1.45rem;font-weight:bold;color:#174ea6}
+.final-meter{width:100%;height:22px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.final-meter-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
+.timerBox{font-size:1.2rem;font-weight:bold;color:#db2777;background:white;border:2px solid #f9a8d4;border-radius:14px;padding:10px;display:inline-block;margin:8px 0}
+.progress-panel{position:fixed;left:16px;top:80px;width:215px;background:white;border:2px solid #dbeafe;border-radius:16px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:998;font-size:.86rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}.progressfill{height:100%;width:0%;background:#22c55e}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:#174ea6;font-weight:bold}.step-item.done{color:#166534}.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+.audio-controls{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;gap:10px;flex-wrap:wrap}.audio-controls button{padding:12px 16px;border-radius:12px;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.print{position:fixed;right:20px;bottom:90px;background:#111827}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:0 auto 18px}}@media print{body{background:white;padding:0}.container{box-shadow:none;max-width:none}.progress-panel,.audio-controls,button,.print{display:none}}
+</style>
+</head>
+<body>
+<div class="progress-panel">
+<h3>Mission vocabulaire</h3><div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+<div class="step-item" data-target="expressions"><span class="step-dot"></span> Expressions</div>
+<div class="step-item" data-target="contexte"><span class="step-dot"></span> Contexte</div>
+<div class="step-item" data-target="synonymes"><span class="step-dot"></span> Synonymes</div>
+<div class="step-item" data-target="antonymes"><span class="step-dot"></span> Antonymes</div>
+<div class="step-item" data-target="naturel"><span class="step-dot"></span> Français naturel</div>
+<div class="step-item" data-target="defi"><span class="step-dot"></span> Défi chrono</div>
+<div class="step-item" data-target="expert"><span class="step-dot"></span> Défi expert</div>
+<div class="step-item" data-target="boss"><span class="step-dot"></span> Boss final</div>
+<div class="step-item" data-target="bilan"><span class="step-dot"></span> Bilan</div>
+</div>
+<button class="print" onclick="window.print()">Imprimer / PDF</button>
+<div class="container">
+<h1>🎮 DELF B1+ – Mission vocabulaire & expressions</h1>
+<section class="card intro"><h2>Objectif</h2>
+<p>Enrichis ton français pour parler et écrire de façon plus naturelle au DELF B1 : <strong>expressions françaises</strong>, <strong>registre de langue</strong>, <strong>synonymes</strong>, <strong>antonymes</strong>, <strong>contexte</strong> et <strong>formulations plus précises</strong>.</p>
+<div class="warning"><strong>But du jeu :</strong> gagner des points, débloquer du vocabulaire et obtenir un badge final.</div>
+<button class="audio" onclick="lireTexte('Objectif. Dans cette mission, tu vas enrichir ton vocabulaire, comprendre des expressions françaises et choisir des formulations plus naturelles pour réussir le DELF B1.')">🔊 Écouter l’objectif</button></section>
+
+<section class="card expression" id="expressions"><span class="badge" style="background:#f59e0b">1</span><h2>Expressions françaises : comprendre le sens</h2>
+<div class="rule"><strong>Astuce :</strong> une expression ne se comprend pas toujours mot à mot. Il faut comprendre la situation.</div><div class="warning"><strong>Attention au registre :</strong> certaines expressions sont familières. Tu peux les comprendre et les utiliser avec des amis, mais au DELF, en classe ou avec un professeur, il vaut mieux choisir une formulation plus neutre.</div>
+<label>1. « J’en ai marre » <span class="registre familier">familier : à éviter en classe</span> signifie :</label><select id="e1"><option></option><option>Je suis très motivé.</option><option>Je suis fatigué ou agacé par une situation.</option><option>Je suis en retard.</option></select>
+<label>2. « Ça me prend la tête » <span class="registre familier">familier : à éviter en classe</span> signifie :</label><select id="e2"><option></option><option>Cela m’énerve ou me fatigue mentalement.</option><option>J’ai envie de dormir.</option><option>Je comprends très vite.</option></select>
+<label>3. « Donner un coup de main » <span class="registre oral">oral courant</span> signifie :</label><select id="e3"><option></option><option>Se battre.</option><option>Aider quelqu’un.</option><option>Faire une erreur.</option></select>
+<label>4. « Être dans la lune » <span class="registre courant">courant</span> signifie :</label><select id="e4"><option></option><option>Être distrait.</option><option>Être très rapide.</option><option>Être très riche.</option></select>
+<label>5. « Tomber dans les pommes » <span class="registre oral">oral / imagé</span> signifie :</label><select id="e5"><option></option><option>Acheter des fruits.</option><option>S’évanouir.</option><option>Rire beaucoup.</option></select>
+<button onclick="checkExpressions()">Corriger</button><button class="audio" onclick="lireTexte('Attention au registre. J en ai marre et ça me prend la tête sont familiers : on les comprend, mais on évite de les utiliser en classe ou au DELF. Donner un coup de main signifie aider. Être dans la lune signifie être distrait.')">🔊 Écouter explication</button><div id="re" class="feedback"></div></section>
+
+<section class="card contexte" id="contexte"><span class="badge" style="background:#7c3aed">2</span><h2>Choisir l’expression dans le bon contexte</h2>
+<label>1. Ton ami oublie encore son livre. Tu peux dire :</label><select id="ctx1"><option></option><option>Tu es dans la lune aujourd’hui !</option><option>Tu tombes dans les pommes.</option><option>Tu donnes un coup de main.</option></select>
+<label>2. Ton camarade t’aide à préparer l’oral. Tu peux dire :</label><select id="ctx2"><option></option><option>Merci pour le coup de main.</option><option>J’en ai marre de toi.</option><option>Tu es à côté de la plaque.</option></select>
+<label>3. Un exercice est trop compliqué et t’énerve. Tu peux dire :</label><select id="ctx3"><option></option><option>Cet exercice me prend la tête.</option><option>Cet exercice tombe dans les pommes.</option><option>Cet exercice a la main verte.</option></select>
+<label>4. Quelqu’un répond complètement hors sujet. Tu peux dire :</label><select id="ctx4"><option></option><option>Tu es à côté de la plaque.</option><option>Tu as le cœur sur la main.</option><option>Tu as un poil dans la main.</option></select>
+<button onclick="checkContexte()">Corriger</button><div id="rctx" class="feedback"></div></section>
+
+<section class="card synonymes" id="synonymes"><span class="badge" style="background:#16a34a">3</span><h2>Synonymes : enrichir son vocabulaire</h2>
+<div class="wordbank"><span>enrichissant</span><span>épuisant</span><span>agaçant</span><span>utile</span><span>convaincant</span><span>agréable</span></div>
+<label>1. « intéressant » peut devenir :</label><select id="sy1"><option></option><option>enrichissant</option><option>bruyant</option><option>sale</option></select>
+<label>2. « fatigant » peut devenir :</label><select id="sy2"><option></option><option>épuisant</option><option>poli</option><option>simple</option></select>
+<label>3. « énervant » peut devenir :</label><select id="sy3"><option></option><option>calme</option><option>agaçant</option><option>rapide</option></select>
+<label>4. « qui donne envie d’être d’accord » peut devenir :</label><select id="sy4"><option></option><option>convaincant</option><option>fragile</option><option>inutile</option></select>
+<label>5. « pratique » peut devenir :</label><select id="sy5"><option></option><option>utile</option><option>lent</option><option>drôle</option></select>
+<button onclick="checkSynonymes()">Corriger</button><button class="audio" onclick="lireTexte('Vocabulaire débloqué. Enrichissant, épuisant, agaçant, convaincant, utile. Ces mots remplacent des mots trop simples.')">🔊 Écouter vocabulaire</button><div id="rsy" class="feedback"></div></section>
+
+<section class="card synonymes" id="antonymes"><span class="badge" style="background:#16a34a">4</span><h2>Antonymes : dire le contraire</h2>
+<label>1. Le contraire de « courageux » est :</label><select id="an1"><option></option><option>peureux</option><option>gentil</option><option>fatigué</option></select>
+<label>2. Le contraire de « utile » est :</label><select id="an2"><option></option><option>inutile</option><option>agréable</option><option>précis</option></select>
+<label>3. Le contraire de « calme » est :</label><select id="an3"><option></option><option>bruyant</option><option>simple</option><option>poli</option></select>
+<label>4. Le contraire de « honnête » est :</label><select id="an4"><option></option><option>malhonnête</option><option>organisé</option><option>curieux</option></select>
+<button onclick="checkAntonymes()">Corriger</button><div id="ran" class="feedback"></div></section>
+
+<section class="card contexte" id="naturel"><span class="badge" style="background:#7c3aed">5</span><h2>Français plus naturel : améliorer une phrase</h2>
+<label>1. « Le voyage était bien. » → meilleure version :</label><select id="nat1"><option></option><option>Ce voyage m’a beaucoup plu.</option><option>Le voyage était normal.</option><option>Le voyage était quelque chose.</option></select>
+<label>2. « C’était dur. » → meilleure version :</label><select id="nat2"><option></option><option>C’était assez difficile, mais formateur.</option><option>C’était dur dur.</option><option>C’était pas facile quoi.</option></select>
+<label>3. « Je suis content. » → meilleure version pour le DELF :</label><select id="nat3"><option></option><option>Je suis satisfait de cette expérience.</option><option>Je suis content content.</option><option>Je suis pas triste.</option></select>
+<label>4. « C’est nul. » → version plus correcte :</label><select id="nat4"><option></option><option>Je trouve cette situation décevante.</option><option>C’est catastrophiquement nul.</option><option>J’aime pas.</option></select>
+<button onclick="checkNaturel()">Corriger</button><button class="audio" onclick="lireTexte('Au DELF, il vaut mieux dire : ce voyage m a beaucoup plu, c était difficile mais formateur, je suis satisfait de cette expérience.')">🔊 Écouter modèles</button><div id="rnat" class="feedback"></div></section>
+
+<section class="card defi" id="defi"><span class="badge" style="background:#db2777">6</span><h2>⏱ Défi chrono : 60 secondes</h2>
+<p>Le chronomètre est là pour le jeu. Tu peux quand même prendre ton temps.</p><div class="timerBox" id="timer">60</div><br><button class="timerBtn" onclick="startTimer()">Lancer le chrono</button>
+<label>1. « Je suis crevé » signifie :</label><select id="d1"><option></option><option>Je suis très fatigué.</option><option>Je suis très riche.</option><option>Je suis en colère.</option></select>
+<label>2. « Ce n’est pas la mer à boire » signifie :</label><select id="d2"><option></option><option>Ce n’est pas très difficile.</option><option>Il faut boire de l’eau.</option><option>C’est impossible.</option></select>
+<label>3. « Avoir un poil dans la main » signifie :</label><select id="d3"><option></option><option>Être paresseux.</option><option>Être malade.</option><option>Être généreux.</option></select>
+<label>4. « Coûter les yeux de la tête » signifie :</label><select id="d4"><option></option><option>Être très cher.</option><option>Être gratuit.</option><option>Être dangereux.</option></select>
+<label>5. « Avoir le cœur sur la main » signifie :</label><select id="d5"><option></option><option>Être généreux.</option><option>Être distrait.</option><option>Être inquiet.</option></select>
+<button onclick="checkDefi()">Corriger le défi</button><div id="rd" class="feedback"></div></section>
+
+
+<section class="card defi" id="expert">
+<span class="badge" style="background:#111827">7</span><h2>⚡ Défi expert : mot précis en contexte</h2>
+<p>Choisis le mot le plus précis. Ici, ce n’est pas seulement comprendre : il faut choisir le vocabulaire le plus adapté.</p>
+
+<label>1. Une expérience qui apprend beaucoup de choses est :</label>
+<select id="x1"><option></option><option>enrichissante</option><option>bruyante</option><option>légère</option></select>
+
+<label>2. Une personne qui sait expliquer et convaincre est :</label>
+<select id="x2"><option></option><option>convaincante</option><option>fatigante</option><option>désordonnée</option></select>
+
+<label>3. Une situation qui met mal à l’aise est :</label>
+<select id="x3"><option></option><option>gênante</option><option>pratique</option><option>solide</option></select>
+
+<label>4. Un argument qui aide vraiment à défendre une idée est :</label>
+<select id="x4"><option></option><option>pertinent</option><option>amusant</option><option>rapide</option></select>
+
+<label>5. Une réponse qui manque de détails est :</label>
+<select id="x5"><option></option><option>trop vague</option><option>très précise</option><option>bien développée</option></select>
+
+<button onclick="checkExpert()">Corriger le défi expert</button>
+<button class="audio" onclick="lireTexte('Défi expert. Une expérience enrichissante apprend beaucoup de choses. Un argument pertinent aide à défendre une idée. Une réponse trop vague manque de détails.')">🔊 Écouter vocabulaire expert</button>
+<div id="rx" class="feedback"></div>
+</section>
+
+<section class="card boss" id="boss"><span class="badge" style="background:#0891b2">8</span><h2>👑 Boss final : situation DELF</h2>
+<p>Choisis la meilleure phrase : <strong>naturelle</strong>, <strong>polie</strong> et <strong>précise</strong>.</p>
+<label>1. Ton colocataire fait du bruit tous les soirs.</label><select id="b1"><option></option><option>Tu me prends la tête, arrête.</option><option>Je comprends que tu veuilles écouter de la musique, mais le bruit le soir devient vraiment agaçant.</option><option>Tu es nul.</option></select>
+<label>2. Ton ami t’aide à préparer l’oral.</label><select id="b2"><option></option><option>Merci pour ton aide, ça m’a vraiment donné un coup de main.</option><option>Tu as été utile comme une chaise.</option><option>Bon, voilà.</option></select>
+<label>3. Tu veux donner ton avis sur les études à l’étranger.</label><select id="b3"><option></option><option>Selon moi, c’est une expérience enrichissante, même si elle peut être difficile au début.</option><option>C’est bien et pas bien.</option><option>Moi j’aime, voilà.</option></select>
+<label>4. Tu racontes une journée très fatigante.</label><select id="b4"><option></option><option>Cette journée était épuisante, mais elle m’a appris beaucoup de choses.</option><option>J’étais mort mort.</option><option>C’était fatigué.</option></select>
+<button onclick="checkBoss()">Corriger le boss final</button><button class="audio" onclick="lireTexte('Selon moi, c est une expérience enrichissante, même si elle peut être difficile au début. Cette journée était épuisante, mais elle m a appris beaucoup de choses.')">🔊 Écouter phrases B1+</button><div id="rboss" class="feedback"></div></section>
+
+<section class="card bilan" id="bilan"><h2>🏆 Bilan final</h2><p>Le score se calcule automatiquement, même si tu n’as pas corrigé chaque partie.</p><button onclick="afficherBilan()">Voir mon score et mon badge</button><button class="audio" onclick="lireBilan()">🔊 Écouter mon bilan</button><div id="bilanResult" class="feedback"></div></section>
+</div>
+<div class="audio-controls"><button class="pause" onclick="pauseLecture()">⏸ Pause</button><button class="resume" onclick="reprendreLecture()">▶ Reprendre</button><button class="repeat" onclick="repeterLecture()">🔁 Répéter</button></div>
+<script>
+let dernierTexteLu="";
+function choisirVoixFrancaise(){const voix=speechSynthesis.getVoices();return voix.find(v=>v.lang==="fr-FR"&&/google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))||voix.find(v=>v.lang==="fr-FR")||voix.find(v=>v.lang&&v.lang.startsWith("fr"))||voix[0];}
+function lireTexte(texte){if(!("speechSynthesis" in window)){alert("Lecture audio indisponible.");return;}dernierTexteLu=texte;speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(texte);u.lang="fr-FR";u.rate=0.86;u.pitch=1.03;u.volume=1;const voix=choisirVoixFrancaise();if(voix){u.voice=voix;}speechSynthesis.speak(u);},120);}
+function pauseLecture(){if("speechSynthesis" in window&&speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if("speechSynthesis" in window&&speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+let timerInterval=null,timeLeft=60;function startTimer(){clearInterval(timerInterval);timeLeft=60;timer.textContent=timeLeft;timerInterval=setInterval(()=>{timeLeft--;timer.textContent=timeLeft;if(timeLeft<=0){clearInterval(timerInterval);timer.textContent="Temps écoulé !";}},1000);}
+let scores={expressions:null,contexte:null,synonymes:null,antonymes:null,naturel:null,defi:null,expert:null,boss:null};
+function save(k,s,t){scores[k]={score:s,total:t};}
+function msg(id,s,t,txt,unlock=""){document.getElementById(id).innerHTML="<strong>Score : "+s+" / "+t+"</strong><br>"+txt+(unlock?'<div class="unlock">🔓 Vocabulaire débloqué : '+unlock+'</div>':'');}
+function checkExpressions(silent=false){let s=0;if(e1.value==="Je suis fatigué ou agacé par une situation.")s++;if(e2.value==="Cela m’énerve ou me fatigue mentalement.")s++;if(e3.value==="Aider quelqu’un.")s++;if(e4.value==="Être distrait.")s++;if(e5.value==="S’évanouir.")s++;save("expressions",s,5);if(!silent)msg("re",s,5,"Ces expressions servent surtout à comprendre le français oral. Certaines sont familières : à éviter avec un professeur ou dans une réponse formelle.","j’en ai marre, donner un coup de main, être dans la lune");}
+function checkContexte(silent=false){let s=0;if(ctx1.value==="Tu es dans la lune aujourd’hui !")s++;if(ctx2.value==="Merci pour le coup de main.")s++;if(ctx3.value==="Cet exercice me prend la tête.")s++;if(ctx4.value==="Tu es à côté de la plaque.")s++;save("contexte",s,4);if(!silent)msg("rctx",s,4,"Bien choisir le contexte évite les contresens.","être à côté de la plaque = être hors sujet");}
+function checkSynonymes(silent=false){let s=0;if(sy1.value==="enrichissant")s++;if(sy2.value==="épuisant")s++;if(sy3.value==="agaçant")s++;if(sy4.value==="convaincant")s++;if(sy5.value==="utile")s++;save("synonymes",s,5);if(!silent)msg("rsy",s,5,"Ces mots remplacent des mots trop simples.","enrichissant, épuisant, agaçant, convaincant");}
+function checkAntonymes(silent=false){let s=0;if(an1.value==="peureux")s++;if(an2.value==="inutile")s++;if(an3.value==="bruyant")s++;if(an4.value==="malhonnête")s++;save("antonymes",s,4);if(!silent)msg("ran",s,4,"Les antonymes t’aident à nuancer ton opinion.","utile / inutile, honnête / malhonnête");}
+function checkNaturel(silent=false){let s=0;if(nat1.value==="Ce voyage m’a beaucoup plu.")s++;if(nat2.value==="C’était assez difficile, mais formateur.")s++;if(nat3.value==="Je suis satisfait de cette expérience.")s++;if(nat4.value==="Je trouve cette situation décevante.")s++;save("naturel",s,4);if(!silent)msg("rnat",s,4,"Objectif : parler moins scolaire, plus précis.","formateur, satisfait, décevant");}
+function checkDefi(silent=false){let s=0;if(d1.value==="Je suis très fatigué.")s++;if(d2.value==="Ce n’est pas très difficile.")s++;if(d3.value==="Être paresseux.")s++;if(d4.value==="Être très cher.")s++;if(d5.value==="Être généreux.")s++;save("defi",s,5);if(!silent)msg("rd",s,5,"Défi réussi si tu comprends vite les expressions.","ce n’est pas la mer à boire, coûter les yeux de la tête");}
+
+function checkExpert(silent=false){let s=0;if(x1.value==="enrichissante")s++;if(x2.value==="convaincante")s++;if(x3.value==="gênante")s++;if(x4.value==="pertinent")s++;if(x5.value==="trop vague")s++;save("expert",s,5);if(!silent)msg("rx",s,5,"Défi expert : tu choisis des mots plus précis pour parler comme au DELF B1+.","enrichissant, convaincant, gênant, pertinent, vague");}
+
+function checkBoss(silent=false){let s=0;if(b1.value==="Je comprends que tu veuilles écouter de la musique, mais le bruit le soir devient vraiment agaçant.")s++;if(b2.value==="Merci pour ton aide, ça m’a vraiment donné un coup de main.")s++;if(b3.value==="Selon moi, c’est une expérience enrichissante, même si elle peut être difficile au début.")s++;if(b4.value==="Cette journée était épuisante, mais elle m’a appris beaucoup de choses.")s++;save("boss",s,4);if(!silent)msg("rboss",s,4,"Le boss final vérifie l’utilisation du vocabulaire en situation DELF.","agaçant, enrichissant, épuisant");}
+function autoCalc(){checkExpressions(true);checkContexte(true);checkSynonymes(true);checkAntonymes(true);checkNaturel(true);checkDefi(true);checkExpert(true);checkBoss(true);}
+function line(k,label,tip){const x=scores[k];const pct=x.score/x.total;const cls=pct>=.75?"score-ok":pct>=.5?"score-mid":"score-low";let app=pct>=.75?"Très bien : mission validée.":pct>=.5?"Correct : encore un peu d’entraînement.":"À refaire pour débloquer plus de vocabulaire.";return "<div class='score-line'><strong>"+label+"</strong> : <span class='"+cls+"'>"+x.score+" / "+x.total+"</span><br>"+app+"<br>"+tip+"</div>";}
+function afficherBilan(){autoCalc();let total=0,max=0;Object.values(scores).forEach(x=>{total+=x.score;max+=x.total});let pct=Math.round(total/max*100);let grade="",color="",badge="";if(pct>=90){grade="🏆 Badge Légende du vocabulaire";color="#16a34a";badge="Tu peux utiliser un vocabulaire précis et naturel en contexte DELF.";}else if(pct>=75){grade="🔵 Badge Stratège B1+";color="#2563eb";badge="Très bon niveau. Continue à réutiliser les expressions dans tes réponses.";}else if(pct>=55){grade="🟡 Badge Explorateur";color="#f59e0b";badge="Tu avances bien. Revois surtout les expressions et le français naturel.";}else{grade="🟠 Badge Entraînement";color="#f97316";badge="Reprends les modèles et retente le défi.";}let html="<div class='grade-box' style='border-color:"+color+"'><div class='grade-title' style='color:"+color+"'>"+grade+"</div><p><strong>Total :</strong> "+total+" / "+max+" — "+pct+"%</p><div class='final-meter'><div class='final-meter-fill' style='width:"+pct+"%'></div></div><p>"+badge+"</p></div>";html+=line("expressions","Expressions françaises","Comprendre le sens global, pas mot à mot.");html+=line("contexte","Expression en contexte","Choisir l’expression adaptée.");html+=line("synonymes","Synonymes","Remplacer les mots trop simples.");html+=line("antonymes","Antonymes","Nuancer ses idées.");html+=line("naturel","Français naturel","Formuler comme au DELF.");html+=line("defi","Défi chrono","Comprendre vite les expressions.");html+=line("expert","Défi expert","Choisir le mot précis en contexte.");html+=line("boss","Boss final","Réutiliser en situation DELF.");bilanResult.innerHTML=html;}
+function lireBilan(){afficherBilan();lireTexte(bilanResult.innerText);}
+function updateProgress(){const doc=document.documentElement;const scrollTop=doc.scrollTop||document.body.scrollTop;const scrollHeight=doc.scrollHeight-doc.clientHeight;const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;const fill=document.getElementById("progressFill");if(fill)fill.style.width=percent+"%";document.querySelectorAll(".step-item").forEach(item=>{const target=document.getElementById(item.dataset.target);if(!target)return;const rect=target.getBoundingClientRect();item.classList.remove("active","done");if(rect.top<window.innerHeight*.35&&rect.bottom>window.innerHeight*.25)item.classList.add("active");if(rect.bottom<window.innerHeight*.3)item.classList.add("done");});}
+window.addEventListener("scroll",updateProgress);window.addEventListener("load",updateProgress);document.addEventListener("click",e=>{const item=e.target.closest(".step-item");if(!item)return;const target=document.getElementById(item.dataset.target);if(target)target.scrollIntoView({behavior:"smooth",block:"start"});});
+</script>
+</body></html>
