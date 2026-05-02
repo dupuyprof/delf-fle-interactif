@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELF B1 - Oral interaction : régler un problème</title>
+<style>
+:root{--blue:#174ea6;--bg:#f3f6fb;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--purple:#7c3aed;--dark:#1e293b}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:var(--bg);color:#111827;line-height:1.55}
+.container{max-width:1120px;margin:auto;background:white;padding:30px;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{text-align:center;color:var(--dark);margin-top:0}
+h2{color:var(--blue);margin-top:0}
+h3{color:#174ea6}
+.intro{background:#eef6ff;border:3px solid #93c5fd;border-radius:18px;padding:18px;margin-bottom:22px}
+.card{border:2px solid #e5e7eb;border-radius:18px;padding:18px;margin:18px 0;background:white}
+.sujet{background:#fff7ed;border-color:#f59e0b}
+.vocab{background:#f0fdf4;border-color:#22c55e}
+.quiz{background:#f8fafc;border-color:#cbd5e1}
+.model{background:#f5f3ff;border-color:#a78bfa}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.tile{background:white;border:2px solid #e5e7eb;border-radius:16px;padding:14px}
+.emoji{font-size:2rem;display:block;margin-bottom:6px}
+.badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;font-weight:bold;color:white;background:var(--blue);margin-bottom:8px}
+select{width:100%;padding:10px;border:1px solid #b8c4d4;border-radius:10px;font-size:1rem;background:white;margin:6px 0 12px}
+button{background:#2563eb;color:white;border:none;padding:9px 14px;border-radius:10px;cursor:pointer;margin:8px 6px 0 0;font-weight:bold}
+button:hover{filter:brightness(.95)}.audio{background:#7c3aed}.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}
+.feedback{margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f9}
+.good{color:#15803d;font-weight:bold}.bad{color:#dc2626;font-weight:bold}
+.answer{background:#ecfdf5;border-left:5px solid #22c55e;padding:10px;border-radius:10px;margin-top:8px}
+.warning{background:#fff7ed;border-left:6px solid #f97316;padding:12px;border-radius:12px;margin:10px 0}
+.wordbank span{display:inline-block;background:#e0f2fe;border:1px solid #7dd3fc;border-radius:999px;padding:5px 10px;margin:4px;font-weight:bold}
+.subjectbox{background:white;border:2px dashed #111827;border-radius:12px;padding:14px;margin:12px 0}
+.results-panel{background:#eef6ff;border:3px solid #60a5fa;border-radius:18px;padding:18px;margin:18px 0}
+.score-line{background:white;border:1px solid #dbeafe;border-radius:12px;padding:10px;margin:8px 0}
+.score-ok{color:#15803d;font-weight:bold}.score-mid{color:#f97316;font-weight:bold}.score-low{color:#dc2626;font-weight:bold}
+.grade-box{background:white;border:2px solid #dbeafe;border-radius:16px;padding:14px;margin:12px 0}
+.grade-title{font-size:1.4rem;font-weight:bold;color:#174ea6}
+.final-meter{width:100%;height:22px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.final-meter-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
+.progress-panel{position:fixed;left:16px;top:80px;width:205px;background:white;border:2px solid #dbeafe;border-radius:16px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:998;font-size:.86rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}.progressfill{height:100%;width:0%;background:#22c55e}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:#174ea6;font-weight:bold}.step-item.done{color:#166534}.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+.audio-controls{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;gap:10px;flex-wrap:wrap}.audio-controls button{padding:12px 16px;border-radius:12px;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.print{position:fixed;right:20px;bottom:90px;background:#111827}
+.small{font-size:.92rem;color:#475569}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:0 auto 18px}}
+@media print{body{background:white;padding:0}.container{box-shadow:none;max-width:none}.progress-panel,.audio-controls,button,.print{display:none}}
+</style>
+</head>
+<body>
+<div class="progress-panel">
+<h3>Progression</h3><div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+<div class="step-item" data-target="types"><span class="step-dot"></span> 5 sujets</div>
+<div class="step-item" data-target="vocabulaire"><span class="step-dot"></span> Vocabulaire</div>
+<div class="step-item" data-target="quiz1"><span class="step-dot"></span> Identifier</div>
+<div class="step-item" data-target="quiz2"><span class="step-dot"></span> Réagir</div>
+<div class="step-item" data-target="quiz3"><span class="step-dot"></span> Solutions</div>
+<div class="step-item" data-target="quiz4"><span class="step-dot"></span> Dialogue</div>
+<div class="step-item" data-target="modeles"><span class="step-dot"></span> Modèles</div>
+<div class="step-item" data-target="synthese"><span class="step-dot"></span> Synthèse</div>
+<div class="step-item" data-target="bilan"><span class="step-dot"></span> Bilan</div>
+</div>
+
+<button class="print" onclick="window.print()">Imprimer / PDF</button>
+
+<div class="container">
+<h1>DELF B1 – Production orale, exercice 2</h1>
+<section class="intro">
+<h2>Interaction : faire face à une situation inhabituelle</h2>
+<p><strong>Objectif officiel :</strong> faire face à une situation inhabituelle et trouver une solution à un problème.</p>
+<p>Tu tires deux sujets, tu en choisis un, puis tu joues la situation avec l’examinateur. Tu dois parler en premier, réagir, expliquer, négocier et proposer une solution.</p>
+<div class="warning"><strong>À viser au B1 :</strong> utiliser des expressions plus précises que « c’est pas grave » ou « je ne sais pas » : <strong>je suis embêté</strong>, <strong>cela me pose problème</strong>, <strong>je comprends votre point de vue, mais...</strong>, <strong>pourrions-nous trouver un compromis ?</strong></div>
+<button class="audio" onclick="lireTexte('Dans l exercice en interaction du DELF B1, tu dois faire face à une situation inhabituelle et trouver une solution à un problème. Tu dois réagir, expliquer, négocier et proposer une solution.')">🔊 Écouter l’objectif</button>
+</section>
+
+<section class="card sujet" id="types">
+<span class="badge">🧩 Les 5 situations du document DELF</span>
+<div class="grid">
+<div class="tile"><span class="emoji">📚</span><h3>1. Livre de bibliothèque perdu</h3><p>Tu as prêté un livre à un ami. Il l’a perdu. Tu exprimes ton mécontentement et vous cherchez une solution.</p></div>
+<div class="tile"><span class="emoji">🏀</span><h3>2. Club de sport : remboursement refusé</h3><p>Ton emploi du temps a changé. Tu ne peux plus aller aux cours. Tu demandes un remboursement, mais le responsable refuse.</p></div>
+<div class="tile"><span class="emoji">🚌</span><h3>3. Portefeuille perdu après le bus</h3><p>Tu es en vacances en France. Tu n’as plus ton portefeuille avec papiers, passeport et argent. Tu vas au commissariat.</p></div>
+<div class="tile"><span class="emoji">🏕️</span><h3>4. Week-end francophone refusé</h3><p>Tu demandes à ton professeur d’organiser un week-end francophone. Il refuse. Tu demandes les raisons et tu défends le projet.</p></div>
+<div class="tile"><span class="emoji">🏠</span><h3>5. Chambre partagée désordonnée</h3><p>Tu es en séjour linguistique au Québec. Ton compagnon de chambre est très désordonné. Cela te dérange.</p></div>
+</div>
+</section>
+
+<section class="card vocab" id="vocabulaire">
+<span class="badge" style="background:#16a34a">📚 Vocabulaire B1 utile</span>
+<div class="grid">
+<div class="tile"><h3>Exprimer un problème</h3><div class="wordbank"><span>Je suis embêté</span><span>Cela me pose problème</span><span>Je suis dans une situation délicate</span><span>Je viens vous voir car...</span></div></div>
+<div class="tile"><h3>Exprimer son mécontentement</h3><div class="wordbank"><span>Je suis déçu</span><span>Je ne trouve pas cela normal</span><span>Je comprends, mais...</span><span>Je suis assez contrarié</span></div></div>
+<div class="tile"><h3>Demander / négocier</h3><div class="wordbank"><span>Serait-il possible de... ?</span><span>Pourrions-nous trouver un compromis ?</span><span>Y aurait-il une autre solution ?</span><span>Que me conseillez-vous ?</span></div></div>
+<div class="tile"><h3>Proposer une solution</h3><div class="wordbank"><span>Je pourrais...</span><span>Vous pourriez...</span><span>Il faudrait peut-être...</span><span>On pourrait s’organiser ainsi...</span></div></div>
+</div>
+<button class="audio" onclick="lireTexte('Vocabulaire B1 utile. Je suis embêté. Cela me pose problème. Je suis déçu. Je comprends, mais. Serait-il possible de trouver un compromis ? Y aurait-il une autre solution ?')">🔊 Écouter le vocabulaire</button>
+</section>
+
+<section class="card quiz" id="quiz1">
+<span class="badge">1</span><h2>Identifier la situation</h2>
+<label>Un ami annonce qu’il a perdu le livre de bibliothèque que tu lui avais prêté.</label>
+<select id="q1a"><option></option><option>Livre perdu</option><option>Club de sport</option><option>Projet de classe</option></select>
+<label>Tu ne peux plus aller aux cours de sport et tu demandes un remboursement refusé.</label>
+<select id="q1b"><option></option><option>Chambre désordonnée</option><option>Club de sport</option><option>Commissariat</option></select>
+<label>Tu as perdu ton portefeuille, ton passeport et ton argent après être sorti du bus.</label>
+<select id="q1c"><option></option><option>Commissariat</option><option>Professeur</option><option>Bibliothèque</option></select>
+<label>Ton professeur refuse un week-end francophone.</label>
+<select id="q1d"><option></option><option>Projet de classe</option><option>Club de sport</option><option>Colocation</option></select>
+<label>Ton compagnon de chambre au Québec est très désordonné.</label>
+<select id="q1e"><option></option><option>Chambre partagée</option><option>Objet perdu</option><option>Remboursement</option></select>
+<button onclick="check1()">Corriger</button><div id="r1" class="feedback"></div>
+</section>
+
+<section class="card quiz" id="quiz2">
+<span class="badge">2</span><h2>Choisir une réaction B1</h2>
+<label>Livre perdu : quelle réaction est la plus adaptée ?</label>
+<select id="q2a"><option></option><option>C’est pas grave.</option><option>Je suis assez contrarié, car ce livre appartient à la bibliothèque.</option><option>Tu es nul.</option></select>
+<label>Remboursement refusé : que dire au responsable ?</label>
+<select id="q2b"><option></option><option>Je comprends votre règlement, mais ma situation a changé. Pourrions-nous trouver un compromis ?</option><option>Vous êtes méchant.</option><option>Remboursez-moi.</option></select>
+<label>Commissariat : phrase correcte ?</label>
+<select id="q2c"><option></option><option>Je viens signaler la perte de mon portefeuille et savoir comment récupérer mes papiers.</option><option>J’ai plus rien, voilà.</option><option>Je veux mes papiers.</option></select>
+<label>Projet refusé : phrase correcte ?</label>
+<select id="q2d"><option></option><option>Pourriez-vous m’expliquer les raisons de votre refus ?</option><option>Pourquoi non ?</option><option>C’est injuste, je pars.</option></select>
+<label>Chambre désordonnée : phrase correcte ?</label>
+<select id="q2e"><option></option><option>Ton désordre me dérange, car j’ai besoin d’un espace calme pour travailler.</option><option>Tu es sale.</option><option>Range.</option></select>
+<button onclick="check2()">Corriger</button><button class="audio" onclick="lireTexte('Je suis assez contrarié, car ce livre appartient à la bibliothèque. Je comprends votre règlement, mais ma situation a changé. Pourrions-nous trouver un compromis ? Je viens signaler la perte de mon portefeuille et savoir comment récupérer mes papiers.')">🔊 Écouter des réactions B1</button>
+<div id="r2" class="feedback"></div>
+</section>
+
+<section class="card quiz" id="quiz3">
+<span class="badge">3</span><h2>Proposer une solution précise</h2>
+<label>Livre perdu : meilleure solution ?</label>
+<select id="q3a"><option></option><option>Tu pourrais le chercher chez toi, puis le rembourser si tu ne le retrouves pas.</option><option>Tant pis.</option><option>On oublie.</option></select>
+<label>Club de sport : compromis possible ?</label>
+<select id="q3b"><option></option><option>Serait-il possible de reporter mon abonnement ou de me proposer un avoir ?</option><option>Je veux tout mon argent maintenant.</option><option>Je ne viens plus.</option></select>
+<label>Commissariat : demande précise ?</label>
+<select id="q3c"><option></option><option>Pouvez-vous m’indiquer les démarches pour déclarer la perte et refaire mes papiers ?</option><option>Vous avez mon portefeuille ?</option><option>Je suis perdu.</option></select>
+<label>Week-end francophone : proposition B1 ?</label>
+<select id="q3d"><option></option><option>Je peux participer à l’organisation et préparer un programme pour réduire le travail des professeurs.</option><option>Vous devez dire oui.</option><option>Je veux partir.</option></select>
+<label>Chambre désordonnée : solution concrète ?</label>
+<select id="q3e"><option></option><option>On pourrait définir des règles simples et ranger chacun nos affaires chaque soir.</option><option>Je change tout.</option><option>Tu dors dehors.</option></select>
+<button onclick="check3()">Corriger</button><button class="audio" onclick="lireTexte('Serait-il possible de reporter mon abonnement ou de me proposer un avoir ? Pouvez-vous m indiquer les démarches pour déclarer la perte et refaire mes papiers ? On pourrait définir des règles simples et ranger chacun nos affaires chaque soir.')">🔊 Écouter des solutions</button>
+<div id="r3" class="feedback"></div>
+</section>
+
+<section class="card quiz" id="quiz4">
+<span class="badge">4</span><h2>Choisir le bon ton selon l’interlocuteur</h2>
+<label>Avec un ami, je peux dire :</label>
+<select id="q4a"><option></option><option>Salut, je voulais te parler du livre que je t’avais prêté.</option><option>Veuillez agréer mes salutations.</option><option>Je vous ordonne.</option></select>
+<label>Avec un responsable de club, je dois plutôt dire :</label>
+<select id="q4b"><option></option><option>Bonjour, je viens vous voir au sujet de mon abonnement.</option><option>Salut mec.</option><option>Tu me rembourses.</option></select>
+<label>Avec un agent de police, je dois plutôt dire :</label>
+<select id="q4c"><option></option><option>Bonjour monsieur / madame, je voudrais déclarer la perte de mon portefeuille.</option><option>Salut, j’ai paumé mes papiers.</option><option>Rendez-moi mon argent.</option></select>
+<label>Avec un professeur, je dois plutôt dire :</label>
+<select id="q4d"><option></option><option>Pourriez-vous m’expliquer ce qui vous inquiète dans ce projet ?</option><option>Pourquoi vous êtes contre moi ?</option><option>C’est nul.</option></select>
+<label>Avec un compagnon de chambre, je peux dire :</label>
+<select id="q4e"><option></option><option>J’aimerais qu’on parle de l’organisation de la chambre.</option><option>Vous êtes prié de ranger.</option><option>Je vais me plaindre tout de suite.</option></select>
+<button onclick="check4()">Corriger</button><div id="r4" class="feedback"></div>
+</section>
+
+<section class="card model" id="modeles">
+<span class="badge" style="background:#7c3aed">🎭 Modèles courts</span>
+<div class="grid">
+<div class="tile"><h3>Livre perdu</h3><p><strong>Salut,</strong> je suis embêté parce que le livre que je t’avais prêté appartient à la bibliothèque. Il faudrait que tu le recherches. Si tu ne le retrouves pas, tu pourrais le rembourser.</p></div>
+<div class="tile"><h3>Club de sport</h3><p><strong>Bonjour,</strong> je comprends votre règlement, mais mon emploi du temps a changé. Serait-il possible de reporter mon abonnement ou d’obtenir un avoir ?</p></div>
+<div class="tile"><h3>Commissariat</h3><p><strong>Bonjour,</strong> je viens déclarer la perte de mon portefeuille. Il contenait mon passeport, mes papiers et de l’argent. Pouvez-vous m’expliquer les démarches ?</p></div>
+<div class="tile"><h3>Projet de classe</h3><p><strong>Bonjour monsieur,</strong> pourriez-vous m’expliquer votre refus ? Ce week-end pourrait nous aider à pratiquer le français. Je peux participer à l’organisation.</p></div>
+<div class="tile"><h3>Chambre désordonnée</h3><p><strong>Écoute,</strong> ton désordre me dérange parce que j’ai besoin d’un espace calme. On pourrait définir des règles simples pour mieux partager la chambre.</p></div>
+</div>
+<button class="audio" onclick="lireTexte('Modèles courts. Je suis embêté parce que le livre appartient à la bibliothèque. Serait-il possible de reporter mon abonnement ? Je viens déclarer la perte de mon portefeuille. Pourriez-vous m expliquer votre refus ? Ton désordre me dérange parce que j ai besoin d un espace calme.')">🔊 Écouter les modèles</button>
+</section>
+
+<section class="card vocab" id="synthese">
+<span class="badge" style="background:#16a34a">🧠 Synthèse : imaginer une situation-problème</span>
+<p>Les sujets changent, mais ils suivent souvent la même logique :</p>
+<div class="grid">
+<div class="tile"><h3>1. Qui ?</h3><p>ami, responsable, agent de police, professeur, colocataire.</p></div>
+<div class="tile"><h3>2. Quel problème ?</h3><p>objet perdu, remboursement, papiers perdus, refus, désordre.</p></div>
+<div class="tile"><h3>3. Quelle réaction ?</h3><p>mécontentement, inquiétude, demande d’explication, gêne.</p></div>
+<div class="tile"><h3>4. Quelle solution ?</h3><p>rembourser, reporter, déclarer, organiser, établir des règles.</p></div>
+</div>
+<div class="warning"><strong>Phrase passe-partout B1 :</strong> « Je comprends votre point de vue, mais cette situation me pose problème. Est-ce qu’on pourrait trouver une solution ensemble ? »</div>
+</section>
+
+<section class="results-panel" id="bilan">
+<h2>📊 Bilan final</h2>
+<p>Le score se calcule automatiquement, même sans valider chaque partie.</p>
+<button onclick="afficherBilan()">Voir mon bilan</button>
+<button class="audio" onclick="lireBilan()">🔊 Écouter mon bilan</button>
+<div id="bilanResult" class="feedback"></div>
+</section>
+
+</div>
+
+<div class="audio-controls">
+<button class="pause" onclick="pauseLecture()">⏸ Pause</button>
+<button class="resume" onclick="reprendreLecture()">▶ Reprendre</button>
+<button class="repeat" onclick="repeterLecture()">🔁 Répéter</button>
+</div>
+
+<script>
+let dernierTexteLu="";
+function choisirVoixFrancaise(){const voix=speechSynthesis.getVoices();return voix.find(v=>v.lang==="fr-FR"&&/google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))||voix.find(v=>v.lang==="fr-FR")||voix.find(v=>v.lang&&v.lang.startsWith("fr"))||voix[0];}
+function lireTexte(texte){if(!("speechSynthesis" in window)){alert("Lecture audio indisponible.");return;}dernierTexteLu=texte;speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(texte);u.lang="fr-FR";u.rate=0.86;u.pitch=1.03;u.volume=1;const voix=choisirVoixFrancaise();if(voix){u.voice=voix;}speechSynthesis.speak(u);},120);}
+function pauseLecture(){if("speechSynthesis" in window&&speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if("speechSynthesis" in window&&speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+let scores={types:null,reagir:null,solutions:null,ton:null};
+function save(k,s,t){scores[k]={score:s,total:t};}
+function feedback(id,s,t,msg){document.getElementById(id).innerHTML="<strong>Score : "+s+" / "+t+"</strong><br>"+msg;}
+function check1(silent=false){let s=0;if(q1a.value==="Livre perdu")s++;if(q1b.value==="Club de sport")s++;if(q1c.value==="Commissariat")s++;if(q1d.value==="Projet de classe")s++;if(q1e.value==="Chambre partagée")s++;save("types",s,5);if(!silent)feedback("r1",s,5,"Réponses : livre perdu, club de sport, commissariat, projet de classe, chambre partagée.");}
+function check2(silent=false){let s=0;if(q2a.value==="Je suis assez contrarié, car ce livre appartient à la bibliothèque.")s++;if(q2b.value==="Je comprends votre règlement, mais ma situation a changé. Pourrions-nous trouver un compromis ?")s++;if(q2c.value==="Je viens signaler la perte de mon portefeuille et savoir comment récupérer mes papiers.")s++;if(q2d.value==="Pourriez-vous m’expliquer les raisons de votre refus ?")s++;if(q2e.value==="Ton désordre me dérange, car j’ai besoin d’un espace calme pour travailler.")s++;save("reagir",s,5);if(!silent)feedback("r2",s,5,"Objectif : réagir avec un vocabulaire précis et un ton adapté.");}
+function check3(silent=false){let s=0;if(q3a.value==="Tu pourrais le chercher chez toi, puis le rembourser si tu ne le retrouves pas.")s++;if(q3b.value==="Serait-il possible de reporter mon abonnement ou de me proposer un avoir ?")s++;if(q3c.value==="Pouvez-vous m’indiquer les démarches pour déclarer la perte et refaire mes papiers ?")s++;if(q3d.value==="Je peux participer à l’organisation et préparer un programme pour réduire le travail des professeurs.")s++;if(q3e.value==="On pourrait définir des règles simples et ranger chacun nos affaires chaque soir.")s++;save("solutions",s,5);if(!silent)feedback("r3",s,5,"Objectif : proposer une solution concrète et réaliste.");}
+function check4(silent=false){let s=0;if(q4a.value==="Salut, je voulais te parler du livre que je t’avais prêté.")s++;if(q4b.value==="Bonjour, je viens vous voir au sujet de mon abonnement.")s++;if(q4c.value==="Bonjour monsieur / madame, je voudrais déclarer la perte de mon portefeuille.")s++;if(q4d.value==="Pourriez-vous m’expliquer ce qui vous inquiète dans ce projet ?")s++;if(q4e.value==="J’aimerais qu’on parle de l’organisation de la chambre.")s++;save("ton",s,5);if(!silent)feedback("r4",s,5,"Objectif : adapter le ton à l’interlocuteur.");}
+function autoCalc(){check1(true);check2(true);check3(true);check4(true);}
+function scoreLine(k,label,tip){const x=scores[k];const pct=x.score/x.total;const cls=pct>=.75?"score-ok":pct>=.5?"score-mid":"score-low";return "<div class='score-line'><strong>"+label+"</strong> : <span class='"+cls+"'>"+x.score+" / "+x.total+"</span><br>"+tip+"</div>";}
+function afficherBilan(){autoCalc();let total=0,max=0;Object.values(scores).forEach(x=>{total+=x.score;max+=x.total});let pct=Math.round(total/max*100);let grade="",color="",msg="";if(pct>=85){grade="🏆 Très solide";color="#16a34a";msg="Tu as un très bon vocabulaire pour régler un problème.";}else if(pct>=70){grade="✅ Bon niveau";color="#22c55e";msg="Très encourageant : consolide les formulations de négociation.";}else if(pct>=50){grade="🟡 En progression";color="#f59e0b";msg="Tu as déjà des bases. Revois les parties orange ou rouges.";}else{grade="🟠 À consolider";color="#f97316";msg="Pas d’inquiétude : reprends les modèles et recommence le quiz.";}let html="<div class='grade-box' style='border-color:"+color+"'><div class='grade-title' style='color:"+color+"'>"+grade+"</div><p><strong>Total :</strong> "+total+" / "+max+" — "+pct+"%</p><div class='final-meter'><div class='final-meter-fill' style='width:"+pct+"%'></div></div><p>"+msg+"</p></div>";html+=scoreLine("types","Identifier les 5 situations","Reconnaître rapidement le type de problème.");html+=scoreLine("reagir","Réagir avec précision","Exprimer une gêne, une inquiétude ou un mécontentement.");html+=scoreLine("solutions","Proposer une solution","Utiliser des formulations de compromis et de négociation.");html+=scoreLine("ton","Adapter le ton","Parler différemment à un ami, un professeur, un policier ou un responsable.");bilanResult.innerHTML=html;}
+function lireBilan(){afficherBilan();lireTexte(bilanResult.innerText);}
+function updateProgress(){const doc=document.documentElement;const scrollTop=doc.scrollTop||document.body.scrollTop;const scrollHeight=doc.scrollHeight-doc.clientHeight;const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;const fill=document.getElementById("progressFill");if(fill)fill.style.width=percent+"%";document.querySelectorAll(".step-item").forEach(item=>{const target=document.getElementById(item.dataset.target);if(!target)return;const rect=target.getBoundingClientRect();item.classList.remove("active","done");if(rect.top<window.innerHeight*.35&&rect.bottom>window.innerHeight*.25)item.classList.add("active");if(rect.bottom<window.innerHeight*.3)item.classList.add("done");});}
+window.addEventListener("scroll",updateProgress);window.addEventListener("load",updateProgress);document.addEventListener("click",e=>{const item=e.target.closest(".step-item");if(!item)return;const target=document.getElementById(item.dataset.target);if(target)target.scrollIntoView({behavior:"smooth",block:"start"});});
+</script>
+</body>
+</html>
