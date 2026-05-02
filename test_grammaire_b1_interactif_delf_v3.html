@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELF B1 - Test de grammaire interactif</title>
+<style>
+:root{--blue:#174ea6;--bg:#f3f6fb;--green:#16a34a;--orange:#f59e0b;--red:#dc2626;--purple:#7c3aed;--dark:#1e293b}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:Arial,sans-serif;background:var(--bg);color:#111827;line-height:1.55}
+.container{max-width:1120px;margin:auto;background:white;padding:30px;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{text-align:center;color:var(--dark);margin-top:0}
+h2{color:var(--blue);margin-top:0}
+.card{border:2px solid #e5e7eb;border-radius:18px;padding:18px;margin:18px 0;background:white}
+.intro{background:#eef6ff;border:3px solid #93c5fd}
+.temps{background:#fff1f2;border-color:#fb7185}.pronoms{background:#f0fdf4;border-color:#22c55e}.subj{background:#fff7ed;border-color:#f59e0b}.connecteurs{background:#eff6ff;border-color:#60a5fa}.neg{background:#f5f3ff;border-color:#a78bfa}.bilan{background:#eef6ff;border:3px solid #60a5fa}
+.badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 12px;font-weight:bold;color:white;background:var(--blue);margin-bottom:8px}
+select{width:100%;padding:10px;border:1px solid #b8c4d4;border-radius:10px;font-size:1rem;background:white;margin:6px 0 12px}
+button{background:#2563eb;color:white;border:none;padding:9px 14px;border-radius:10px;cursor:pointer;margin:8px 6px 0 0;font-weight:bold}
+button:hover{filter:brightness(.95)}.audio{background:#7c3aed}.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}
+.feedback{margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f9}
+.good{color:#15803d;font-weight:bold}.bad{color:#dc2626;font-weight:bold}
+.warning{background:#fff7ed;border-left:6px solid #f97316;padding:12px;border-radius:12px;margin:10px 0}
+.rule{background:#ffffff;border-left:6px solid #174ea6;padding:12px;border-radius:12px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.tile{background:white;border:2px solid #e5e7eb;border-radius:16px;padding:14px}
+.score-line{background:white;border:1px solid #dbeafe;border-radius:12px;padding:10px;margin:8px 0}
+.score-ok{color:#15803d;font-weight:bold}.score-mid{color:#f97316;font-weight:bold}.score-low{color:#dc2626;font-weight:bold}
+.grade-box{background:white;border:2px solid #dbeafe;border-radius:16px;padding:14px;margin:12px 0}
+.grade-title{font-size:1.4rem;font-weight:bold;color:#174ea6}
+.final-meter{width:100%;height:22px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.final-meter-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
+.progress-panel{position:fixed;left:16px;top:80px;width:205px;background:white;border:2px solid #dbeafe;border-radius:16px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:998;font-size:.86rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}.progressfill{height:100%;width:0%;background:#22c55e}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:#174ea6;font-weight:bold}.step-item.done{color:#166534}.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+.audio-controls{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;gap:10px;flex-wrap:wrap}.audio-controls button{padding:12px 16px;border-radius:12px;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.print{position:fixed;right:20px;bottom:90px;background:#111827}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:0 auto 18px}}
+@media print{body{background:white;padding:0}.container{box-shadow:none;max-width:none}.progress-panel,.audio-controls,button,.print{display:none}}
+</style>
+</head>
+<body>
+<div class="progress-panel">
+<h3>Grammaire B1</h3><div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+<div class="step-item" data-target="temps"><span class="step-dot"></span> Temps</div>
+<div class="step-item" data-target="pronomsrel"><span class="step-dot"></span> Relatifs</div>
+<div class="step-item" data-target="pronomscoi"><span class="step-dot"></span> Pronoms</div>
+<div class="step-item" data-target="futur"><span class="step-dot"></span> Futur</div>
+<div class="step-item" data-target="subjonctif"><span class="step-dot"></span> Subjonctif</div>
+<div class="step-item" data-target="gerondif"><span class="step-dot"></span> Gérondif</div>
+<div class="step-item" data-target="negation"><span class="step-dot"></span> Négation</div>
+<div class="step-item" data-target="connecteurs"><span class="step-dot"></span> Connecteurs</div>
+<div class="step-item" data-target="bilan"><span class="step-dot"></span> Bilan</div>
+</div>
+
+<button class="print" onclick="window.print()">Imprimer / PDF</button>
+
+<div class="container">
+<h1>DELF B1 – Test de grammaire interactif</h1>
+
+<section class="card intro">
+<h2>Objectif</h2>
+<p>Ce test reprend les grands points de grammaire B1 utiles pour le DELF : temps, pronoms, futur, subjonctif, gérondif, négation et connecteurs.</p>
+<div class="warning"><strong>Consigne :</strong> choisis les réponses, puis clique sur le bilan final. Le score se calcule automatiquement, même si tu n’as pas corrigé chaque partie.</div>
+<button class="audio" onclick="lireTexte('Objectif. Ce test de grammaire B1 permet de réviser les temps, les pronoms, le futur, le subjonctif, le gérondif, la négation et les connecteurs. Choisis les réponses puis regarde ton bilan final.')">🔊 Écouter l’objectif</button>
+</section>
+
+<section class="card temps" id="temps">
+<span class="badge">1</span><h2>Temps et repères temporels</h2>
+<p class="warning">Pour parler du temps : <strong>il y a</strong> = passé ; <strong>dans</strong> = futur ; <strong>depuis</strong> = durée qui continue.</p><div class="rule"><strong>Règle :</strong> <em>il y a</em> indique un moment passé ; <em>dans</em> annonce un moment futur ; <em>depuis</em> indique une action commencée dans le passé et encore vraie maintenant ; <em>en</em> indique la durée nécessaire pour faire quelque chose.</div>
+<label>1. Paul est arrivé ___ deux heures.</label><select id="t1"><option></option><option>dans</option><option>pendant</option><option>il y a</option></select>
+<label>2. L’examen oral aura lieu ___ deux semaines.</label><select id="t2"><option></option><option>dans</option><option>il y a</option><option>depuis</option></select>
+<label>3. Je vis en France ___ six mois.</label><select id="t3"><option></option><option>en</option><option>depuis</option><option>pendant que</option></select>
+<label>4. J’ai fini mon devoir ___ dix minutes.</label><select id="t4"><option></option><option>en</option><option>depuis</option><option>dans</option></select>
+<label>5. Je suis né ___ lundi 6 août 2004.</label><select id="t5"><option></option><option>le</option><option>à</option><option>en</option></select>
+<button onclick="checkTemps()">Corriger</button><div id="rt" class="feedback"></div>
+</section>
+
+<section class="card pronoms" id="pronomsrel">
+<span class="badge" style="background:#16a34a">2</span><h2>Pronoms relatifs : qui, que, où</h2>
+<p class="warning"><strong>qui</strong> remplace le sujet ; <strong>que</strong> remplace le complément ; <strong>où</strong> indique un lieu ou un moment.</p><div class="rule"><strong>Astuce :</strong> si le mot après le pronom est un verbe, on utilise souvent <strong>qui</strong>. Si le mot après est un sujet, on utilise souvent <strong>que</strong>. Pour un lieu ou un moment, on utilise <strong>où</strong>.</div>
+<label>1. Le livre ___ je lis est intéressant.</label><select id="r1"><option></option><option>qui</option><option>que</option><option>où</option></select>
+<label>2. Le garçon ___ est devant vous est mon frère.</label><select id="r2"><option></option><option>qui</option><option>que</option><option>où</option></select>
+<label>3. Voici le lycée ___ j’étudie cette année.</label><select id="r3"><option></option><option>qui</option><option>que</option><option>où</option></select>
+<label>4. C’est une solution ___ peut aider les élèves.</label><select id="r4"><option></option><option>qui</option><option>que</option><option>où</option></select>
+<label>5. C’est le moment ___ je dois me concentrer.</label><select id="r5"><option></option><option>qui</option><option>que</option><option>où</option></select>
+<button onclick="checkRelatifs()">Corriger</button><div id="rr" class="feedback"></div>
+</section>
+
+<section class="card pronoms" id="pronomscoi">
+<span class="badge" style="background:#16a34a">3</span><h2>Pronoms compléments : le, la, les, lui, leur, y, en</h2><div class="rule"><strong>Règle :</strong> <strong>le/la/les</strong> remplacent une chose ou une personne directe ; <strong>lui/leur</strong> remplacent une personne après « à » ; <strong>y</strong> remplace un lieu ou une idée avec « à » ; <strong>en</strong> remplace une quantité ou une idée avec « de ».</div>
+<label>1. Tu parles souvent à ton professeur ? Oui, je ___ parle souvent.</label><select id="p1"><option></option><option>le</option><option>lui</option><option>y</option></select>
+<label>2. Tu vas au lycée demain ? Oui, j’___ vais demain.</label><select id="p2"><option></option><option>en</option><option>y</option><option>le</option></select>
+<label>3. Tes parents te téléphonent ? Oui, ils ___ téléphonent.</label><select id="p3"><option></option><option>les</option><option>lui</option><option>me</option></select>
+<label>4. Tu as compris le texte ? Oui, je ___ ai compris.</label><select id="p4"><option></option><option>l’</option><option>lui</option><option>en</option></select>
+<label>5. Tu veux un peu d’eau ? Oui, j’___ veux un peu.</label><select id="p5"><option></option><option>y</option><option>en</option><option>la</option></select>
+<button onclick="checkPronoms()">Corriger</button><div id="rp" class="feedback"></div>
+</section>
+
+<section class="card temps" id="futur">
+<span class="badge" style="background:#dc2626">4</span><h2>Futur simple</h2><div class="rule"><strong>Règle :</strong> le futur simple sert à parler de l’avenir. Terminaisons fréquentes : <strong>-ai, -as, -a, -ons, -ez, -ont</strong>. Attention aux verbes irréguliers : venir → viendront, prendre → prendrai, faire → ferez, aller → iras.</div>
+<label>1. Demain, ils ___ au cours de français.</label><select id="f1"><option></option><option>viennent</option><option>viendront</option><option>venaient</option></select>
+<label>2. Je ___ le bus pour aller au lycée.</label><select id="f2"><option></option><option>prends</option><option>prenais</option><option>prendrai</option></select>
+<label>3. Nous ___ nos exercices ce soir.</label><select id="f3"><option></option><option>finissions</option><option>finirons</option><option>finissons</option></select>
+<label>4. Vous ___ attention pendant l’examen.</label><select id="f4"><option></option><option>faites</option><option>faisiez</option><option>ferez</option></select>
+<label>5. Tu ___ à la réunion d’orientation.</label><select id="f5"><option></option><option>allais</option><option>vas</option><option>iras</option></select>
+<button onclick="checkFutur()">Corriger</button><div id="rf" class="feedback"></div>
+</section>
+
+<section class="card subj" id="subjonctif">
+<span class="badge" style="background:#f59e0b">5</span><h2>Subjonctif</h2>
+<p class="warning">Après <strong>il faut que</strong>, <strong>je veux que</strong>, <strong>j’aimerais que</strong>, on utilise souvent le subjonctif.</p><div class="rule"><strong>Règle :</strong> le subjonctif exprime souvent une obligation, un souhait, une peur ou une volonté. Exemples : il faut que tu <strong>sois</strong>, que tu <strong>fasses</strong>, que tu <strong>étudies</strong>.</div>
+<label>1. Il faut que tu ___ plus attentif.</label><select id="s1"><option></option><option>es</option><option>sois</option><option>étais</option></select>
+<label>2. J’aimerais que tu ___ davantage.</label><select id="s2"><option></option><option>étudier</option><option>étudies</option><option>étudiais</option></select>
+<label>3. Il ne faut pas que tu lui ___.</label><select id="s3"><option></option><option>mens</option><option>mentiras</option><option>mentes</option></select>
+<label>4. Elle a peur que tu ___ trop vite.</label><select id="s4"><option></option><option>conduiras</option><option>conduises</option><option>conduis</option></select>
+<label>5. Il faut que nous ___ moins d’erreurs.</label><select id="s5"><option></option><option>ferons</option><option>faisons</option><option>fassions</option></select>
+<button onclick="checkSubj()">Corriger</button><button class="audio" onclick="lireTexte('Après il faut que, on utilise souvent le subjonctif : il faut que tu sois attentif, que tu étudies, que tu ne mentes pas.')">🔊 Écouter la règle</button><div id="rs" class="feedback"></div>
+</section>
+
+<section class="card subj" id="gerondif">
+<span class="badge" style="background:#7c3aed">6</span><h2>Gérondif : en + participe présent</h2><div class="rule"><strong>Règle :</strong> le gérondif se forme avec <strong>en + participe présent</strong>. Il indique souvent la manière : tu progresses <strong>en travaillant</strong>.</div>
+<label>1. Tu progresseras ___ régulièrement.</label><select id="g1"><option></option><option>en travaillant</option><option>travailler</option><option>travaillé</option></select>
+<label>2. Tu iras mieux ___ plus d’eau.</label><select id="g2"><option></option><option>en buvant</option><option>boire</option><option>bu</option></select>
+<label>3. On apprend mieux ___ attention.</label><select id="g3"><option></option><option>en faisant</option><option>faire</option><option>fait</option></select>
+<label>4. Tu réussiras ___ confiance en toi.</label><select id="g4"><option></option><option>en ayant</option><option>avoir</option><option>eu</option></select>
+<label>5. Il a répondu ___ des exemples.</label><select id="g5"><option></option><option>en donnant</option><option>donner</option><option>donné</option></select>
+<button onclick="checkGerondif()">Corriger</button><div id="rg" class="feedback"></div>
+</section>
+
+<section class="card neg" id="negation">
+<span class="badge" style="background:#7c3aed">7</span><h2>Négation</h2><div class="rule"><strong>Règle :</strong> à l’écrit, on garde <strong>ne</strong>. Quelque chose devient <strong>ne... rien</strong>, quelqu’un devient <strong>ne... personne</strong>, quelque part devient <strong>ne... nulle part</strong>.</div>
+<label>1. Vous allez dire quelque chose. →</label><select id="n1"><option></option><option>Vous n’allez rien dire.</option><option>Vous allez ne rien dire.</option><option>Vous ne direz quelque chose.</option></select>
+<label>2. Ils sont allés quelque part. →</label><select id="n2"><option></option><option>Ils ne sont allés nulle part.</option><option>Ils ne sont pas allés quelque part.</option><option>Ils sont allés nulle part.</option></select>
+<label>3. J’ai vu quelqu’un. →</label><select id="n3"><option></option><option>Je n’ai vu personne.</option><option>Je n’ai pas vu quelqu’un.</option><option>Je ne vois personne hier.</option></select>
+<label>4. Tout le monde me parle. →</label><select id="n4"><option></option><option>Personne ne me parle.</option><option>Tout le monde ne me parle pas.</option><option>Je ne parle personne.</option></select>
+<button onclick="checkNeg()">Corriger</button><div id="rn" class="feedback"></div>
+</section>
+
+<section class="card connecteurs" id="connecteurs">
+<span class="badge">8</span><h2>Connecteurs logiques</h2><div class="rule"><strong>Règle :</strong> les connecteurs organisent la pensée : <strong>parce que</strong> explique une cause, <strong>grâce à</strong> indique une cause positive, <strong>mais</strong> oppose, <strong>même si</strong> nuance, <strong>d’abord</strong> organise.</div>
+<label>1. Lisa doit repasser l’examen ___ elle n’a pas eu la moyenne.</label><select id="c1"><option></option><option>parce que</option><option>mais</option><option>d’abord</option></select>
+<label>2. ___ son travail, elle a réussi son DELF.</label><select id="c2"><option></option><option>Grâce à</option><option>À cause de</option><option>Même si</option></select>
+<label>3. Je comprends ton avis, ___ je ne suis pas d’accord.</label><select id="c3"><option></option><option>mais</option><option>comme</option><option>puisque</option></select>
+<label>4. ___ tu viens, tu devras participer.</label><select id="c4"><option></option><option>Même si</option><option>Grâce à</option><option>D’abord</option></select>
+<label>5. ___, je présente le sujet, ensuite je donne mon opinion.</label><select id="c5"><option></option><option>D’abord</option><option>Parce que</option><option>À cause de</option></select>
+<button onclick="checkConn()">Corriger</button><div id="rc" class="feedback"></div>
+</section>
+
+<section class="card bilan" id="bilan">
+<h2>📊 Bilan final</h2>
+<p>Le score se calcule automatiquement, même si tu n’as pas corrigé chaque partie.</p>
+<button onclick="afficherBilan()">Voir mon bilan</button><button class="audio" onclick="lireBilan()">🔊 Écouter mon bilan</button>
+<div id="bilanResult" class="feedback"></div>
+</section>
+</div>
+
+<div class="audio-controls"><button class="pause" onclick="pauseLecture()">⏸ Pause</button><button class="resume" onclick="reprendreLecture()">▶ Reprendre</button><button class="repeat" onclick="repeterLecture()">🔁 Répéter</button></div>
+
+<script>
+let dernierTexteLu="";
+function choisirVoixFrancaise(){const voix=speechSynthesis.getVoices();return voix.find(v=>v.lang==="fr-FR"&&/google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))||voix.find(v=>v.lang==="fr-FR")||voix.find(v=>v.lang&&v.lang.startsWith("fr"))||voix[0];}
+function lireTexte(texte){if(!("speechSynthesis" in window)){alert("Lecture audio indisponible.");return;}dernierTexteLu=texte;speechSynthesis.cancel();setTimeout(()=>{const u=new SpeechSynthesisUtterance(texte);u.lang="fr-FR";u.rate=0.86;u.pitch=1.03;u.volume=1;const voix=choisirVoixFrancaise();if(voix){u.voice=voix;}speechSynthesis.speak(u);},120);}
+function pauseLecture(){if("speechSynthesis" in window&&speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if("speechSynthesis" in window&&speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+let scores={temps:null,relatifs:null,pronoms:null,futur:null,subjonctif:null,gerondif:null,negation:null,connecteurs:null};
+function save(k,s,t){scores[k]={score:s,total:t};}
+function msg(id,s,t,txt){document.getElementById(id).innerHTML="<strong>Score : "+s+" / "+t+"</strong><br>"+txt;}
+function checkTemps(silent=false){let s=0;if(t1.value==="il y a")s++;if(t2.value==="dans")s++;if(t3.value==="depuis")s++;if(t4.value==="en")s++;if(t5.value==="le")s++;save("temps",s,5);if(!silent)msg("rt",s,5,"Réponses : il y a, dans, depuis, en, le.");}
+function checkRelatifs(silent=false){let s=0;if(r1.value==="que")s++;if(r2.value==="qui")s++;if(r3.value==="où")s++;if(r4.value==="qui")s++;if(r5.value==="où")s++;save("relatifs",s,5);if(!silent)msg("rr",s,5,"Réponses : que, qui, où, qui, où.");}
+function checkPronoms(silent=false){let s=0;if(p1.value==="lui")s++;if(p2.value==="y")s++;if(p3.value==="me")s++;if(p4.value==="l’")s++;if(p5.value==="en")s++;save("pronoms",s,5);if(!silent)msg("rp",s,5,"Réponses : lui, y, me, l’, en.");}
+function checkFutur(silent=false){let s=0;if(f1.value==="viendront")s++;if(f2.value==="prendrai")s++;if(f3.value==="finirons")s++;if(f4.value==="ferez")s++;if(f5.value==="iras")s++;save("futur",s,5);if(!silent)msg("rf",s,5,"Réponses : viendront, prendrai, finirons, ferez, iras.");}
+function checkSubj(silent=false){let s=0;if(s1.value==="sois")s++;if(s2.value==="étudies")s++;if(s3.value==="mentes")s++;if(s4.value==="conduises")s++;if(s5.value==="fassions")s++;save("subjonctif",s,5);if(!silent)msg("rs",s,5,"Réponses : sois, étudies, mentes, conduises, fassions.");}
+function checkGerondif(silent=false){let s=0;if(g1.value==="en travaillant")s++;if(g2.value==="en buvant")s++;if(g3.value==="en faisant")s++;if(g4.value==="en ayant")s++;if(g5.value==="en donnant")s++;save("gerondif",s,5);if(!silent)msg("rg",s,5,"Réponses : en travaillant, en buvant, en faisant, en ayant, en donnant.");}
+function checkNeg(silent=false){let s=0;if(n1.value==="Vous n’allez rien dire.")s++;if(n2.value==="Ils ne sont allés nulle part.")s++;if(n3.value==="Je n’ai vu personne.")s++;if(n4.value==="Personne ne me parle.")s++;save("negation",s,4);if(!silent)msg("rn",s,4,"Réponses : rien, nulle part, personne, personne ne.");}
+function checkConn(silent=false){let s=0;if(c1.value==="parce que")s++;if(c2.value==="Grâce à")s++;if(c3.value==="mais")s++;if(c4.value==="Même si")s++;if(c5.value==="D’abord")s++;save("connecteurs",s,5);if(!silent)msg("rc",s,5,"Réponses : parce que, grâce à, mais, même si, d’abord.");}
+function autoCalc(){checkTemps(true);checkRelatifs(true);checkPronoms(true);checkFutur(true);checkSubj(true);checkGerondif(true);checkNeg(true);checkConn(true);}
+function line(k,label,tip){const x=scores[k];const pct=x.score/x.total;const cls=pct>=.75?"score-ok":pct>=.5?"score-mid":"score-low";let app="";if(pct>=.75){app="Très bien : ce point semble bien compris.";}else if(pct>=.5){app="C’est en cours : tu peux encore t’entraîner sur cette partie.";}else{app="À retravailler en priorité, sans stress : reprends la règle puis refais l’exercice.";}return "<div class='score-line'><strong>"+label+"</strong> : <span class='"+cls+"'>"+x.score+" / "+x.total+"</span><br>"+app+"<br>"+tip+"</div>";}
+function afficherBilan(){autoCalc();let total=0,max=0;Object.values(scores).forEach(x=>{total+=x.score;max+=x.total});let pct=Math.round(total/max*100);let grade="",color="",m="";if(pct>=85){grade="🏆 Très solide";color="#16a34a";m="Excellent : tu as de bons réflexes grammaticaux B1.";}else if(pct>=70){grade="✅ Bon niveau";color="#22c55e";m="Très encourageant : consolide les points les plus faibles.";}else if(pct>=50){grade="🟡 En progression";color="#f59e0b";m="Tu as des bases : reprends les lignes orange ou rouges.";}else{grade="🟠 À consolider";color="#f97316";m="Ce test sert à repérer ce qu’il faut retravailler, sans pression.";}let html="<div class='grade-box' style='border-color:"+color+"'><div class='grade-title' style='color:"+color+"'>"+grade+"</div><p><strong>Total :</strong> "+total+" / "+max+" — "+pct+"%</p><div class='final-meter'><div class='final-meter-fill' style='width:"+pct+"%'></div></div><p>"+m+"</p></div>";html+=line("temps","Repères temporels","Revoir : il y a, dans, depuis, en, le.");html+=line("relatifs","Pronoms relatifs","Revoir : qui, que, où.");html+=line("pronoms","Pronoms compléments","Revoir : le, la, les, lui, leur, y, en.");html+=line("futur","Futur simple","Revoir les terminaisons du futur.");html+=line("subjonctif","Subjonctif","Revoir les formes après il faut que / j’aimerais que.");html+=line("gerondif","Gérondif","Revoir : en + participe présent.");html+=line("negation","Négation","Revoir : ne... rien, ne... personne, ne... nulle part.");html+=line("connecteurs","Connecteurs","Revoir : cause, opposition, concession, ordre.");bilanResult.innerHTML=html;}
+function lireBilan(){afficherBilan();lireTexte(bilanResult.innerText);}
+function updateProgress(){const doc=document.documentElement;const scrollTop=doc.scrollTop||document.body.scrollTop;const scrollHeight=doc.scrollHeight-doc.clientHeight;const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;const fill=document.getElementById("progressFill");if(fill)fill.style.width=percent+"%";document.querySelectorAll(".step-item").forEach(item=>{const target=document.getElementById(item.dataset.target);if(!target)return;const rect=target.getBoundingClientRect();item.classList.remove("active","done");if(rect.top<window.innerHeight*.35&&rect.bottom>window.innerHeight*.25)item.classList.add("active");if(rect.bottom<window.innerHeight*.3)item.classList.add("done");});}
+window.addEventListener("scroll",updateProgress);window.addEventListener("load",updateProgress);document.addEventListener("click",e=>{const item=e.target.closest(".step-item");if(!item)return;const target=document.getElementById(item.dataset.target);if(target)target.scrollIntoView({behavior:"smooth",block:"start"});});
+</script>
+</body>
+</html>
