@@ -7,11 +7,10 @@
 <title>Plateforme DELF FLE Interactive</title>
 
 <style>
-
 body{
 font-family:Arial, sans-serif;
 background:#f4f6f9;
-padding:40px;
+padding:35px;
 text-align:center;
 margin:0;
 }
@@ -24,49 +23,103 @@ font-size:42px;
 
 .subtitle{
 color:#555;
-margin-bottom:40px;
+margin-bottom:35px;
 font-size:20px;
 }
 
-.container{
+.wrapper{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+gap:30px;
+max-width:1150px;
+margin:auto;
+}
+
+.level{
+border-radius:22px;
+padding:25px;
+box-shadow:0 4px 14px rgba(0,0,0,0.12);
+}
+
+.a2{
+background:#fff7e6;
+border:4px solid #f59e0b;
+}
+
+.b1{
+background:#eaf2ff;
+border:4px solid #2563eb;
+}
+
+.level h2{
+font-size:34px;
+margin-top:0;
+}
+
+.a2 h2{color:#d97706;}
+.b1 h2{color:#1d4ed8;}
+
+.section{
+margin-top:26px;
+margin-bottom:10px;
+font-size:24px;
+font-weight:bold;
+color:#1d3557;
+}
+
+.links{
 display:flex;
 flex-direction:column;
-gap:20px;
-max-width:750px;
-margin:auto;
+gap:14px;
 }
 
 a{
 text-decoration:none;
-background:#457b9d;
 color:white;
-padding:22px;
+padding:18px;
 border-radius:14px;
-font-size:22px;
+font-size:19px;
 font-weight:bold;
 transition:0.3s;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
-a:hover{
+.a2 a{background:#f59e0b;}
+.a2 a:hover{background:#b45309;transform:scale(1.02);}
+
+.b1 a{background:#2563eb;}
+.b1 a:hover{background:#1e40af;transform:scale(1.02);}
+
+.games{
+max-width:750px;
+margin:40px auto 0;
+background:#eef6ff;
+border:3px solid #93c5fd;
+border-radius:22px;
+padding:25px;
+}
+
+.games h2{
+color:#1d3557;
+font-size:30px;
+margin-top:0;
+}
+
+.games a{
+display:block;
+background:#457b9d;
+}
+
+.games a:hover{
 background:#1d3557;
 transform:scale(1.02);
 }
 
-.section{
-margin-top:30px;
-margin-bottom:10px;
-font-size:28px;
-font-weight:bold;
-color:#1d3557;
-}
-
 .footer{
-margin-top:60px;
+margin-top:50px;
 font-size:15px;
 color:#666;
 }
-
 </style>
 </head>
 
@@ -75,31 +128,70 @@ color:#666;
 <h1>Plateforme DELF FLE Interactive</h1>
 
 <div class="subtitle">
-Ressources interactives DELF B1 et A2
+Ressources interactives DELF A2 et B1
 </div>
 
-<div class="container">
+<div class="wrapper">
 
-<!-- ORAL -->
+<!-- A2 -->
 
-<div class="section">
-🎤 Production orale B1
+<div class="level a2">
+<h2>🟠 Niveau A2</h2>
+
+<div class="section">📌 Présentation générale</div>
+<div class="links">
+<a href="delf_a2_presentation.pdf.pdf" target="_blank">
+PDF – Présentation DELF A2
+</a>
 </div>
 
+<div class="section">🎤 Production orale A2</div>
+<div class="links">
+<a href="fiche_methode_oral_delf_a2.html">
+Méthode orale A2
+</a>
+</div>
+
+<div class="section">✍️ Production écrite A2</div>
+<div class="links">
+<a href="A2%20PE%20ECRIRE%20A%20UN%20AMI.html">
+Écrire à un ami – A2
+</a>
+</div>
+
+<div class="section">🧠 Grammaire et entraînement A2</div>
+<div class="links">
+<a href="CONJUG%20SONS_eleve_revision_DELF_A2_complet(2).html">
+Conjugaison et sons – A2
+</a>
+</div>
+</div>
+
+<!-- B1 -->
+
+<div class="level b1">
+<h2>🔵 Niveau B1</h2>
+
+<div class="section">📌 Présentation générale</div>
+<div class="links">
+<a href="delf_presentation_b1.pdf.pdf" target="_blank">
+PDF – Présentation DELF B1
+</a>
+</div>
+
+<div class="section">🎤 Production orale B1</div>
+<div class="links">
 <a href="DELF%20B1%20LES%203%20EPREUVES%20ORALES.html">
 DELF B1 – Les 3 épreuves orales
 </a>
 
 <a href="B1-PO-quiz_interaction_orale_situations.html">
-Quiz interaction orale B1 – Régler un problème
+Épreuve 2 – Interaction : régler un problème
 </a>
-
-<!-- ECRIT -->
-
-<div class="section">
-✍️ Production écrite B1
 </div>
 
+<div class="section">✍️ Production écrite B1</div>
+<div class="links">
 <a href="B1%20METHODO%20ARGU%20TEST.html">
 Méthodologie argumentation B1
 </a>
@@ -107,13 +199,10 @@ Méthodologie argumentation B1
 <a href="PRODUCTION%20ECRITE%20TEXTE%20ARGUMENTATIF%20METHODO.html">
 Production écrite argumentative
 </a>
-
-<!-- GRAMMAIRE -->
-
-<div class="section">
-🧠 Grammaire et entraînement transversal B1
 </div>
 
+<div class="section">🧠 Grammaire et entraînement B1</div>
+<div class="links">
 <a href="B1%20ERREURS%20FREQUENTES%20QUIZ.html">
 Quiz erreurs fréquentes B1
 </a>
@@ -121,17 +210,19 @@ Quiz erreurs fréquentes B1
 <a href="test_grammaire_b1_interactif_delf_v3.html">
 Test de grammaire B1 interactif
 </a>
+</div>
+</div>
+
+</div>
 
 <!-- JEUX -->
 
-<div class="section">
-🎮 Apprendre le français par le jeu
-</div>
+<div class="games">
+<h2>🎮 Apprendre le français par le jeu</h2>
 
 <a href="https://fr.lyricstraining.com/fr" target="_blank">
 LyricsTraining – apprendre avec des chansons
 </a>
-
 </div>
 
 <div class="footer">
