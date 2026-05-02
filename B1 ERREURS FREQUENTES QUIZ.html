@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELF B1 - Exercices interactifs</title>
+<style>
+:root{--blue:#0b4fb3;--green:#15803d;--orange:#f97316;--red:#dc2626;--bg:#f6f8fc}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#0f172a;margin:0;line-height:1.45}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;padding:22px 18px;text-align:center}
+header h1{margin:0;font-size:clamp(1.7rem,4vw,3rem)}
+main{max-width:1120px;margin:20px auto;padding:0 14px}
+.card{background:white;border-radius:18px;padding:18px;margin:16px 0;box-shadow:0 4px 18px #0001;border:1px solid #d8e2f0}
+h2{margin:0 0 12px;color:#0b4fb3}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.box{border:1px solid #d7e1ef;border-radius:14px;padding:14px;background:#fbfdff}
+.badge{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:bold;color:white;background:#334155;margin-right:6px}
+.blue{border-left:8px solid var(--blue)}.orange{border-left:8px solid var(--orange)}.green{border-left:8px solid var(--green)}.red{border-left:8px solid var(--red)}
+select{width:100%;padding:10px;border:1px solid #b8c4d4;border-radius:10px;font-size:1rem;background:white;margin:4px 0 10px}
+button{border:none;border-radius:12px;padding:10px 14px;margin:10px 6px 0 0;background:#0b64d8;color:white;font-weight:bold;cursor:pointer}
+.audio{background:#7c3aed}.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}
+.feedback{margin-top:10px;padding:10px;border-radius:10px;background:#f1f5f9}.good{color:#15803d;font-weight:bold}.bad{color:#dc2626;font-weight:bold}
+.warning{background:#fff7ed;border-left:6px solid #f97316;padding:12px;border-radius:12px;margin:10px 0}
+.results-panel{background:#eef6ff;border:3px solid #60a5fa;border-radius:18px;padding:18px;margin:18px 0}
+.score-line{background:white;border:1px solid #dbeafe;border-radius:12px;padding:10px;margin:8px 0}
+.score-ok{color:#15803d;font-weight:bold}.score-mid{color:#f97316;font-weight:bold}.score-low{color:#dc2626;font-weight:bold}
+.grade-box{background:white;border:2px solid #dbeafe;border-radius:16px;padding:14px;margin:12px 0}
+.grade-title{font-size:1.4rem;font-weight:bold;color:#0b4fb3}
+.final-meter{width:100%;height:22px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.final-meter-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
+.progress-panel{position:fixed;left:14px;top:90px;width:205px;background:white;border:2px solid #dbeafe;border-radius:16px;padding:12px;box-shadow:0 4px 12px #0002;z-index:998;font-size:.86rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}.progressfill{height:100%;width:0%;background:#22c55e}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1}
+.step-item.active{color:#0b4fb3;font-weight:bold}.step-item.done{color:#166534}.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+.audio-controls{position:fixed;bottom:18px;right:18px;z-index:999;display:flex;gap:10px;flex-wrap:wrap}
+.audio-controls button{padding:12px 16px;border-radius:12px;font-size:15px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.print{position:fixed;right:14px;bottom:85px;background:#111827}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:12px auto}}
+@media print{header,button.print,.progress-panel,.audio-controls,button.audio{display:none}body{background:white}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<header><h1>DELF B1 – Exercices interactifs</h1><p>Choisis les réponses, corrige, compte tes points et regarde ton bilan.</p></header>
+<div class="progress-panel">
+<h3>Compétences</h3><div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+<div class="step-item" data-target="argumenter"><span class="step-dot"></span> Argumenter</div>
+<div class="step-item" data-target="connecteurs"><span class="step-dot"></span> Connecteurs</div>
+<div class="step-item" data-target="temps"><span class="step-dot"></span> Temps</div>
+<div class="step-item" data-target="conditionnel"><span class="step-dot"></span> Conditionnel</div>
+<div class="step-item" data-target="subjonctif"><span class="step-dot"></span> Subjonctif</div>
+<div class="step-item" data-target="accords"><span class="step-dot"></span> Accords</div>
+<div class="step-item" data-target="negation"><span class="step-dot"></span> Négation</div>
+<div class="step-item" data-target="bilan"><span class="step-dot"></span> Bilan</div>
+</div>
+<main>
+<button class="print" onclick="window.print()">Imprimer / PDF</button>
+
+<section class="card orange" id="argumenter">
+<h2><span class="badge">1</span>Argumentation</h2>
+<div class="warning">Au B1, on attend souvent : <strong>opinion → argument → exemple</strong>.</div>
+<div class="grid"><div class="box">
+<p>A. Par exemple, on peut parler avec les habitants tous les jours.<br>B. Je pense qu’étudier à l’étranger est une bonne idée.<br>C. Cela permet d’apprendre rapidement une langue.</p>
+<label>Ordre logique :</label><select id="arg1"><option></option><option>A → B → C</option><option>B → C → A</option><option>C → A → B</option></select>
+</div><div class="box">
+<label>« Selon moi, étudier à l’étranger est utile. »</label><select id="arg2a"><option></option><option>opinion</option><option>exemple</option><option>conclusion</option></select>
+<label>« Cela permet d’apprendre une langue. »</label><select id="arg2b"><option></option><option>salutation</option><option>argument</option><option>exemple</option></select>
+<label>« Par exemple, on peut parler avec les habitants. »</label><select id="arg2c"><option></option><option>exemple</option><option>opposition</option><option>avis</option></select>
+</div></div>
+<button onclick="checkArgumentation()">Corriger</button><button class="audio" onclick="lireTexte('Opinion, argument, exemple. Je pense qu’étudier à l’étranger est une bonne idée, car cela permet d’apprendre une langue. Par exemple, on peut parler avec les habitants.')">🔊 Écouter modèle</button>
+<div id="argRes" class="feedback"></div>
+</section>
+
+<section class="card blue" id="connecteurs">
+<h2><span class="badge">2</span>Connecteurs</h2>
+<label>1. ___, étudier à l’étranger permet d’apprendre une langue.</label><select id="c1"><option></option><option>Par exemple</option><option>D’abord</option><option>Cependant</option></select>
+<label>2. ___, cela permet de découvrir une autre culture.</label><select id="c2"><option></option><option>Cependant</option><option>Enfin</option><option>De plus</option></select>
+<label>3. ___, on peut découvrir les habitudes de vie du pays.</label><select id="c3"><option></option><option>D’abord</option><option>Donc</option><option>Par exemple</option></select>
+<label>4. ___, il faut accepter d’être loin de sa famille.</label><select id="c4"><option></option><option>Cependant</option><option>De plus</option><option>Par exemple</option></select>
+<button onclick="checkConnecteurs()">Corriger</button><button class="audio" onclick="lireTexte('D’abord, étudier à l’étranger permet d’apprendre une langue. De plus, cela permet de découvrir une autre culture. Par exemple, on peut découvrir les habitudes de vie du pays. Cependant, il faut accepter d’être loin de sa famille.')">🔊 Écouter correction</button>
+<div id="cres" class="feedback"></div>
+</section>
+
+<section class="card red" id="temps">
+<h2><span class="badge">3</span>Temps</h2>
+<label>1. Avant, je ne ___ personne.</label><select id="t1"><option></option><option>connais</option><option>connaîtrai</option><option>connaissais</option></select>
+<label>2. L’année dernière, ___ en France.</label><select id="t2"><option></option><option>j’étudie</option><option>j’étudierai</option><option>j’ai étudié</option></select>
+<label>3. Aujourd’hui, je ___ que c’est utile.</label><select id="t3"><option></option><option>pense</option><option>pensais</option><option>penserai</option></select>
+<label>4. Plus tard, cette expérience me ___ de trouver un travail.</label><select id="t4"><option></option><option>permet</option><option>permettait</option><option>permettra</option></select>
+<button onclick="checkTemps()">Corriger</button><div id="tres" class="feedback"></div>
+</section>
+
+<section class="card green" id="conditionnel">
+<h2><span class="badge">4</span>Conditionnel</h2>
+<label>1. Plus tard, je ___ devenir éducateur sportif.</label><select id="cond1"><option></option><option>veux</option><option>voudrais</option><option>voulais</option></select>
+<label>2. À ta place, je ___ avant de partir.</label><select id="cond2"><option></option><option>me renseignerai</option><option>me renseignerais</option><option>me renseigne</option></select>
+<label>3. Tu ___ chercher un logement avant ton arrivée.</label><select id="cond3"><option></option><option>dois</option><option>devait</option><option>devrais</option></select>
+<button onclick="checkConditionnel()">Corriger</button><div id="condres" class="feedback"></div>
+</section>
+
+<section class="card orange" id="subjonctif">
+<h2><span class="badge">5</span>Subjonctif</h2>
+<div class="warning">Après <strong>il faut que</strong>, on utilise souvent le subjonctif.</div>
+<label>1. Il faut que tu ___ courageux.</label><select id="s1"><option></option><option>es</option><option>étais</option><option>sois</option></select>
+<label>2. Il faut que tu ___ attention aux règles du pays.</label><select id="s2"><option></option><option>fasses</option><option>fais</option><option>feras</option></select>
+<label>3. Je veux que tu ___ ton projet.</label><select id="s3"><option></option><option>réussiras</option><option>réussis</option><option>réussisses</option></select>
+<button onclick="checkSubjonctif()">Corriger</button><button class="audio" onclick="lireTexte('Après il faut que, on utilise souvent le subjonctif. Il faut que tu sois courageux. Il faut que tu fasses attention. Je veux que tu réussisses.')">🔊 Écouter</button>
+<div id="sres" class="feedback"></div>
+</section>
+
+<section class="card green" id="accords">
+<h2><span class="badge">6</span>Accords</h2>
+<label>1. une idée exceptionnel →</label><select id="a1"><option></option><option>exceptionnel</option><option>exceptionnels</option><option>exceptionnelle</option></select>
+<label>2. des expériences utile →</label><select id="a2"><option></option><option>utile</option><option>utiles</option><option>utilisée</option></select>
+<label>3. un culture différente →</label><select id="a3"><option></option><option>un</option><option>une</option><option>des</option></select>
+<label>4. mes études seront bénéfique →</label><select id="a4"><option></option><option>bénéfique</option><option>bénéfiques</option><option>bénéficier</option></select>
+<button onclick="checkAccords()">Corriger</button><div id="ares" class="feedback"></div>
+</section>
+
+<section class="card red" id="negation">
+<h2><span class="badge">7</span>Négation</h2>
+<label>1. Choisis la phrase correcte.</label><select id="n1"><option></option><option>Je connais personne.</option><option>Je ne connais personne.</option><option>Je n’est connais personne.</option></select>
+<label>2. Choisis la phrase correcte.</label><select id="n2"><option></option><option>Ce n’est pas facile.</option><option>C’est pas facile.</option><option>Ce ne pas facile.</option></select>
+<label>3. Choisis la phrase correcte.</label><select id="n3"><option></option><option>Je veux pas partir seul.</option><option>Je ne veux partir pas seul.</option><option>Je ne veux pas partir seul.</option></select>
+<button onclick="checkNegation()">Corriger</button><div id="nres" class="feedback"></div>
+</section>
+
+<section class="results-panel" id="bilan">
+<h2>📊 Bilan final</h2>
+<button onclick="afficherBilan()">Voir mon bilan</button><button class="audio" onclick="lireBilan()">🔊 Écouter mon bilan</button>
+<div id="bilanResult" class="feedback"></div>
+</section>
+</main>
+
+<div class="audio-controls">
+<button class="pause" onclick="pauseLecture()">⏸ Pause</button>
+<button class="resume" onclick="reprendreLecture()">▶ Reprendre</button>
+<button class="repeat" onclick="repeterLecture()">🔁 Répéter</button>
+</div>
+
+<script>
+let dernierTexteLu = "";
+let lectureEnCours = null;
+function choisirVoixFrancaise(){
+ const voix = speechSynthesis.getVoices();
+ return voix.find(v => v.lang === "fr-FR" && /google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name)) || voix.find(v => v.lang === "fr-FR") || voix.find(v => v.lang && v.lang.startsWith("fr")) || voix[0];
+}
+function lireTexte(texte){
+ if(!("speechSynthesis" in window)){alert("Lecture audio indisponible sur ce navigateur.");return;}
+ dernierTexteLu = texte; speechSynthesis.cancel();
+ setTimeout(()=>{lectureEnCours = new SpeechSynthesisUtterance(texte); lectureEnCours.lang="fr-FR"; lectureEnCours.rate=0.86; lectureEnCours.pitch=1.03; lectureEnCours.volume=1; const voix=choisirVoixFrancaise(); if(voix){lectureEnCours.voice=voix;} speechSynthesis.speak(lectureEnCours);},120);
+}
+function pauseLecture(){ if("speechSynthesis" in window && speechSynthesis.speaking && !speechSynthesis.paused){speechSynthesis.pause();} }
+function reprendreLecture(){ if("speechSynthesis" in window && speechSynthesis.paused){speechSynthesis.resume();} }
+function repeterLecture(){ if(dernierTexteLu){lireTexte(dernierTexteLu);} }
+window.addEventListener("load",()=>{if("speechSynthesis" in window){speechSynthesis.getVoices();}});
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+
+let scoresB1={argumentation:null,connecteurs:null,temps:null,conditionnel:null,subjonctif:null,accords:null,negation:null};
+function saveScore(part,score,total){scoresB1[part]={score,total};}
+function line(part,label,tip){const s=scoresB1[part];if(!s)return "<div class='score-line'><strong>"+label+"</strong> : non fait.</div>";const pct=s.score/s.total;const cls=pct>=.75?'score-ok':pct>=.5?'score-mid':'score-low';return "<div class='score-line'><strong>"+label+"</strong> : <span class='"+cls+"'>"+s.score+" / "+s.total+"</span><br>"+tip+"</div>";}
+
+function calculerTousLesScores(){
+  let sArg=0;
+  if(arg1.value==='B → C → A')sArg++;
+  if(arg2a.value==='opinion')sArg++;
+  if(arg2b.value==='argument')sArg++;
+  if(arg2c.value==='exemple')sArg++;
+  saveScore('argumentation',sArg,4);
+
+  let sConn=0;
+  if(c1.value==='D’abord')sConn++;
+  if(c2.value==='De plus')sConn++;
+  if(c3.value==='Par exemple')sConn++;
+  if(c4.value==='Cependant')sConn++;
+  saveScore('connecteurs',sConn,4);
+
+  let sTemps=0;
+  if(t1.value==='connaissais')sTemps++;
+  if(t2.value==='j’ai étudié')sTemps++;
+  if(t3.value==='pense')sTemps++;
+  if(t4.value==='permettra')sTemps++;
+  saveScore('temps',sTemps,4);
+
+  let sCond=0;
+  if(cond1.value==='voudrais')sCond++;
+  if(cond2.value==='me renseignerais')sCond++;
+  if(cond3.value==='devrais')sCond++;
+  saveScore('conditionnel',sCond,3);
+
+  let sSub=0;
+  if(s1.value==='sois')sSub++;
+  if(s2.value==='fasses')sSub++;
+  if(s3.value==='réussisses')sSub++;
+  saveScore('subjonctif',sSub,3);
+
+  let sAcc=0;
+  if(a1.value==='exceptionnelle')sAcc++;
+  if(a2.value==='utiles')sAcc++;
+  if(a3.value==='une')sAcc++;
+  if(a4.value==='bénéfiques')sAcc++;
+  saveScore('accords',sAcc,4);
+
+  let sNeg=0;
+  if(n1.value==='Je ne connais personne.')sNeg++;
+  if(n2.value==='Ce n’est pas facile.')sNeg++;
+  if(n3.value==='Je ne veux pas partir seul.')sNeg++;
+  saveScore('negation',sNeg,3);
+}
+
+function afficherBilan(){calculerTousLesScores();let total=0,max=0;Object.values(scoresB1).forEach(s=>{if(s){total+=s.score;max+=s.total;}});let html="<h3>Résultat global</h3>";if(max){let pct=Math.round(total/max*100);let grade='', message='', color='';
+if(pct>=85){grade='🏆 Très solide'; color='#16a34a'; message='Excellent travail : tu maîtrises très bien ces points. Continue à enrichir tes phrases.';}
+else if(pct>=70){grade='✅ Bon niveau'; color='#22c55e'; message='C’est très encourageant : quelques points sont encore à consolider.';}
+else if(pct>=50){grade='🟡 En progression'; color='#f59e0b'; message='Tu as déjà des bases. Reprends surtout les parties où tu as perdu des points.';}
+else{grade='🟠 À consolider'; color='#f97316'; message='Ce n’est pas grave : cette fiche sert justement à repérer ce qu’il faut retravailler.';}
+html+="<div class='grade-box' style='border-color:"+color+"'><div class='grade-title' style='color:"+color+"'>"+grade+"</div><p><strong>Total :</strong> "+total+" / "+max+" — "+pct+"%</p><div class='final-meter'><div class='final-meter-fill' style='width:"+pct+"%'></div></div><p>"+message+"</p><p><strong>Conseil :</strong> travaille en priorité les lignes orange ou rouges dans le bilan ci-dessous.</p></div>";}else{html+="<p>Aucun exercice rempli pour le moment.</p>";}html+=line('argumentation','Argumentation','À revoir doucement : repérer opinion, argument et exemple.');html+=line('connecteurs','Connecteurs','À consolider : choisir le connecteur qui correspond à l’idée.');html+=line('temps','Choix des temps','À consolider : passé pour raconter, présent pour donner son avis, futur pour l’avenir.');html+=line('conditionnel','Conditionnel','À consolider : je voudrais, j’aimerais, tu devrais.');html+=line('subjonctif','Subjonctif','À consolider : après « il faut que », pense au subjonctif.');html+=line('accords','Accords','À consolider : regarde le nom avant d’accorder.');html+=line('negation','Négation','À consolider : à l’écrit, garde « ne » dans la négation.');bilanResult.innerHTML=html;}
+function lireBilan(){afficherBilan();lireTexte(bilanResult.innerText);}
+function checkArgumentation(){let s=0,r=[];if(arg1.value==='B → C → A'){s++;r.push('✔ Ordre logique OK.')}else r.push('❌ Ordre : B → C → A.');if(arg2a.value==='opinion'){s++;}else r.push('❌ Selon moi = opinion.');if(arg2b.value==='argument'){s++;}else r.push('❌ Cela permet = argument.');if(arg2c.value==='exemple'){s++;}else r.push('❌ Par exemple = exemple.');saveScore('argumentation',s,4);argRes.innerHTML='<strong>Score : '+s+'/4</strong><br>'+r.join('<br>')+'<br><span class=good>Tip : opinion → argument → exemple.</span>';}
+function checkConnecteurs(){let s=0;if(c1.value==='D’abord')s++;if(c2.value==='De plus')s++;if(c3.value==='Par exemple')s++;if(c4.value==='Cependant')s++;saveScore('connecteurs',s,4);cres.innerHTML='<strong>Score : '+s+'/4</strong><br>Réponses : D’abord, De plus, Par exemple, Cependant.';}
+function checkTemps(){let s=0;if(t1.value==='connaissais')s++;if(t2.value==='j’ai étudié')s++;if(t3.value==='pense')s++;if(t4.value==='permettra')s++;saveScore('temps',s,4);tres.innerHTML='<strong>Score : '+s+'/4</strong><br>Réponses : connaissais, j’ai étudié, pense, permettra.';}
+function checkConditionnel(){let s=0;if(cond1.value==='voudrais')s++;if(cond2.value==='me renseignerais')s++;if(cond3.value==='devrais')s++;saveScore('conditionnel',s,3);condres.innerHTML='<strong>Score : '+s+'/3</strong><br>Réponses : voudrais, me renseignerais, devrais.';}
+function checkSubjonctif(){let s=0;if(s1.value==='sois')s++;if(s2.value==='fasses')s++;if(s3.value==='réussisses')s++;saveScore('subjonctif',s,3);sres.innerHTML='<strong>Score : '+s+'/3</strong><br>Réponses : sois, fasses, réussisses.';}
+function checkAccords(){let s=0;if(a1.value==='exceptionnelle')s++;if(a2.value==='utiles')s++;if(a3.value==='une')s++;if(a4.value==='bénéfiques')s++;saveScore('accords',s,4);ares.innerHTML='<strong>Score : '+s+'/4</strong><br>Réponses : exceptionnelle, utiles, une, bénéfiques.';}
+function checkNegation(){let s=0;if(n1.value==='Je ne connais personne.')s++;if(n2.value==='Ce n’est pas facile.')s++;if(n3.value==='Je ne veux pas partir seul.')s++;saveScore('negation',s,3);nres.innerHTML='<strong>Score : '+s+'/3</strong><br>Réponses : Je ne connais personne ; Ce n’est pas facile ; Je ne veux pas partir seul.';}
+function updateProgress(){const doc=document.documentElement;const scrollTop=doc.scrollTop||document.body.scrollTop;const scrollHeight=doc.scrollHeight-doc.clientHeight;const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;const fill=document.getElementById('progressFill');if(fill)fill.style.width=percent+'%';document.querySelectorAll('.step-item').forEach(item=>{const target=document.getElementById(item.dataset.target);if(!target)return;const rect=target.getBoundingClientRect();item.classList.remove('active','done');if(rect.top<window.innerHeight*.35&&rect.bottom>window.innerHeight*.25)item.classList.add('active');if(rect.bottom<window.innerHeight*.3)item.classList.add('done');});}
+window.addEventListener('scroll',updateProgress);window.addEventListener('load',updateProgress);
+document.addEventListener('click',e=>{const item=e.target.closest('.step-item');if(!item)return;const target=document.getElementById(item.dataset.target);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});});
+</script>
+</body>
+</html>

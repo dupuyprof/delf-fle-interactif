@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Guide DELF B1 - Production orale</title>
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f3f6fb;
+  margin:0;
+  padding:20px;
+  color:#1f2937;
+  line-height:1.6;
+}
+.container{
+  max-width:1120px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:18px;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+h1,h2,h3{color:#174ea6}
+.hero{
+  background:#eef6ff;
+  border:3px solid #93c5fd;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:25px;
+}
+.card{
+  background:#f8fafc;
+  border:1px solid #dbeafe;
+  border-radius:14px;
+  padding:18px;
+  margin:18px 0;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;
+}
+.step{
+  background:#f0fdf4;
+  border:2px solid #86efac;
+  padding:14px;
+  border-radius:12px;
+}
+.example{
+  background:#ecfeff;
+  border-left:5px solid #06b6d4;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+}
+.warning{
+  background:#fff7ed;
+  border-left:5px solid #f97316;
+  padding:12px;
+  border-radius:8px;
+  margin-top:10px;
+}
+.subject-box{
+  background:white;
+  border:3px solid #334155;
+  border-radius:12px;
+  padding:16px;
+  margin:14px 0;
+  font-family:"Courier New",monospace;
+}
+.highlight{
+  background:#fef08a;
+  padding:1px 5px;
+  border-radius:4px;
+  font-weight:bold;
+}
+.role{
+  background:#fef2f2;
+  border-left:5px solid #ef4444;
+  border-radius:8px;
+  padding:12px;
+  margin-top:10px;
+}
+.mindmap{
+  background:white;
+  border:2px solid #cbd5e1;
+  border-radius:16px;
+  padding:18px;
+  margin:14px 0;
+}
+.center-question{
+  background:#174ea6;
+  color:white;
+  text-align:center;
+  font-weight:bold;
+  border-radius:16px;
+  padding:14px;
+  margin:10px auto 18px;
+  max-width:520px;
+}
+.branches{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.branch{
+  background:#f8fafc;
+  border:2px solid #dbeafe;
+  border-radius:14px;
+  padding:14px;
+}
+.branch h3{margin-top:0;color:#174ea6}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:18px;
+}
+th{
+  background:#3498db;
+  color:white;
+  padding:10px;
+  text-align:left;
+}
+td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  vertical-align:top;
+}
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:8px;
+}
+button:hover{background:#1d4ed8}
+.progress-panel{
+  position:fixed;
+  left:18px;
+  top:90px;
+  width:180px;
+  background:white;
+  border:2px solid #dbeafe;
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  z-index:998;
+  font-size:.86rem;
+}
+.progress-panel h3{margin:0 0 8px;color:#174ea6;font-size:1rem}
+.progressbar{
+  width:100%;
+  height:10px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin:8px 0 12px;
+}
+.progressfill{height:100%;width:0%;background:#22c55e;transition:width .2s ease}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}
+.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:#174ea6;font-weight:bold}
+.step-item.done{color:#166534}
+.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}
+.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+.audio-controls{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:999;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.audio-controls button{
+  padding:12px 16px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:bold;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.pause{background:#f59e0b}
+.resume{background:#16a34a}
+.repeat{background:#7c3aed}
+.small{font-size:.95rem;color:#475569}
+
+.epreuve-overview{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:16px;
+  margin:20px 0 26px;
+}
+.epreuve-tile{
+  border-radius:18px;
+  padding:18px;
+  color:#111827;
+  border:3px solid transparent;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+.tile-icon{
+  font-size:2.2rem;
+  display:block;
+  margin-bottom:8px;
+}
+.tile-1{background:#eff6ff;border-color:#60a5fa}
+.tile-2{background:#fef3c7;border-color:#f59e0b}
+.tile-3{background:#ecfdf5;border-color:#22c55e}
+.badge-epreuve{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+.badge-1{background:#dbeafe;color:#1d4ed8}
+.badge-2{background:#fde68a;color:#92400e}
+.badge-3{background:#dcfce7;color:#166534}
+.schema{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:12px;
+  margin:14px 0;
+}
+.schema-step{
+  background:white;
+  border:2px solid #e5e7eb;
+  border-radius:14px;
+  padding:12px;
+  text-align:center;
+}
+.schema-step .picto{
+  font-size:2rem;
+  display:block;
+  margin-bottom:6px;
+}
+.arrow-note{
+  text-align:center;
+  font-weight:bold;
+  color:#475569;
+}
+
+
+.theme-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;
+  margin:14px 0;
+}
+.theme-card{
+  background:white;
+  border:2px solid #e5e7eb;
+  border-radius:14px;
+  padding:12px;
+}
+.theme-card .emoji{
+  font-size:2rem;
+  display:block;
+  margin-bottom:6px;
+}
+.theme-card h4{
+  margin:0 0 6px;
+  color:#174ea6;
+}
+.compact-list{
+  margin:8px 0 0;
+  padding-left:18px;
+}
+
+@media(max-width:1280px){
+  .progress-panel{position:static;width:auto;margin:0 auto 18px}
+}
+@media print{
+  body{background:white;padding:0}
+  .container{box-shadow:none;max-width:none}
+  .progress-panel,.audio-controls,button{display:none}
+}
+</style>
+<script>
+let dernierTexteLu="";
+
+function choisirVoixFrancaise(){
+  const voix=speechSynthesis.getVoices();
+  return voix.find(v=>v.lang==="fr-FR" && /google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))
+  || voix.find(v=>v.lang==="fr-FR")
+  || voix.find(v=>v.lang && v.lang.startsWith("fr"))
+  || voix[0];
+}
+function lireTexte(texte){
+  if(!("speechSynthesis" in window)){
+    alert("Lecture audio indisponible.");
+    return;
+  }
+  dernierTexteLu=texte;
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(texte);
+    u.lang="fr-FR";
+    u.rate=0.86;
+    u.pitch=1.03;
+    u.volume=1;
+    const voix=choisirVoixFrancaise();
+    if(voix){u.voice=voix;}
+    speechSynthesis.speak(u);
+  },120);
+}
+function pauseLecture(){if(speechSynthesis.speaking && !speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if(speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+</script>
+</head>
+
+<body>
+<div class="progress-panel">
+  <h3>Ma progression</h3>
+  <div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+  <div class="step-item" data-target="general"><span class="step-dot"></span> Général</div>
+  <div class="step-item" data-target="epreuve1"><span class="step-dot"></span> Épreuve 1</div>
+  <div class="step-item" data-target="epreuve2"><span class="step-dot"></span> 👥 Épreuve 2</div>
+  <div class="step-item" data-target="epreuve3"><span class="step-dot"></span> Épreuve 3</div>
+  <div class="step-item" data-target="preparation"><span class="step-dot"></span> Préparation</div>
+  <div class="step-item" data-target="modeles"><span class="step-dot"></span> Modèles</div>
+  <div class="step-item" data-target="checklist"><span class="step-dot"></span> Checklist</div>
+</div>
+
+<div class="container">
+<h1>DELF B1 – Production orale</h1>
+<p class="small">Fiche méthode : comprendre les 3 parties de l’épreuve orale.</p>
+
+<section class="hero" id="general">
+<h2>Présentation générale</h2>
+<p>L’oral dure environ <strong>10 à 15 minutes</strong>. Il y a <strong>3 parties</strong>.</p>
+<ul>
+<li><strong>Épreuve 1 :</strong> entretien dirigé.</li>
+<li><strong>Épreuve 2 :</strong> exercice en interaction, comme un jeu de rôle.</li>
+<li><strong>Épreuve 3 :</strong> expression d’un point de vue à partir d’un document. C’est la seule partie avec <strong>10 minutes de préparation</strong>.</li>
+</ul>
+<div class="warning">
+<strong>Attention :</strong> il ne faut pas répondre avec un seul mot. Il faut faire des phrases complètes, utiliser des connecteurs et montrer qu’on sait parler au présent, au passé et au futur.
+</div>
+
+<div class="epreuve-overview">
+  <div class="epreuve-tile tile-1">
+    <span class="tile-icon">🗣️</span>
+    <h3>Épreuve 1</h3>
+    <p><strong>Entretien dirigé</strong><br>Je parle de moi seul, puis je réponds aux questions.</p>
+  </div>
+  <div class="epreuve-tile tile-2">
+    <span class="tile-icon">👥💬</span>
+    <h3>Épreuve 2</h3>
+    <p><strong>Interaction</strong><br>Je joue une situation avec l’examinateur et je résous un problème.</p>
+  </div>
+  <div class="epreuve-tile tile-3">
+    <span class="tile-icon">🧠</span>
+    <h3>Épreuve 3</h3>
+    <p><strong>Point de vue</strong><br>Je lis un document, je prépare, puis je donne mon opinion.</p>
+  </div>
+</div>
+
+<button onclick="lireTexte('Présentation générale. L oral du DELF B1 dure environ dix à quinze minutes. Il y a trois parties. La première partie est un entretien dirigé. La deuxième partie est un jeu de rôle. La troisième partie est une expression d un point de vue à partir d un document. Seule la troisième partie a dix minutes de préparation.')">🔊 Écouter partie générale</button>
+</section>
+
+<section class="card" id="epreuve1">
+<div class="badge-epreuve badge-1">🗣️ Épreuve 1</div>
+<h2>Épreuve 1 – Entretien dirigé</h2>
+<p><strong>Durée :</strong> environ 2 à 3 minutes de parole, puis des questions.</p>
+<p>Tu dois parler de toi, de tes goûts, de tes projets, de ton passé ou de ton avenir.</p>
+
+<div class="warning">
+<strong>Objectif :</strong> parler seul pendant au moins <strong>2 minutes</strong>. Ne réponds pas seulement « oui », « non », ou avec un mot isolé.
+</div>
+
+<div class="grid">
+<div class="step">
+<h3>Ce qu’il faut faire</h3>
+<ul>
+<li>Faire des phrases longues.</li>
+<li>Utiliser des connecteurs : <strong>d’abord</strong>, <strong>ensuite</strong>, <strong>par exemple</strong>, <strong>enfin</strong>.</li>
+<li>Utiliser plusieurs temps : <strong>présent</strong>, <strong>passé</strong>, <strong>futur</strong>.</li>
+</ul>
+</div>
+<div class="step">
+<h3>Exemple de réponse</h3>
+<p><strong>Actuellement</strong>, je suis élève en France. <strong>Avant</strong>, j’ai étudié dans mon pays d’origine. <strong>Plus tard</strong>, j’aimerais continuer mes études et trouver un métier qui me plaît.</p>
+</div>
+</div>
+
+<p class="small">Si tu n’utilises pas le passé ou le futur, l’examinateur peut te poser des questions pour vérifier que tu sais les utiliser.</p>
+
+
+<div class="card" style="background:#eef6ff;border-color:#60a5fa;">
+<h3>🧍 Exemple de présentation développée</h3>
+
+<p class="small">
+Pour l’entretien dirigé, pense à répondre à 3 questions :
+<strong>Qui je suis aujourd’hui ?</strong> →
+<strong>D’où je viens ?</strong> →
+<strong>Où je vais / quels sont mes projets ?</strong>
+</p>
+
+<div class="example">
+<strong>Bonjour</strong>, je m’appelle Mamadou et je suis originaire du Mali, un pays situé en Afrique de l’Ouest.<br><br>
+
+Je suis arrivé en France en 2022, <strong>donc</strong> cela fait maintenant presque trois ans que je vis ici. 
+<strong>Actuellement</strong>, je suis scolarisé au lycée professionnel et je prépare un diplôme. 
+Cette année, j’espère réussir mon examen.<br><br>
+
+<strong>Dans la vie</strong>, je suis passionné de football. 
+<strong>En effet</strong>, je joue tous les samedis avec mes amis au stade Beaublanc. 
+Le sport me permet d’être en forme et de rester en bonne santé.<br><br>
+
+J’aime aussi beaucoup la cuisine de mon pays. 
+Mon plat préféré s’appelle le mafé et il est préparé avec de la sauce à l’arachide et du riz. 
+<strong>Par exemple</strong>, j’aime cuisiner ce plat avec ma famille pendant les fêtes.<br><br>
+
+<strong>En revanche</strong>, je déteste les mensonges et l’injustice, <strong>parce que</strong> je pense qu’il est important de respecter les autres.<br><br>
+
+<strong>Plus tard</strong>, je souhaiterais obtenir mon diplôme et devenir éducateur sportif pour aider les jeunes. 
+Je rêve aussi de voyager dans plusieurs pays.<br><br>
+
+<strong>Merci de m’avoir écouté</strong>.
+</div>
+
+<div class="warning">
+<strong>Ce qui rapporte des points :</strong>
+<ul>
+<li>utiliser le <strong>présent</strong>, le <strong>passé</strong>, le <strong>futur</strong> ou le <strong>conditionnel</strong> ;</li>
+<li>faire des phrases développées avec <strong>parce que</strong>, <strong>en effet</strong>, <strong>donc</strong> ;</li>
+<li>utiliser des connecteurs : <strong>tout d’abord</strong>, <strong>ensuite</strong>, <strong>mais</strong>, <strong>en conséquence</strong>, <strong>par exemple</strong> ;</li>
+<li>justifier ses idées ;</li>
+<li>dire <strong>bonjour</strong> et <strong>au revoir</strong>.</li>
+</ul>
+</div>
+
+<button onclick="lireTexte('Exemple de présentation pour l entretien dirigé. Bonjour, je m appelle Mamadou et je suis originaire du Mali, un pays situé en Afrique de l Ouest. Je suis arrivé en France en deux mille vingt deux, donc cela fait maintenant presque trois ans que je vis ici. Actuellement, je suis scolarisé au lycée professionnel et je prépare un diplôme. Dans la vie, je suis passionné de football. En effet, je joue tous les samedis avec mes amis au stade Beaublanc. Plus tard, je souhaiterais obtenir mon diplôme et devenir éducateur sportif pour aider les jeunes. Pour gagner des points, il faut utiliser plusieurs temps, des connecteurs et des phrases développées.')">
+🔊 Écouter l’exemple développé
+</button>
+</div>
+
+<button onclick="lireTexte('Épreuve 1. C est l entretien dirigé. Tu dois parler de toi pendant environ deux à trois minutes. Il faut faire des phrases complètes, utiliser des connecteurs, parler au présent, au passé et au futur. Après ton temps de parole, l examinateur te pose des questions.')">🔊 Écouter épreuve 1</button>
+</section>
+
+<section class="card" id="epreuve2">
+<div class="badge-epreuve badge-2">👥💬 Épreuve 2</div>
+<h2>Épreuve 2 – Exercice en interaction</h2>
+<p><strong>Durée :</strong> environ 3 à 4 minutes.</p>
+<p>Tu pioches <strong>2 sujets</strong> et tu en choisis <strong>1 seul</strong>. C’est comme un petit jeu de rôle au théâtre.</p>
+
+<div class="warning">
+<strong>Important :</strong> le candidat doit parler en premier. Il faut dire <strong>bonjour</strong>, expliquer le problème, discuter, proposer des solutions et finir avec une formule de fin.
+</div>
+
+<h3>Exemple de sujet</h3>
+<div class="subject-box">
+Vous avez prêté un <strong>livre de la bibliothèque</strong> à votre ami français. Lorsque vous retrouvez votre ami, il vous annonce qu’il l’a <strong>perdu</strong>.<br><br>
+Vous exprimez votre <strong>mécontentement</strong> et vous discutez ensemble pour <strong>résoudre ce problème</strong>.
+</div>
+
+<div class="role">
+<h3>Ce qu’il faut comprendre</h3>
+<ul>
+<li>Il y a toujours un <strong>problème</strong>.</li>
+<li>Tu dois montrer une réaction : ici, tu es <strong>mécontent</strong>.</li>
+<li>Tu dois proposer des <strong>solutions</strong>.</li>
+<li>Tu dois utiliser des arguments pour convaincre.</li>
+</ul>
+</div>
+
+<div class="schema">
+  <div class="schema-step">
+    <span class="picto">📌</span>
+    <strong>1. Problème</strong><br>
+    Le livre est perdu.
+  </div>
+  <div class="schema-step">
+    <span class="picto">😠</span>
+    <strong>2. Réaction</strong><br>
+    Je montre mon mécontentement.
+  </div>
+  <div class="schema-step">
+    <span class="picto">💡</span>
+    <strong>3. Solutions</strong><br>
+    Chercher, rembourser, expliquer.
+  </div>
+  <div class="schema-step">
+    <span class="picto">🤝</span>
+    <strong>4. Accord final</strong><br>
+    On résout le problème.
+  </div>
+</div>
+
+<div class="example">
+<strong>Début possible du dialogue :</strong><br>
+Salut, comment ça va ? Dis-moi, est-ce que tu pourrais me rendre le livre que je t’avais prêté ? J’en ai besoin pour mes révisions.<br><br>
+Si l’ami répond : « Je suis désolé, je l’ai perdu », tu peux dire :<br>
+Je ne suis pas très content, parce que ce livre appartient à la bibliothèque. Il faut absolument que tu le recherches. Si tu ne le retrouves pas, tu devras peut-être le rembourser ou aller expliquer la situation à la bibliothèque.
+</div>
+
+<div class="grid">
+<div class="step">
+<h3>Expressions utiles</h3>
+<ul>
+<li><strong>Je ne suis pas d’accord.</strong></li>
+<li><strong>Je ne suis pas très content.</strong></li>
+<li><strong>Il faut trouver une solution.</strong></li>
+<li><strong>Tu pourrais...</strong></li>
+<li><strong>Il faudrait...</strong></li>
+</ul>
+</div>
+<div class="step">
+<h3>Solutions possibles</h3>
+<ul>
+<li>chercher le livre ;</li>
+<li>le rembourser ;</li>
+<li>aller à la bibliothèque ;</li>
+<li>acheter le même livre ;</li>
+<li>expliquer le problème au professeur.</li>
+</ul>
+</div>
+</div>
+
+<div class="card" style="background:#fffaf0;border-color:#f59e0b;">
+<h3>Types de sujets possibles pour l’interaction</h3>
+<p class="small">Les sujets changent, mais les situations se ressemblent souvent : il y a un problème à résoudre.</p>
+<div class="theme-grid">
+  <div class="theme-card">
+    <span class="emoji">📚</span>
+    <h4>Objet perdu ou abîmé</h4>
+    <p>Un ami perd ou abîme un objet prêté : livre, téléphone, vêtement...</p>
+    <ul class="compact-list"><li>exprimer son mécontentement ;</li><li>demander une solution.</li></ul>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🏀</span>
+    <h4>Inscription / annulation</h4>
+    <p>Club de sport, activité, sortie ou inscription à annuler.</p>
+    <ul class="compact-list"><li>expliquer le problème ;</li><li>convaincre ou négocier.</li></ul>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🚌</span>
+    <h4>Objet perdu dans un lieu public</h4>
+    <p>Portefeuille perdu dans un bus, un train, un établissement...</p>
+    <ul class="compact-list"><li>demander de l’aide ;</li><li>décrire l’objet.</li></ul>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🏕️</span>
+    <h4>Projet de classe</h4>
+    <p>Demander à un professeur d’organiser un week-end ou une sortie.</p>
+    <ul class="compact-list"><li>proposer des arguments ;</li><li>montrer l’intérêt du projet.</li></ul>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🏠</span>
+    <h4>Vie quotidienne / colocataire</h4>
+    <p>Colocataire désordonné, bruit, partage des tâches...</p>
+    <ul class="compact-list"><li>dire ce qui ne va pas ;</li><li>trouver un accord.</li></ul>
+  </div>
+</div>
+</div>
+
+<button onclick="lireTexte('Épreuve 2. C est l exercice en interaction. Tu pioches deux sujets et tu en choisis un. C est comme un jeu de rôle. Le candidat doit parler en premier. Il faut dire bonjour, expliquer le problème, montrer son mécontentement si nécessaire, proposer des solutions et terminer la conversation. Dans l exemple du livre perdu, il faut demander à ton ami de rechercher le livre, de le rembourser ou d aller expliquer la situation à la bibliothèque. Les sujets peuvent aussi parler d un objet abîmé, d une inscription à annuler, d un portefeuille perdu, d un projet de classe ou d un colocataire désordonné.')">🔊 Écouter épreuve 2</button>
+</section>
+
+<section class="card" id="epreuve3">
+<div class="badge-epreuve badge-3">🧠 Épreuve 3</div>
+<h2>Épreuve 3 – Expression d’un point de vue</h2>
+<p><strong>Durée :</strong> 5 à 7 minutes.</p>
+<p><strong>Préparation :</strong> 10 minutes. C’est la seule partie où tu as un temps de préparation.</p>
+
+<div class="warning">
+Le sujet peut parler de thèmes du quotidien ou de thèmes d’actualité : <strong>voyages en famille</strong>, <strong>voiture sans conducteur</strong>, <strong>fin du stylo</strong>, <strong>forum d’orientation</strong>, <strong>matières enseignées en Europe</strong>.
+</div>
+
+
+<div class="schema">
+  <div class="schema-step">
+    <span class="picto">📄</span>
+    <strong>1. Lire</strong><br>
+    Je comprends le document.
+  </div>
+  <div class="schema-step">
+    <span class="picto">📝</span>
+    <strong>2. Préparer</strong><br>
+    Je note les thèmes et les idées.
+  </div>
+  <div class="schema-step">
+    <span class="picto">💭</span>
+    <strong>3. Donner mon avis</strong><br>
+    Je dis ce que je pense.
+  </div>
+  <div class="schema-step">
+    <span class="picto">✅</span>
+    <strong>4. Argumenter</strong><br>
+    J’ajoute exemples et connecteurs.
+  </div>
+</div>
+
+<div class="card" style="background:#f0fdf4;border-color:#22c55e;">
+<h3>Types de sujets possibles pour l’expression d’un point de vue</h3>
+<p class="small">Les textes peuvent changer, mais les grands thèmes reviennent souvent.</p>
+<div class="theme-grid">
+  <div class="theme-card">
+    <span class="emoji">👨‍👩‍👧‍👦</span>
+    <h4>Vie familiale</h4>
+    <p><strong>Exemple :</strong> les voyages en famille.</p>
+    <p>Thème : avantages, inconvénients, liberté, liens familiaux.</p>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🤖</span>
+    <h4>Nouvelles technologies</h4>
+    <p><strong>Exemples :</strong> voiture sans conducteur, fin du stylo.</p>
+    <p>Thème : progrès, risques, habitudes qui changent.</p>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🎓</span>
+    <h4>Avenir et orientation</h4>
+    <p><strong>Exemples :</strong> « Que feras-tu plus tard ? », forum d’orientation.</p>
+    <p>Thème : projets, métiers, choix d’études.</p>
+  </div>
+  <div class="theme-card">
+    <span class="emoji">🏫</span>
+    <h4>École et enseignement</h4>
+    <p><strong>Exemple :</strong> matières enseignées selon les pays d’Europe.</p>
+    <p>Thème : différences entre pays, matières utiles, façons d’apprendre.</p>
+  </div>
+</div>
+</div>
+
+<h3>Exemple de document support</h3>
+<div class="subject-box">
+<strong>Les voyages en famille</strong><br><br>
+De plus en plus de familles choisissent de voyager ensemble pendant les vacances. Pour certains parents, ces voyages permettent de partager des moments importants avec leurs enfants. Pourtant, certains adolescents préfèrent parfois partir avec leurs amis ou rester seuls pour avoir plus de liberté.<br><br>
+<strong>Question :</strong> Que pensez-vous des voyages en famille ?
+</div>
+
+<button onclick="lireTexte('Épreuve 3. C est l expression d un point de vue. Tu as dix minutes de préparation. Tu dois lire un petit document, repérer le thème, présenter les idées du texte, puis donner ton opinion personnelle avec des arguments et des exemples. Les thèmes possibles peuvent être la famille, les voyages, les nouvelles technologies, l avenir, l orientation ou l école.')">🔊 Écouter épreuve 3</button>
+</section>
+
+<section class="card" id="preparation">
+<h2>Les 10 minutes de préparation</h2>
+<p>Sur ton brouillon, n’écris pas tout. Note seulement les idées importantes.</p>
+
+<div class="mindmap">
+<div class="center-question">Sujet : les voyages en famille</div>
+<div class="branches">
+<div class="branch">
+<h3>1. Thème du texte</h3>
+<ul>
+<li>voyages en famille ;</li>
+<li>vacances ;</li>
+<li>parents et enfants ;</li>
+<li>liberté des adolescents.</li>
+</ul>
+</div>
+<div class="branch">
+<h3>2. Idées du texte</h3>
+<ul>
+<li>partager des moments ;</li>
+<li>renforcer les liens ;</li>
+<li>parfois manque d’intimité ;</li>
+<li>envie d’être avec ses amis.</li>
+</ul>
+</div>
+<div class="branch">
+<h3>3. Mon avis</h3>
+<ul>
+<li>plutôt positif ;</li>
+<li>bon pour la famille ;</li>
+<li>mais besoin de liberté ;</li>
+<li>équilibre possible.</li>
+</ul>
+</div>
+<div class="branch">
+<h3>4. Exemples</h3>
+<ul>
+<li>voyage avec mes parents ;</li>
+<li>activités en commun ;</li>
+<li>moments de repos seul ;</li>
+<li>sorties avec les amis.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<button onclick="lireTexte('Préparation. Pendant les dix minutes, il ne faut pas écrire un texte complet. Il faut faire une carte mentale. Note le thème, les idées du texte, ton avis et quelques exemples. Pour le sujet des voyages en famille, tu peux dire que c est positif parce que cela renforce les liens, mais que les adolescents ont aussi besoin de liberté.')">🔊 Écouter la préparation</button>
+</section>
+
+<section class="card" id="modeles">
+<h2>Modèles de phrases pour l’épreuve 3</h2>
+
+<div class="example">
+<strong>Présenter le document :</strong><br>
+Ce texte parle des <strong>voyages en famille</strong>. <strong>Tout d’abord</strong>, il explique que les voyages permettent de partager des moments importants. <strong>Ensuite</strong>, il montre que certains adolescents préfèrent avoir plus de liberté. <strong>Enfin</strong>, le texte présente deux points de vue différents.
+</div>
+
+<div class="example">
+<strong>Donner son opinion :</strong><br>
+<strong>Selon moi</strong>, voyager en famille est quelque chose d’agréable, car cela permet de renforcer les liens. <strong>De plus</strong>, on peut découvrir de nouveaux endroits ensemble.
+</div>
+
+<div class="example">
+<strong>Peser le pour et le contre :</strong><br>
+<strong>D’un côté</strong>, je trouve que c’est une bonne chose parce qu’on partage des souvenirs. <strong>Mais de l’autre</strong>, on peut parfois manquer d’intimité et avoir besoin d’être seul pour être au calme.
+</div>
+
+<button onclick="lireTexte('Modèles pour l épreuve 3. Pour commencer, tu peux dire : ce texte parle de. Ensuite, présente les idées avec tout d abord, ensuite et enfin. Puis donne ton opinion avec selon moi ou je pense que. Tu peux aussi peser le pour et le contre avec d un côté et mais de l autre.')">🔊 Écouter les modèles</button>
+</section>
+
+<section class="card" id="checklist">
+<h2>Checklist orale avant de passer</h2>
+<ul>
+<li>Je fais des phrases complètes.</li>
+<li>Je ne réponds pas avec un seul mot.</li>
+<li>J’utilise des connecteurs.</li>
+<li>J’utilise le présent, le passé et le futur.</li>
+<li>Dans le jeu de rôle, je parle en premier.</li>
+<li>Je propose des solutions.</li>
+<li>Dans l’épreuve 3, je présente le document puis je donne mon avis.</li>
+<li>Je donne des arguments et des exemples.</li>
+</ul>
+
+<button onclick="lireTexte('Checklist finale. Fais des phrases complètes. N utilise pas seulement un mot. Utilise des connecteurs. Dans l épreuve deux, parle en premier et propose des solutions. Dans l épreuve trois, présente le document, donne ton avis, puis développe avec des arguments et des exemples.')">🔊 Écouter la checklist</button>
+</section>
+
+</div>
+
+<div class="audio-controls">
+<button class="pause" onclick="pauseLecture()">⏸ Pause</button>
+<button class="resume" onclick="reprendreLecture()">▶ Reprendre</button>
+<button class="repeat" onclick="repeterLecture()">🔁 Répéter</button>
+</div>
+
+<script>
+function updateProgress(){
+  const doc=document.documentElement;
+  const scrollTop=doc.scrollTop || document.body.scrollTop;
+  const scrollHeight=doc.scrollHeight-doc.clientHeight;
+  const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;
+  const fill=document.getElementById("progressFill");
+  if(fill){fill.style.width=percent+"%";}
+  document.querySelectorAll(".step-item").forEach(item=>{
+    const target=document.getElementById(item.dataset.target);
+    if(!target)return;
+    const rect=target.getBoundingClientRect();
+    item.classList.remove("active","done");
+    if(rect.top<window.innerHeight*.35 && rect.bottom>window.innerHeight*.25){item.classList.add("active");}
+    if(rect.bottom<window.innerHeight*.3){item.classList.add("done");}
+  });
+}
+window.addEventListener("scroll",updateProgress);
+window.addEventListener("load",updateProgress);
+document.addEventListener("click",function(e){
+  const item=e.target.closest(".step-item");
+  if(!item)return;
+  const target=document.getElementById(item.dataset.target);
+  if(target){target.scrollIntoView({behavior:"smooth",block:"start"});}
+});
+</script>
+</body>
+</html>

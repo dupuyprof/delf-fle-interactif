@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Guide DELF B1 - Production écrite</title>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f3f6fb;
+margin:0;
+padding:20px;
+color:#1f2937;
+line-height:1.6;
+}
+.container{
+max-width:1100px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:18px;
+box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+h1,h2{
+color:#174ea6;
+}
+.subject{
+background:#eef6ff;
+border:3px solid #93c5fd;
+padding:20px;
+border-radius:16px;
+margin-bottom:25px;
+}
+.mailbox{
+background:white;
+border:2px solid #cbd5e1;
+padding:16px;
+border-radius:12px;
+font-family:"Courier New", monospace;
+}
+.card{
+background:#f8fafc;
+border:1px solid #dbeafe;
+border-radius:14px;
+padding:18px;
+margin:18px 0;
+}
+.highlight{
+background:#fef08a;
+font-weight:bold;
+padding:2px 5px;
+border-radius:4px;
+}
+.check{
+display:flex;
+align-items:flex-start;
+gap:10px;
+margin:10px 0;
+}
+.check input{
+width:20px;
+height:20px;
+margin-top:3px;
+}
+.example{
+background:#ecfeff;
+border-left:5px solid #06b6d4;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+}
+.warning{
+background:#fff7ed;
+border-left:5px solid #f97316;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
+}
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+th{
+background:#3498db;
+color:white;
+padding:10px;
+text-align:left;
+}
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+vertical-align:top;
+}
+button{
+background:#2563eb;
+color:white;
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+margin-top:8px;
+}
+button:hover{
+background:#1d4ed8;
+}
+.plan{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:14px;
+}
+.step{
+background:#f0fdf4;
+border:2px solid #86efac;
+padding:14px;
+border-radius:12px;
+}
+.small{
+font-size:.95rem;
+color:#475569;
+}
+
+.mindmap{
+  background:#f8fafc;
+  border:2px solid #cbd5e1;
+  border-radius:16px;
+  padding:18px;
+  margin:18px 0;
+}
+.center-question{
+  background:#174ea6;
+  color:white;
+  text-align:center;
+  font-weight:bold;
+  border-radius:16px;
+  padding:14px;
+  margin:10px auto 18px;
+  max-width:520px;
+}
+.branches{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.branch{
+  background:white;
+  border:2px solid #dbeafe;
+  border-radius:14px;
+  padding:14px;
+}
+.branch h3{
+  margin-top:0;
+  color:#174ea6;
+}
+.timer{
+  background:#fff7ed;
+  border-left:6px solid #f97316;
+  border-radius:12px;
+  padding:14px;
+  margin:12px 0;
+}
+
+
+.progress-panel{
+  position:fixed;
+  left:18px;
+  top:90px;
+  width:170px;
+  background:white;
+  border:2px solid #dbeafe;
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  z-index:998;
+  font-size:.86rem;
+}
+.progress-panel h3{
+  margin:0 0 8px;
+  color:#174ea6;
+  font-size:1rem;
+}
+.progressbar{
+  width:100%;
+  height:10px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden;
+  margin:8px 0 12px;
+}
+.progressfill{
+  height:100%;
+  width:0%;
+  background:#22c55e;
+  transition:width .2s ease;
+}
+.step-item{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  margin:6px 0;
+  color:#64748b;
+}
+.step-dot{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:2px solid #cbd5e1;
+  flex:0 0 auto;
+}
+.step-item.active{
+  color:#174ea6;
+  font-weight:bold;
+}
+.step-item.done{
+  color:#166534;
+}
+.step-item.done .step-dot{
+  background:#22c55e;
+  border-color:#22c55e;
+}
+.step-item.active .step-dot{
+  background:#93c5fd;
+  border-color:#2563eb;
+}
+@media(max-width:1250px){
+  .progress-panel{
+    position:static;
+    width:auto;
+    margin:0 auto 18px;
+  }
+}
+
+</style>
+<script>
+let dernierTexteLu = "";
+
+function choisirVoixFrancaise(){
+  const voix = speechSynthesis.getVoices();
+  return voix.find(v => v.lang === 'fr-FR' && /google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))
+  || voix.find(v => v.lang === 'fr-FR')
+  || voix.find(v => v.lang && v.lang.startsWith('fr'))
+  || voix[0];
+}
+
+function lireTexte(texte){
+  if(!('speechSynthesis' in window)){
+    alert("Lecture audio indisponible.");
+    return;
+  }
+  dernierTexteLu = texte;
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const utterance = new SpeechSynthesisUtterance(texte);
+    utterance.lang='fr-FR';
+    utterance.rate=0.86;
+    utterance.pitch=1.02;
+    utterance.volume=1;
+    const voix = choisirVoixFrancaise();
+    if(voix){ utterance.voice=voix; }
+    speechSynthesis.speak(utterance);
+  },120);
+}
+
+function pauseLecture(){
+  if(speechSynthesis.speaking && !speechSynthesis.paused){
+    speechSynthesis.pause();
+  }
+}
+
+function reprendreLecture(){
+  if(speechSynthesis.paused){
+    speechSynthesis.resume();
+  }
+}
+
+function repeterLecture(){
+  if(dernierTexteLu){
+    lireTexte(dernierTexteLu);
+  }
+}
+
+window.addEventListener('load',()=>speechSynthesis.getVoices());
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+</script>
+</head>
+<body>
+
+<div class="progress-panel">
+  <h3>Ma progression</h3>
+  <div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+  <div class="step-item" data-target="subject"><span class="step-dot"></span> Sujet</div>
+  <div class="step-item" data-target="brouillon"><span class="step-dot"></span> Brouillon</div>
+  <div class="step-item" data-target="mail"><span class="step-dot"></span> Mail</div>
+  <div class="step-item" data-target="experience"><span class="step-dot"></span> Expérience</div>
+  <div class="step-item" data-target="avis"><span class="step-dot"></span> Avis / conseils</div>
+  <div class="step-item" data-target="efforts"><span class="step-dot"></span> Efforts</div>
+  <div class="step-item" data-target="organisation"><span class="step-dot"></span> Organisation</div>
+  <div class="step-item" data-target="checklist"><span class="step-dot"></span> Checklist</div>
+  <div class="step-item" data-target="bareme"><span class="step-dot"></span> Barème</div>
+</div>
+
+<div class="container">
+
+<h1>DELF B1 – Production écrite</h1>
+
+<div class="subject" id="subject">
+<h2>Le sujet</h2>
+
+<div class="mailbox">
+Salut !<br><br>
+
+Je sais que tu as <strong>étudié en France l’année dernière</strong>. Moi aussi, je pense partir étudier dans un pays étranger <strong>mais</strong> j’hésite…<br><br>
+
+<span class="highlight">1</span> Je voudrais savoir <strong>ce que tu en penses</strong>. Quelle a été <strong>ton expérience</strong> ?<br><br>
+
+<span class="highlight">2</span> D’après toi, est-ce que c’est <strong>une bonne idée de faire ses études dans un autre pays</strong> ?<br><br>
+
+Merci d’avance pour ta réponse !<br><br>
+
+À bientôt,<br>
+Fabien
+</div>
+
+<button onclick="lireTexte('Partie 1. Tu dois répondre à Fabien. C’est un ami, donc tu dois le tutoyer. Première chose attendue : raconter ton expérience, parce que Fabien te demande quelle a été ton expérience. Deuxième chose attendue : donner ton avis et argumenter pour dire si tu penses que c’est une bonne idée d’étudier à l’étranger. Tu dois aussi donner des exemples précis. Ton texte doit faire au moins cent soixante mots.')">
+🔊 Écouter partie 8 : checklist partie 7 : connecteurs utiles partie 6 : organiser le texte partie 5 : les efforts à faire partie 4 : donner son avis partie 3 : raconter son expérience partie 2 : écrire un mail partie 1 : comprendre le sujet
+</button>
+
+<div class="warning">
+<strong>Attention :</strong>
+<ul>
+<li><span class="highlight">Tu écris un mail à un ami.</span></li>
+<li><span class="highlight">Tu racontes ton expérience.</span></li>
+<li><span class="highlight">Tu dois argumenter.</span></li>
+<li><span class="highlight">Tu dois donner des exemples.</span></li>
+<li><span class="highlight">Minimum : 160 mots.</span></li>
+</ul>
+<p><strong>Ce qu’on attend dans ta réponse :</strong></p>
+<ol>
+<li><strong>Raconter ton expérience</strong> dans un pays étranger.</li>
+<li><strong>Donner ton avis</strong> : est-ce une bonne idée d’étudier à l’étranger ?</li>
+<li><strong>Argumenter</strong> avec des raisons précises.</li>
+<li><strong>Illustrer</strong> avec des exemples concrets.</li>
+</ol>
+</div>
+</div>
+
+
+<div class="card" id="brouillon">
+<h2>0. Avant d’écrire : 10 minutes de brouillon</h2>
+
+<div class="timer">
+<strong>Tu as 10 minutes pour préparer tes idées.</strong><br>
+Ne rédige pas tout au brouillon. Écris seulement des mots-clés, des arguments et des exemples.
+</div>
+
+<p><strong>Question centrale :</strong></p>
+
+<div class="mindmap">
+  <div class="center-question">
+    Est-ce que c’est une bonne idée d’aller étudier à l’étranger ?
+  </div>
+
+  <div class="branches">
+    <div class="branch">
+      <h3>✅ Avantages</h3>
+      <ul>
+        <li>apprendre une langue ;</li>
+        <li>découvrir une culture ;</li>
+        <li>devenir plus autonome ;</li>
+        <li>rencontrer des personnes.</li>
+      </ul>
+    </div>
+
+    <div class="branch">
+      <h3>⚠️ Difficultés</h3>
+      <ul>
+        <li>trouver un logement ;</li>
+        <li>être loin de sa famille ;</li>
+        <li>comprendre les cours ;</li>
+        <li>parler la langue du pays.</li>
+      </ul>
+    </div>
+
+    <div class="branch">
+      <h3>💬 Mon expérience</h3>
+      <ul>
+        <li>au début : difficile ;</li>
+        <li>ensuite : adaptation ;</li>
+        <li>rencontres ;</li>
+        <li>progrès dans la langue.</li>
+      </ul>
+    </div>
+
+    <div class="branch">
+      <h3>🔎 Exemples précis</h3>
+      <ul>
+        <li>s’inscrire à un club de sport ;</li>
+        <li>prendre des cours de langue ;</li>
+        <li>participer à une association ;</li>
+        <li>découvrir les coutumes du pays.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+<strong>Exemple de brouillon rapide :</strong><br>
+Avis : oui, bonne idée.<br>
+Argument 1 : apprendre la langue → exemple : club de sport, parler avec les habitants.<br>
+Argument 2 : découvrir une culture → exemple : habitudes de vie, coutumes.<br>
+Difficulté : logement, solitude → conseil : se renseigner avant.
+</div>
+
+<button onclick="lireTexte('Partie zéro. Avant d’écrire, prends dix minutes pour préparer ton brouillon. Ne rédige pas tout. Écris seulement des mots clés. La question centrale est : est-ce que c’est une bonne idée d’aller étudier à l’étranger ? Cherche des avantages, des difficultés, des exemples et des conseils.')">
+🔊 Écouter partie 0 : préparer le brouillon
+</button>
+</div>
+
+<div class="card" id="mail">
+<h2>1. Écrire un mail</h2>
+
+<div class="mailbox">
+Bonjour Fabien,<br><br>
+
+Merci pour ton message...<br><br>
+
+<strong>Je trouve que</strong> c’est une très bonne idée de partir étudier à l’étranger...<br><br>
+
+Je vais à présent te parler de mon expérience personnelle et te donner quelques conseils...<br><br>
+
+.................................................................................<br><br>
+
+Bonne journée et à bientôt,<br>
+Ton prénom
+</div>
+
+<button onclick="lireTexte('Partie 2. Attention à la forme du mail. Il faut commencer par Bonjour Fabien. Tu peux ensuite écrire : merci pour ton message. Je trouve que c’est une très bonne idée de partir étudier à l’étranger. Je vais à présent te parler de mon expérience personnelle. Comme Fabien est un ami, tu dois utiliser tu et non vous.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="experience">
+<h2>2. Raconter son expérience</h2>
+
+<p>Tu racontes ce que tu as vécu dans un pays étranger :</p>
+
+<div class="check"><input type="checkbox"><div>Le logement</div></div>
+<div class="check"><input type="checkbox"><div>La langue</div></div>
+<div class="check"><input type="checkbox"><div>Les études</div></div>
+<div class="check"><input type="checkbox"><div>Les difficultés</div></div>
+<div class="check"><input type="checkbox"><div>La famille ou les amis qui manquent</div></div>
+
+<div class="example">
+<strong>Exemple pour raconter ton expérience :</strong><br>
+Au début, ce n’était pas facile parce que je ne connaissais personne, <strong><strong>mais</strong></strong> j’ai fait des efforts pour parler avec les habitants.
+</div>
+
+<div class="example">
+<strong>Exemple avec conseil + argument :</strong><br>
+<strong><strong>Selon moi</strong></strong>, il est important d’apprendre rapidement la langue du pays. <strong><strong>Par exemple</strong></strong>, tu pourrais t’inscrire à un club de sport : comme cela, tu pourrais rencontrer de nouveaux amis et pratiquer la langue.
+</div>
+
+<p class="small">➡ Utilise le passé composé et l’imparfait.</p>
+
+<button onclick="lireTexte('Partie 3. Tu dois raconter ton expérience. Parle du logement, de la langue, des études ou des difficultés. Comme tu racontes quelque chose du passé, utilise le passé composé et l’imparfait. Tu peux aussi expliquer les efforts faits pour parler avec les habitants ou rencontrer de nouvelles personnes.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="avis">
+<h2>3. Donner son avis, argumenter et donner des conseils</h2>
+
+<p>Fabien veut savoir ce que tu penses des études à l’étranger.</p>
+
+<div class="example">
+<strong>Deux façons de répondre :</strong><br><br>
+<strong>1. Donner ton avis / argumenter :</strong><br>
+<strong>Selon moi</strong>, étudier à l’étranger est une bonne idée parce que cela permet d’apprendre une nouvelle langue et de devenir plus autonome. <strong>Par exemple</strong>, on doit se débrouiller seul pour les cours, les transports ou le logement.<br><br>
+
+<strong>2. Donner des conseils :</strong><br>
+<strong>Tu devrais</strong> te renseigner avant ton départ sur le pays, le logement et les études. <strong>Il faut que</strong> tu essaies aussi de parler rapidement avec les habitants pour progresser dans la langue.
+</div>
+
+<div class="check"><input type="checkbox"><div>Donner son opinion : <strong>Je pense que</strong>, à mon avis...</div></div>
+<div class="check"><input type="checkbox"><div>Donner des arguments</div></div>
+<div class="check"><input type="checkbox"><div>Développer les idées</div></div>
+<div class="check"><input type="checkbox"><div>Ajouter des exemples précis</div></div>
+
+<div class="example">
+<strong>Exemple :</strong><br>
+<strong>Je pense que</strong> c’est une bonne idée parce qu’on apprend une nouvelle langue et une autre culture. <strong>Par exemple</strong>, on découvre les habitudes de vie et les coutumes du pays.
+</div>
+
+<button onclick="lireTexte('Partie 4. L argumentation est très importante au niveau B1. Tu peux faire deux choses. D’abord, donner ton avis et argumenter, par exemple : selon moi, étudier à l’étranger est une bonne idée parce que cela permet d’apprendre une langue. Ensuite, donner des conseils, par exemple : tu devrais te renseigner avant ton départ, et il faut que tu parles avec les habitants pour progresser.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="efforts">
+<h2>4. Quels efforts faut-il faire quand on étudie à l’étranger ?</h2>
+
+<div class="check"><input type="checkbox"><div>Apprendre la langue du pays</div></div>
+<div class="check"><input type="checkbox"><div>S’adapter aux habitudes et aux règles</div></div>
+<div class="check"><input type="checkbox"><div>Être autonome</div></div>
+<div class="check"><input type="checkbox"><div>Faire des rencontres</div></div>
+<div class="check"><input type="checkbox"><div>Être motivé et persévérant</div></div>
+
+<div class="example">
+<strong>Exemple :</strong><br>
+Quand on arrive dans un nouveau pays, il faut faire des efforts pour parler la langue et rencontrer des personnes.
+</div>
+
+<button onclick="lireTexte('Partie 5. Étudier dans un pays étranger demande des efforts. Il faut apprendre la langue, s adapter aux règles du pays, être autonome et motivé.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="organisation">
+<h2>5. Organiser son texte en paragraphes</h2>
+
+<div class="plan">
+<div class="step"><strong>Paragraphe 1</strong><br>Introduction et réponse à Fabien</div>
+<div class="step"><strong>Paragraphe 2</strong><br>Ton expérience personnelle</div>
+<div class="step"><strong>Paragraphe 3</strong><br>Les difficultés</div>
+<div class="step"><strong>Paragraphe 4</strong><br>Les avantages et les exemples</div>
+<div class="step"><strong>Paragraphe 5</strong><br>Conclusion et conseil final</div>
+</div>
+
+<button onclick="lireTexte('Partie 6. Pour organiser ton texte, fais plusieurs paragraphes. Un paragraphe correspond à une idée principale.')">
+🔊 Écouter
+</button>
+</div>
+
+
+<div class="warning">
+<strong>Important :</strong> les mots en <strong>gras</strong> sont des expressions importantes au niveau B1 :
+<ul>
+<li>les connecteurs pour organiser les idées ;</li>
+<li>les expressions d’opinion pour donner son avis ;</li>
+<li>les exemples pour développer l’argumentation.</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>6. Connecteurs utiles</h2>
+
+<p><strong><strong>D’abord</strong></strong>, <strong>ensuite</strong>, <strong>puis</strong>, <strong>de plus</strong>, <strong>d’autre part</strong>, <strong>par exemple</strong>, <strong>enfin</strong>.</p>
+
+<div class="example">
+<strong>Exemple de paragraphe avec connecteurs :</strong><br>
+<strong><strong>D’abord</strong></strong>, étudier à l’étranger permet de devenir plus autonome. <strong><strong>De plus</strong></strong>, on peut apprendre une nouvelle langue plus rapidement. <strong><strong>Par exemple</strong></strong>, si tu t’inscris à une activité sportive ou culturelle, tu peux rencontrer des étudiants et pratiquer la langue du pays.
+</div>
+
+<div class="warning">
+Les connecteurs permettent de relier les idées et rendent le texte plus clair.
+</div>
+
+<button onclick="lireTexte('Partie 7. Utilise des connecteurs logiques comme d abord, ensuite, de plus, d autre part ou enfin pour organiser tes idées.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="checklist">
+<h2>Checklist avant de rendre le travail</h2>
+
+<div class="check"><input type="checkbox"><div>J’ai répondu à Fabien.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai utilisé « tu ».</div></div>
+<div class="check"><input type="checkbox"><div>J’ai raconté mon expérience.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai donné des arguments.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai donné des exemples.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai utilisé des connecteurs.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai organisé mon texte en paragraphes.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai vérifié les conjugaisons et les accords.</div></div>
+<div class="check"><input type="checkbox"><div>J’ai écrit au moins 160 mots.</div></div>
+
+<button onclick="lireTexte('Partie 8. Avant de rendre ton travail, vérifie les conjugaisons, les accords, les paragraphes et les exemples.')">
+🔊 Écouter
+</button>
+</div>
+
+<div class="card" id="bareme">
+<h2>Barème simplifié DELF B1</h2>
+
+<table>
+<tr>
+<th>Critère</th>
+<th>Ce qui est attendu</th>
+</tr>
+
+<tr>
+<td><strong>Réalisation de la tâche</strong></td>
+<td>Répondre au sujet, raconter son expérience, donner son avis et développer des arguments.</td>
+</tr>
+
+<tr>
+<td><strong>Cohérence et cohésion</strong></td>
+<td>Organiser les idées avec des paragraphes et des connecteurs.</td>
+</tr>
+
+<tr>
+<td><strong>Adéquation sociolinguistique</strong></td>
+<td>Respecter la forme du mail et utiliser le tutoiement.</td>
+</tr>
+
+<tr>
+<td><strong>Lexique</strong></td>
+<td>Employer un vocabulaire varié et précis.</td>
+</tr>
+
+<tr>
+<td><strong>Morphosyntaxe</strong></td>
+<td>Faire attention aux conjugaisons, aux accords et à la ponctuation.</td>
+</tr>
+</table>
+
+<button onclick="lireTexte('Partie 9. Le critère le plus important est la réalisation de la tâche. Tu dois répondre complètement au sujet et développer tes idées avec des arguments et des exemples.')">
+🔊 Écouter partie 9 : barème expliqué
+</button>
+
+</div>
+
+</div>
+
+<div style="position:fixed;bottom:20px;right:20px;z-index:999;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+  <button onclick="pauseLecture()" style="background:#f59e0b;color:white;border:none;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);">⏸ Pause</button>
+  <button onclick="reprendreLecture()" style="background:#16a34a;color:white;border:none;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);">▶ Reprendre</button>
+  <button onclick="repeterLecture()" style="background:#7c3aed;color:white;border:none;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);">🔁 Répéter</button>
+</div>
+
+
+<script>
+function updateProgress(){
+  const doc = document.documentElement;
+  const scrollTop = doc.scrollTop || document.body.scrollTop;
+  const scrollHeight = doc.scrollHeight - doc.clientHeight;
+  const percent = scrollHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / scrollHeight) * 100)) : 0;
+  const fill = document.getElementById('progressFill');
+  if(fill){ fill.style.width = percent + '%'; }
+
+  const items = document.querySelectorAll('.step-item');
+  items.forEach(item=>{
+    const target = document.getElementById(item.dataset.target);
+    if(!target) return;
+    const rect = target.getBoundingClientRect();
+    item.classList.remove('active','done');
+    if(rect.top < window.innerHeight * 0.35 && rect.bottom > window.innerHeight * 0.25){
+      item.classList.add('active');
+    }
+    if(rect.bottom < window.innerHeight * 0.3){
+      item.classList.add('done');
+    }
+  });
+}
+window.addEventListener('scroll', updateProgress);
+window.addEventListener('load', updateProgress);
+
+document.addEventListener('click', function(e){
+  const item = e.target.closest('.step-item');
+  if(!item) return;
+  const target = document.getElementById(item.dataset.target);
+  if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+});
+</script>
+
+</body>
+</html>
