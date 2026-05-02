@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Méthode DELF A2 - Production écrite</title>
+<style>
+:root{
+  --blue:#2563eb; --green:#16a34a; --orange:#f97316; --purple:#7c3aed; --dark:#1e293b; --bg:#f3f6fb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:#1f2937;
+  line-height:1.6;
+}
+.container{
+  max-width:1120px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+h1{text-align:center;color:var(--dark);margin-top:0}
+h2{color:var(--blue);margin-top:0}
+h3{color:#334155}
+.hero{
+  background:#eef6ff;
+  border:3px solid #93c5fd;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:24px;
+}
+.subject-box{
+  background:white;
+  border:3px solid #334155;
+  border-radius:14px;
+  padding:18px;
+  margin:14px 0;
+}
+.highlight{
+  background:#fef08a;
+  padding:1px 5px;
+  border-radius:4px;
+  font-weight:bold;
+}
+.card{
+  background:#f8fafc;
+  border:1px solid #dbeafe;
+  border-radius:14px;
+  padding:18px;
+  margin:18px 0;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+.step{
+  background:white;
+  border:2px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px;
+}
+.step .picto{
+  font-size:2rem;
+  display:block;
+  margin-bottom:6px;
+}
+.example{
+  background:#ecfeff;
+  border-left:5px solid #06b6d4;
+  border-radius:10px;
+  padding:12px;
+  margin:12px 0;
+}
+.warning{
+  background:#fff7ed;
+  border-left:5px solid #f97316;
+  border-radius:10px;
+  padding:12px;
+  margin:12px 0;
+}
+.good{
+  background:#f0fdf4;
+  border-left:5px solid #22c55e;
+  border-radius:10px;
+  padding:12px;
+  margin:12px 0;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:bold;
+  color:white;
+  background:var(--blue);
+  margin-bottom:8px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:18px;
+}
+th{
+  background:#3498db;
+  color:white;
+  padding:10px;
+  text-align:left;
+}
+td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  vertical-align:top;
+}
+.progress-panel{
+  position:fixed;
+  left:18px;
+  top:90px;
+  width:185px;
+  background:white;
+  border:2px solid #dbeafe;
+  border-radius:16px;
+  padding:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  z-index:998;
+  font-size:.86rem;
+}
+.progress-panel h3{margin:0 0 8px;color:var(--blue);font-size:1rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.progressfill{height:100%;width:0%;background:#22c55e;transition:width .2s ease}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}
+.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:var(--blue);font-weight:bold}
+.step-item.done{color:#166534}
+.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}
+.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:8px;
+}
+button:hover{background:#1d4ed8}
+.audio-controls{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  z-index:999;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.audio-controls button{
+  padding:12px 16px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:bold;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}
+.small{font-size:.95rem;color:#475569}
+.model{
+  background:#f3e8ff;
+  border:2px solid #c084fc;
+  border-radius:16px;
+  padding:18px;
+  margin:18px 0;
+}
+.wordcount{
+  display:inline-block;
+  background:#111827;
+  color:white;
+  border-radius:999px;
+  padding:5px 12px;
+  font-weight:bold;
+}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:0 auto 18px}}
+@media print{
+  body{background:white;padding:0}
+  .container{box-shadow:none;max-width:none}
+  .progress-panel,.audio-controls,button{display:none}
+}
+</style>
+<script>
+let dernierTexteLu="";
+function choisirVoixFrancaise(){
+  const voix=speechSynthesis.getVoices();
+  return voix.find(v=>v.lang==="fr-FR" && /google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))
+  || voix.find(v=>v.lang==="fr-FR")
+  || voix.find(v=>v.lang && v.lang.startsWith("fr"))
+  || voix[0];
+}
+function lireTexte(texte){
+  if(!("speechSynthesis" in window)){alert("Lecture audio indisponible.");return;}
+  dernierTexteLu=texte;
+  speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(texte);
+    u.lang="fr-FR";
+    u.rate=0.86;
+    u.pitch=1.03;
+    u.volume=1;
+    const voix=choisirVoixFrancaise();
+    if(voix){u.voice=voix;}
+    speechSynthesis.speak(u);
+  },120);
+}
+function pauseLecture(){if(speechSynthesis.speaking && !speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if(speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+</script>
+</head>
+<body>
+
+<div class="progress-panel">
+  <h3>Ma progression</h3>
+  <div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+  <div class="step-item" data-target="sujet"><span class="step-dot"></span> Sujet</div>
+  <div class="step-item" data-target="contraintes"><span class="step-dot"></span> Contraintes</div>
+  <div class="step-item" data-target="brouillon"><span class="step-dot"></span> Brouillon</div>
+  <div class="step-item" data-target="plan"><span class="step-dot"></span> Plan</div>
+  <div class="step-item" data-target="langue"><span class="step-dot"></span> Langue A2</div>
+  <div class="step-item" data-target="modele"><span class="step-dot"></span> Modèle</div>
+  <div class="step-item" data-target="bareme"><span class="step-dot"></span> Barème</div>
+  <div class="step-item" data-target="checklist"><span class="step-dot"></span> Checklist</div>
+</div>
+
+<div class="container">
+<h1>DELF A2 – Production écrite</h1>
+<p class="small">Fiche méthode pour écrire une réponse claire de 60 mots minimum.</p>
+
+<section class="hero" id="sujet">
+<h2>Le sujet</h2>
+<div class="subject-box">
+<strong>Exercice 1 – 12,5 points</strong><br><br>
+Vous êtes parti(e) en vacances pendant une semaine. Vous écrivez à un(e) ami(e) francophone pour lui raconter vos vacances. Vous lui expliquez où vous êtes allé(e), avec qui et ce que vous avez fait. Vous donnez vos impressions sur vos vacances.<br><br>
+<span class="wordcount">60 mots minimum</span>
+</div>
+
+<button onclick="lireTexte('Sujet. Tu es parti en vacances pendant une semaine. Tu écris à un ami francophone pour raconter tes vacances. Tu dois dire où tu es allé, avec qui tu es parti, ce que tu as fait et donner tes impressions. Le texte doit faire au moins soixante mots.')">🔊 Écouter le sujet expliqué</button>
+</section>
+
+<section class="card" id="contraintes">
+<span class="badge">🎯 Ce qu’il faut faire</span>
+<h2>Les 5 contraintes du sujet</h2>
+<div class="grid">
+  <div class="step"><span class="picto">✉️</span><strong>1. Écrire à un ami</strong><br>Commence par une formule simple : <strong>Salut</strong> ou <strong>Bonjour</strong>.</div>
+  <div class="step"><span class="picto">📍</span><strong>2. Dire où</strong><br>Explique le lieu : mer, montagne, ville, pays.</div>
+  <div class="step"><span class="picto">👥</span><strong>3. Dire avec qui</strong><br>Famille, amis, cousins, classe...</div>
+  <div class="step"><span class="picto">🏖️</span><strong>4. Dire ce que tu as fait</strong><br>Visites, plage, sport, restaurant...</div>
+  <div class="step"><span class="picto">😊</span><strong>5. Donner tes impressions</strong><br>J’ai aimé, c’était agréable, je me suis amusé...</div>
+</div>
+
+<div class="warning">
+<strong>Important A2 :</strong> tu dois commencer à <strong>décrire</strong>, <strong>expliquer un peu</strong> et <strong>justifier simplement</strong> avec des mots comme <strong>parce que</strong>, <strong>mais</strong>, <strong>de plus</strong>.
+</div>
+
+<button onclick="lireTexte('Il y a cinq contraintes. Tu dois écrire à un ami, dire où tu es allé, avec qui tu es parti, ce que tu as fait et donner tes impressions. Au niveau A2, tu dois décrire, expliquer un peu et justifier simplement avec parce que, mais ou de plus.')">🔊 Écouter les contraintes</button>
+</section>
+
+<section class="card" id="brouillon">
+<span class="badge" style="background:#f97316">📝 Brouillon rapide</span>
+<h2>Préparer avant d’écrire</h2>
+<p>Avant d’écrire, note seulement des mots-clés.</p>
+
+<div class="grid">
+  <div class="step"><span class="picto">📍</span><strong>Où ?</strong><br>À Marseille / à Paris / au Sénégal / à la montagne</div>
+  <div class="step"><span class="picto">👨‍👩‍👧</span><strong>Avec qui ?</strong><br>avec ma famille / avec mes amis / avec mon cousin</div>
+  <div class="step"><span class="picto">🚶</span><strong>Activités</strong><br>visiter, nager, manger, jouer, marcher</div>
+  <div class="step"><span class="picto">⭐</span><strong>Impressions</strong><br>super, agréable, intéressant, fatigant, trop court</div>
+</div>
+
+<div class="example">
+<strong>Exemple de brouillon :</strong><br>
+Lieu : Marseille<br>
+Avec qui : famille<br>
+Activités : plage, vieux port, restaurant<br>
+Impressions : très bien, soleil, un peu fatigant
+</div>
+
+<button onclick="lireTexte('Avant d écrire, prépare un brouillon rapide. Note où tu es allé, avec qui, les activités et tes impressions. Il ne faut pas écrire tout le texte au brouillon.')">🔊 Écouter le brouillon</button>
+</section>
+
+<section class="card" id="plan">
+<span class="badge" style="background:#16a34a">🏗️ Plan conseillé</span>
+<h2>Un texte simple en 4 parties</h2>
+
+<div class="grid">
+  <div class="step"><span class="picto">👋</span><strong>1. Saluer</strong><br>Salut / Bonjour + phrase d’introduction.</div>
+  <div class="step"><span class="picto">📍</span><strong>2. Lieu + personnes</strong><br>Où ? Avec qui ?</div>
+  <div class="step"><span class="picto">🏖️</span><strong>3. Activités</strong><br>Ce que tu as fait.</div>
+  <div class="step"><span class="picto">😊</span><strong>4. Impressions + fin</strong><br>Ce que tu as pensé + au revoir.</div>
+</div>
+
+<div class="example">
+<strong>Connecteurs simples :</strong> <strong>d’abord</strong>, <strong>ensuite</strong>, <strong>puis</strong>, <strong>de plus</strong>, <strong>mais</strong>, <strong>parce que</strong>, <strong>enfin</strong>.
+</div>
+
+<button onclick="lireTexte('Plan conseillé. Tu peux écrire ton texte en quatre parties. D abord, tu salues ton ami. Ensuite, tu dis où tu es allé et avec qui. Puis, tu racontes les activités. Enfin, tu donnes tes impressions et tu termines le message.')">🔊 Écouter le plan</button>
+</section>
+
+<section class="card" id="langue">
+<span class="badge" style="background:#7c3aed">🧩 Langue attendue en A2</span>
+<h2>Ce qu’il faut essayer d’utiliser</h2>
+
+<table>
+<tr>
+<th>Compétence</th>
+<th>Ce qu’on attend en A2</th>
+<th>Exemples</th>
+</tr>
+<tr>
+<td><strong>Décrire</strong></td>
+<td>Donner quelques détails simples.</td>
+<td>La ville était grande. La plage était belle.</td>
+</tr>
+<tr>
+<td><strong>Expliquer / justifier</strong></td>
+<td>Dire pourquoi avec une phrase simple.</td>
+<td>J’ai aimé parce qu’il faisait beau.</td>
+</tr>
+<tr>
+<td><strong>Connecteurs</strong></td>
+<td>Relier les idées.</td>
+<td>D’abord, ensuite, de plus, mais, enfin.</td>
+</tr>
+<tr>
+<td><strong>Temps</strong></td>
+<td>Utiliser surtout le passé pour raconter.</td>
+<td>Je suis allé, j’ai visité, c’était, nous avons mangé.</td>
+</tr>
+<tr>
+<td><strong>Orthographe</strong></td>
+<td>Quelques erreurs sont possibles, mais le texte doit rester compréhensible.</td>
+<td>Relis les verbes et les accords importants.</td>
+</tr>
+</table>
+
+<div class="warning">
+<strong>Temps à maîtriser :</strong> présent, passé composé, imparfait, futur proche / futur simple. En A2, quelques erreurs sont encore acceptées, mais il faut que le lecteur comprenne bien.
+</div>
+
+<button onclick="lireTexte('En A2, on attend des phrases simples mais compréhensibles. Tu dois décrire, expliquer un peu, justifier simplement et utiliser quelques connecteurs. Pour raconter des vacances, utilise surtout le passé composé et l imparfait.')">🔊 Écouter la langue attendue</button>
+</section>
+
+<section class="model" id="modele">
+<h2>Exemple de réponse A2</h2>
+<p class="small">Modèle de plus de 60 mots, avec des phrases simples et des connecteurs.</p>
+
+<div class="subject-box" style="font-family:Arial,sans-serif">
+Salut Aminata,<br><br>
+
+La semaine dernière, je suis allé à Marseille avec ma famille. <strong>D’abord</strong>, nous avons visité le Vieux-Port et nous avons mangé dans un petit restaurant. <strong>Ensuite</strong>, nous sommes allés à la plage. J’ai nagé et j’ai joué au football avec mon frère.<br><br>
+
+J’ai beaucoup aimé ces vacances <strong>parce qu’</strong>il faisait beau et la ville était très agréable. <strong>Mais</strong> le voyage était un peu long. <strong>Enfin</strong>, je suis très content et j’aimerais y retourner un jour.<br><br>
+
+À bientôt,<br>
+Mamadou
+</div>
+
+<div class="good">
+<strong>Pourquoi c’est réussi ?</strong>
+<ul>
+<li>Le message est adressé à un ami.</li>
+<li>Le lieu est indiqué : Marseille.</li>
+<li>On sait avec qui il est parti : sa famille.</li>
+<li>Les activités sont racontées.</li>
+<li>Il donne ses impressions et justifie avec <strong>parce que</strong>.</li>
+<li>Le texte fait plus de 60 mots.</li>
+</ul>
+</div>
+
+<button onclick="lireTexte('Exemple de réponse. Salut Aminata. La semaine dernière, je suis allé à Marseille avec ma famille. D abord, nous avons visité le Vieux Port et nous avons mangé dans un petit restaurant. Ensuite, nous sommes allés à la plage. J ai nagé et j ai joué au football avec mon frère. J ai beaucoup aimé ces vacances parce qu il faisait beau et la ville était très agréable. Mais le voyage était un peu long. Enfin, je suis très content et j aimerais y retourner un jour. À bientôt, Mamadou.')">🔊 Écouter le modèle</button>
+</section>
+
+<section class="card" id="bareme">
+<span class="badge" style="background:#334155">📊 Barème simplifié A2</span>
+<h2>Comment la copie est évaluée ?</h2>
+
+<table>
+<tr>
+<th>Critère</th>
+<th>Ce que cela veut dire pour toi</th>
+<th>Conseil</th>
+</tr>
+<tr>
+<td><strong>Réalisation de la tâche</strong></td>
+<td>Tu réponds bien au sujet : lieu, personnes, activités, impressions.</td>
+<td>Vérifie que tu as répondu à toutes les questions.</td>
+</tr>
+<tr>
+<td><strong>Cohérence et cohésion</strong></td>
+<td>Ton texte est organisé et on comprend l’ordre des idées.</td>
+<td>Utilise <strong>d’abord</strong>, <strong>ensuite</strong>, <strong>enfin</strong>.</td>
+</tr>
+<tr>
+<td><strong>Adéquation sociolinguistique</strong></td>
+<td>Tu écris à un ami avec une formule de début et de fin.</td>
+<td>Utilise <strong>Salut</strong>, <strong>Bonjour</strong>, <strong>À bientôt</strong>.</td>
+</tr>
+<tr>
+<td><strong>Lexique</strong></td>
+<td>Tu utilises des mots adaptés : vacances, activités, impressions.</td>
+<td>Évite de répéter toujours <strong>bien</strong> ou <strong>super</strong>.</td>
+</tr>
+<tr>
+<td><strong>Morphosyntaxe</strong></td>
+<td>Tu fais attention aux verbes et aux accords.</td>
+<td>Relis surtout le passé composé : <strong>je suis allé</strong>, <strong>j’ai visité</strong>.</td>
+</tr>
+</table>
+
+<button onclick="lireTexte('Barème simplifié. La copie est évaluée sur cinq critères : répondre au sujet, organiser le texte, respecter la forme du message, utiliser le bon vocabulaire et faire attention aux verbes et aux accords. En A2, quelques erreurs sont possibles, mais le texte doit rester clair.')">🔊 Écouter le barème</button>
+</section>
+
+<section class="card" id="checklist">
+<span class="badge" style="background:#dc2626">✅ Checklist avant de rendre</span>
+<h2>Je vérifie ma copie</h2>
+
+<div class="grid">
+  <div class="step">☐ J’ai écrit à un ami.</div>
+  <div class="step">☐ J’ai dit où je suis allé.</div>
+  <div class="step">☐ J’ai dit avec qui.</div>
+  <div class="step">☐ J’ai raconté ce que j’ai fait.</div>
+  <div class="step">☐ J’ai donné mes impressions.</div>
+  <div class="step">☐ J’ai utilisé des connecteurs.</div>
+  <div class="step">☐ J’ai écrit au moins 60 mots.</div>
+  <div class="step">☐ J’ai relu les verbes au passé.</div>
+</div>
+
+<button onclick="lireTexte('Checklist. Avant de rendre, vérifie que tu as écrit à un ami, indiqué le lieu, les personnes, les activités et tes impressions. Vérifie aussi que tu as écrit au moins soixante mots et que les verbes au passé sont compréhensibles.')">🔊 Écouter la checklist</button>
+</section>
+
+</div>
+
+<div class="audio-controls">
+<button class="pause" onclick="pauseLecture()">⏸ Pause</button>
+<button class="resume" onclick="reprendreLecture()">▶ Reprendre</button>
+<button class="repeat" onclick="repeterLecture()">🔁 Répéter</button>
+</div>
+
+<script>
+function updateProgress(){
+ const doc=document.documentElement;
+ const scrollTop=doc.scrollTop || document.body.scrollTop;
+ const scrollHeight=doc.scrollHeight-doc.clientHeight;
+ const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;
+ const fill=document.getElementById("progressFill");
+ if(fill){fill.style.width=percent+"%";}
+ document.querySelectorAll(".step-item").forEach(item=>{
+   const target=document.getElementById(item.dataset.target);
+   if(!target)return;
+   const rect=target.getBoundingClientRect();
+   item.classList.remove("active","done");
+   if(rect.top<window.innerHeight*.35 && rect.bottom>window.innerHeight*.25){item.classList.add("active");}
+   if(rect.bottom<window.innerHeight*.3){item.classList.add("done");}
+ });
+}
+window.addEventListener("scroll",updateProgress);
+window.addEventListener("load",updateProgress);
+document.addEventListener("click",function(e){
+ const item=e.target.closest(".step-item");
+ if(!item)return;
+ const target=document.getElementById(item.dataset.target);
+ if(target){target.scrollIntoView({behavior:"smooth",block:"start"});}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Guide DELF A2 - Production orale</title>
+<style>
+:root{
+  --blue:#2563eb; --green:#16a34a; --orange:#f97316; --purple:#7c3aed; --dark:#1e293b; --bg:#f3f6fb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:20px; font-family:Arial,sans-serif; background:var(--bg); color:#1f2937; line-height:1.6;
+}
+.container{
+  max-width:1120px; margin:auto; background:white; padding:30px; border-radius:20px; box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+h1{text-align:center;color:var(--dark);margin-top:0}
+h2{color:var(--blue);margin-top:0}
+h3{color:#334155}
+.hero{
+  background:#eef6ff; border:3px solid #93c5fd; border-radius:18px; padding:20px; margin-bottom:24px;
+}
+.card{
+  background:#f8fafc; border:1px solid #dbeafe; border-radius:14px; padding:18px; margin:18px 0;
+}
+.epreuve-overview{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin:20px 0 26px;
+}
+.epreuve-tile{
+  border-radius:18px; padding:18px; border:3px solid transparent; box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+.tile-icon{font-size:2.2rem;display:block;margin-bottom:8px}
+.tile-1{background:#eff6ff;border-color:#60a5fa}
+.tile-2{background:#fef3c7;border-color:#f59e0b}
+.tile-3{background:#ecfdf5;border-color:#22c55e}
+.badge{
+  display:inline-flex; align-items:center; gap:8px; border-radius:999px; padding:6px 12px; font-weight:bold; color:white; background:var(--blue); margin-bottom:8px;
+}
+.badge-1{background:#2563eb}.badge-2{background:#f59e0b}.badge-3{background:#16a34a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.step{
+  background:#fff; border:2px solid #e5e7eb; border-radius:14px; padding:14px;
+}
+.example{
+  background:#ecfeff; border-left:5px solid #06b6d4; border-radius:10px; padding:12px; margin:12px 0;
+}
+.warning{
+  background:#fff7ed; border-left:5px solid #f97316; border-radius:10px; padding:12px; margin:12px 0;
+}
+.subject-box{
+  background:#fff; border:3px solid #334155; border-radius:12px; padding:16px; margin:14px 0; font-family:"Courier New",monospace;
+}
+.highlight{background:#fef08a;padding:1px 5px;border-radius:4px;font-weight:bold}
+.theme-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:14px 0;
+}
+.theme-card{
+  background:white; border:2px solid #e5e7eb; border-radius:14px; padding:12px;
+}
+.theme-card .emoji{font-size:2rem;display:block;margin-bottom:6px}
+.theme-card h4{margin:0 0 6px;color:#174ea6}
+.schema{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:14px 0;
+}
+.schema-step{
+  background:white; border:2px solid #e5e7eb; border-radius:14px; padding:12px; text-align:center;
+}
+.schema-step .picto{font-size:2rem;display:block;margin-bottom:6px}
+.progress-panel{
+  position:fixed; left:18px; top:90px; width:180px; background:white; border:2px solid #dbeafe;
+  border-radius:16px; padding:12px; box-shadow:0 4px 12px rgba(0,0,0,.12); z-index:998; font-size:.86rem;
+}
+.progress-panel h3{margin:0 0 8px;color:var(--blue);font-size:1rem}
+.progressbar{width:100%;height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.progressfill{height:100%;width:0%;background:#22c55e;transition:width .2s ease}
+.step-item{display:flex;gap:6px;align-items:center;margin:6px 0;color:#64748b;cursor:pointer}
+.step-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;flex:0 0 auto}
+.step-item.active{color:var(--blue);font-weight:bold}
+.step-item.done{color:#166534}
+.step-item.done .step-dot{background:#22c55e;border-color:#22c55e}
+.step-item.active .step-dot{background:#93c5fd;border-color:#2563eb}
+button{
+  background:#2563eb;color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;margin-top:8px;
+}
+button:hover{background:#1d4ed8}
+.audio-controls{
+  position:fixed; bottom:20px; right:20px; z-index:999; display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+}
+.audio-controls button{padding:12px 16px;border-radius:12px;font-size:15px;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.pause{background:#f59e0b}.resume{background:#16a34a}.repeat{background:#7c3aed}
+.small{font-size:.95rem;color:#475569}
+ul.compact{margin:8px 0 0;padding-left:18px}
+@media(max-width:1280px){.progress-panel{position:static;width:auto;margin:0 auto 18px}}
+@media print{
+  body{background:white;padding:0}.container{box-shadow:none;max-width:none}.progress-panel,.audio-controls,button{display:none}
+}
+</style>
+<script>
+let dernierTexteLu="";
+function choisirVoixFrancaise(){
+  const voix=speechSynthesis.getVoices();
+  return voix.find(v=>v.lang==="fr-FR" && /google|audrey|thomas|hortense|amelie|paul|online|natural/i.test(v.name))
+  || voix.find(v=>v.lang==="fr-FR")
+  || voix.find(v=>v.lang && v.lang.startsWith("fr"))
+  || voix[0];
+}
+function lireTexte(texte){
+  if(!("speechSynthesis" in window)){alert("Lecture audio indisponible.");return;}
+  dernierTexteLu=texte; speechSynthesis.cancel();
+  setTimeout(()=>{
+    const u=new SpeechSynthesisUtterance(texte);
+    u.lang="fr-FR"; u.rate=0.86; u.pitch=1.03; u.volume=1;
+    const voix=choisirVoixFrancaise(); if(voix){u.voice=voix;}
+    speechSynthesis.speak(u);
+  },120);
+}
+function pauseLecture(){if(speechSynthesis.speaking && !speechSynthesis.paused){speechSynthesis.pause();}}
+function reprendreLecture(){if(speechSynthesis.paused){speechSynthesis.resume();}}
+function repeterLecture(){if(dernierTexteLu){lireTexte(dernierTexteLu);}}
+window.addEventListener("load",()=>speechSynthesis.getVoices());
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+</script>
+</head>
+<body>
+
+<div class="progress-panel">
+  <h3>Ma progression</h3>
+  <div class="progressbar"><div class="progressfill" id="progressFill"></div></div>
+  <div class="step-item" data-target="general"><span class="step-dot"></span> Général</div>
+  <div class="step-item" data-target="epreuve1"><span class="step-dot"></span> Épreuve 1</div>
+  <div class="step-item" data-target="epreuve2"><span class="step-dot"></span> Épreuve 2</div>
+  <div class="step-item" data-target="themes"><span class="step-dot"></span> Sujets</div>
+  <div class="step-item" data-target="epreuve3"><span class="step-dot"></span> Épreuve 3</div>
+  <div class="step-item" data-target="dialogue"><span class="step-dot"></span> Dialogue</div>
+  <div class="step-item" data-target="checklist"><span class="step-dot"></span> Checklist</div>
+</div>
+
+<div class="container">
+<h1>DELF A2 – Production orale</h1>
+<p class="small">Fiche méthode : réussir les 3 parties de l’épreuve orale A2.</p>
+
+<section class="hero" id="general">
+<h2>Présentation générale</h2>
+<p>Au niveau A2, tu dois parler de sujets simples et quotidiens. Les phrases peuvent être moins complexes qu’en B1, mais il faut déjà <strong>décrire</strong>, <strong>expliquer</strong>, <strong>détailler un peu</strong> et <strong>justifier simplement</strong>.</p>
+
+<div class="epreuve-overview">
+  <div class="epreuve-tile tile-1">
+    <span class="tile-icon">🗣️</span>
+    <h3>Épreuve 1</h3>
+    <p><strong>Entretien dirigé</strong><br>Je parle de moi. Objectif : dépasser 1 minute.</p>
+  </div>
+  <div class="epreuve-tile tile-2">
+    <span class="tile-icon">🧍📢</span>
+    <h3>Épreuve 2</h3>
+    <p><strong>Monologue suivi</strong><br>Je parle seul sur un sujet du quotidien pendant environ 2 minutes.</p>
+  </div>
+  <div class="epreuve-tile tile-3">
+    <span class="tile-icon">👥💬</span>
+    <h3>Épreuve 3</h3>
+    <p><strong>Interaction</strong><br>Je joue une situation avec une autre personne.</p>
+  </div>
+</div>
+
+<div class="warning">
+<strong>À retenir :</strong> ne réponds pas avec un seul mot. Fais des phrases simples mais complètes : sujet + verbe + complément + petite justification.
+</div>
+
+<button onclick="lireTexte('Présentation générale. Au niveau A2, tu dois parler de sujets simples du quotidien. Tu dois déjà décrire, expliquer, détailler un peu et justifier simplement. Il y a trois parties : entretien dirigé, monologue suivi et interaction.')">🔊 Écouter présentation générale</button>
+</section>
+
+<section class="card" id="epreuve1">
+<div class="badge badge-1">🗣️ Épreuve 1</div>
+<h2>Entretien dirigé : parler de soi</h2>
+<p><strong>Objectif :</strong> parler un peu plus d’une minute. L’examinateur peut poser des questions simples.</p>
+
+<div class="schema">
+  <div class="schema-step"><span class="picto">🙋</span><strong>Qui je suis</strong><br>nom, âge, pays</div>
+  <div class="schema-step"><span class="picto">🏠</span><strong>D’où je viens</strong><br>ville, famille, arrivée</div>
+  <div class="schema-step"><span class="picto">❤️</span><strong>Ce que j’aime</strong><br>loisirs, goûts</div>
+  <div class="schema-step"><span class="picto">🎯</span><strong>Mes projets</strong><br>école, métier, futur</div>
+</div>
+
+<div class="example">
+<strong>Exemple simple :</strong><br>
+Bonjour, je m’appelle Adam. Je viens du Sénégal, un pays situé en Afrique de l’Ouest. Aujourd’hui, je suis élève au lycée en France. J’aime le football parce que je joue avec mes amis le week-end. Plus tard, je voudrais réussir mon examen et travailler dans la mécanique. Merci.
+</div>
+
+<div class="warning">
+<strong>Ce qui rapporte des points :</strong> parler assez longtemps, faire des phrases complètes, utiliser quelques connecteurs comme <strong>et</strong>, <strong>mais</strong>, <strong>parce que</strong>, <strong>aussi</strong>, <strong>plus tard</strong>.
+</div>
+
+<button onclick="lireTexte('Épreuve 1. Tu dois parler de toi pendant un peu plus d une minute. Tu peux dire qui tu es, d où tu viens, ce que tu aimes et ce que tu voudrais faire plus tard. Fais des phrases simples mais complètes.')">🔊 Écouter épreuve 1</button>
+</section>
+
+<section class="card" id="epreuve2">
+<div class="badge badge-2">🧍📢 Épreuve 2</div>
+<h2>Monologue suivi : parler seul sur un sujet</h2>
+<p><strong>Objectif :</strong> parler environ 2 minutes. Il faut au moins dépasser 1 minute. Tu dois répondre à toutes les questions du sujet.</p>
+
+<h3>Exemple de sujet : décrivez votre pays</h3>
+<div class="subject-box">
+<strong>Décrivez votre pays.</strong><br><br>
+1. Qu’est-ce que vous aimez dans votre pays ?<br>
+2. Y a-t-il des choses que vous n’aimez pas ?<br>
+3. Expliquez pourquoi.
+</div>
+
+<div class="schema">
+  <div class="schema-step"><span class="picto">🌍</span><strong>1. Choisir</strong><br>Mon pays</div>
+  <div class="schema-step"><span class="picto">🏙️</span><strong>2. Décrire</strong><br>ville, climat, paysages</div>
+  <div class="schema-step"><span class="picto">👍</span><strong>3. Dire ce que j’aime</strong><br>famille, nourriture, culture</div>
+  <div class="schema-step"><span class="picto">👎</span><strong>4. Dire ce que j’aime moins</strong><br>chaleur, transport, bruit</div>
+</div>
+
+<div class="example">
+<strong>Exemple de réponse :</strong><br>
+Je vais parler de mon pays, le Sénégal. C’est un pays situé en Afrique de l’Ouest. Il y a de grandes villes, comme Dakar, mais aussi des villages et de beaux paysages. J’aime mon pays parce que les gens sont accueillants et la nourriture est très bonne. Par exemple, j’aime beaucoup le thiéboudienne. Ce que j’aime moins, c’est parfois la chaleur et les problèmes de transport. Mais, pour moi, c’est un pays très important parce que ma famille y vit.
+</div>
+
+<button onclick="lireTexte('Épreuve 2. Tu dois parler seul sur un sujet du quotidien. Par exemple : décrivez votre pays. Il faut répondre à toutes les questions : décrire le pays, dire ce que tu aimes, dire ce que tu n aimes pas et expliquer pourquoi. Tu dois parler au moins plus d une minute.')">🔊 Écouter épreuve 2</button>
+</section>
+
+<section class="card" id="themes">
+<h2>Exemples de sujets possibles pour le monologue</h2>
+<p>Les thèmes sont simples et proches de la vie quotidienne.</p>
+
+<div class="theme-grid">
+  <div class="theme-card"><span class="emoji">🌍</span><h4>Pays / ville</h4><p>Décrire son pays, sa ville, ce qu’on aime.</p></div>
+  <div class="theme-card"><span class="emoji">👨‍👩‍👧‍👦</span><h4>Famille</h4><p>Présenter sa famille, ses habitudes.</p></div>
+  <div class="theme-card"><span class="emoji">👕</span><h4>Vêtements / magasins</h4><p>Parler de ses vêtements préférés, faire les magasins.</p></div>
+  <div class="theme-card"><span class="emoji">📻</span><h4>Radio / musique</h4><p>Dire ce qu’on écoute et pourquoi.</p></div>
+  <div class="theme-card"><span class="emoji">🐾</span><h4>Animaux</h4><p>Parler d’un animal qu’on aime.</p></div>
+  <div class="theme-card"><span class="emoji">⚽</span><h4>Sports / loisirs</h4><p>Décrire une activité et justifier ses goûts.</p></div>
+  <div class="theme-card"><span class="emoji">🎬</span><h4>Concerts / acteurs</h4><p>Parler d’une sortie ou d’une personnalité.</p></div>
+  <div class="theme-card"><span class="emoji">🍲</span><h4>Plats préférés</h4><p>Décrire un plat, ses ingrédients, son origine.</p></div>
+  <div class="theme-card"><span class="emoji">💻</span><h4>Ordinateurs</h4><p>Dire à quoi ils servent, avantages et limites.</p></div>
+  <div class="theme-card"><span class="emoji">🏫</span><h4>École</h4><p>Matières, journée de classe, métier futur.</p></div>
+</div>
+
+<button onclick="lireTexte('Les sujets du monologue sont des sujets du quotidien : pays, famille, vêtements, magasins, radio, animaux, sports, loisirs, nourriture, ordinateurs, école, matières et métiers.')">🔊 Écouter les thèmes possibles</button>
+</section>
+
+<section class="card" id="epreuve3">
+<div class="badge badge-3">👥💬 Épreuve 3</div>
+<h2>Interaction : jouer une situation</h2>
+<p><strong>Objectif :</strong> parler avec une autre personne pendant environ 3 à 4 minutes. C’est un jeu de rôle.</p>
+
+<h3>Exemple de sujet : visite d’un ami</h3>
+<div class="subject-box">
+Vous recevez chez vous un ami français qui ne connaît pas votre ville.<br><br>
+Vous lui proposez <strong>des activités que vous pouvez faire ensemble pour découvrir votre ville</strong>.<br><br>
+Vous vous mettez d’accord sur <strong>un programme</strong>.
+</div>
+
+<div class="warning">
+<strong>À retenir :</strong> c’est au candidat de commencer. Il faut dire <strong>bonjour</strong>, utiliser <strong>tu</strong> si c’est un ami, proposer des activités, poser des questions, se mettre d’accord et dire <strong>au revoir</strong>.
+</div>
+
+<div class="schema">
+  <div class="schema-step"><span class="picto">👋</span><strong>1. Saluer</strong><br>Salut, ça va ?</div>
+  <div class="schema-step"><span class="picto">🏛️</span><strong>2. Proposer</strong><br>musée, concert, promenade</div>
+  <div class="schema-step"><span class="picto">❓</span><strong>3. Demander</strong><br>Qu’est-ce que tu en penses ?</div>
+  <div class="schema-step"><span class="picto">✅</span><strong>4. Décider</strong><br>On se retrouve à...</div>
+</div>
+
+<button onclick="lireTexte('Épreuve 3. C est un jeu de rôle. Tu dois commencer la conversation, dire bonjour, proposer des activités, poser des questions et te mettre d accord avec ton ami. Il faut aussi dire au revoir à la fin.')">🔊 Écouter épreuve 3</button>
+</section>
+
+<section class="card" id="dialogue">
+<h2>Exemple de dialogue pour l’interaction</h2>
+
+<div class="example">
+<strong>Candidat :</strong> Salut, ça va ? Comme tu ne connais pas ma ville, je peux te proposer quelques activités.<br><br>
+
+<strong>Ami :</strong> Oui, avec plaisir. Qu’est-ce qu’on peut faire ?<br><br>
+
+<strong>Candidat :</strong> On pourrait visiter la cathédrale le matin, parce que c’est un monument important. Ensuite, on pourrait aller au musée ou se promener dans le centre-ville. Qu’est-ce que tu préfères ?<br><br>
+
+<strong>Ami :</strong> Je préfère me promener et visiter la cathédrale.<br><br>
+
+<strong>Candidat :</strong> D’accord. Alors, on se retrouve à 10 heures devant la gare, puis on va visiter la cathédrale. Après, on peut manger ensemble dans un petit restaurant. Ça te va ?<br><br>
+
+<strong>Ami :</strong> Oui, c’est parfait.<br><br>
+
+<strong>Candidat :</strong> Très bien, à demain !<br>
+<strong>Ami :</strong> À demain !
+</div>
+
+<div class="warning">
+<strong>Expressions utiles :</strong> <strong>Que penses-tu de... ?</strong> / <strong>On pourrait...</strong> / <strong>Tu préfères...</strong> / <strong>On se retrouve à quelle heure ?</strong> / <strong>Ça te va ?</strong>
+</div>
+
+<button onclick="lireTexte('Exemple de dialogue. Salut, ça va ? Comme tu ne connais pas ma ville, je peux te proposer quelques activités. On pourrait visiter la cathédrale le matin parce que c est un monument important. Ensuite, on pourrait aller au musée ou se promener dans le centre-ville. Qu est-ce que tu préfères ? D accord, on se retrouve à dix heures devant la gare. Ça te va ?')">🔊 Écouter le dialogue</button>
+</section>
+
+<section class="card" id="checklist">
+<h2>Checklist A2 avant l’oral</h2>
+<ul>
+<li>Je fais des phrases complètes.</li>
+<li>Je parle assez longtemps : au moins plus d’une minute pour les premières réponses.</li>
+<li>Je décris simplement : pays, famille, école, goûts.</li>
+<li>Je justifie avec <strong>parce que</strong>.</li>
+<li>J’utilise des connecteurs simples : <strong>et</strong>, <strong>mais</strong>, <strong>aussi</strong>, <strong>ensuite</strong>, <strong>par exemple</strong>.</li>
+<li>Dans l’interaction, je dis bonjour et au revoir.</li>
+<li>Je pose des questions : <strong>Qu’est-ce que tu préfères ?</strong>, <strong>Ça te va ?</strong></li>
+<li>Je propose des solutions ou des activités.</li>
+</ul>
+
+<button onclick="lireTexte('Checklist A2. Fais des phrases complètes. Décris simplement. Justifie avec parce que. Utilise des connecteurs simples comme et, mais, aussi, ensuite et par exemple. Dans l interaction, dis bonjour, pose des questions, propose des activités et dis au revoir.')">🔊 Écouter la checklist</button>
+</section>
+
+</div>
+
+<div class="audio-controls">
+<button class="pause" onclick="pauseLecture()">⏸ Pause</button>
+<button class="resume" onclick="reprendreLecture()">▶ Reprendre</button>
+<button class="repeat" onclick="repeterLecture()">🔁 Répéter</button>
+</div>
+
+<script>
+function updateProgress(){
+ const doc=document.documentElement;
+ const scrollTop=doc.scrollTop || document.body.scrollTop;
+ const scrollHeight=doc.scrollHeight-doc.clientHeight;
+ const percent=scrollHeight>0?Math.min(100,Math.max(0,(scrollTop/scrollHeight)*100)):0;
+ const fill=document.getElementById("progressFill");
+ if(fill){fill.style.width=percent+"%";}
+ document.querySelectorAll(".step-item").forEach(item=>{
+   const target=document.getElementById(item.dataset.target);
+   if(!target)return;
+   const rect=target.getBoundingClientRect();
+   item.classList.remove("active","done");
+   if(rect.top<window.innerHeight*.35 && rect.bottom>window.innerHeight*.25){item.classList.add("active");}
+   if(rect.bottom<window.innerHeight*.3){item.classList.add("done");}
+ });
+}
+window.addEventListener("scroll",updateProgress);
+window.addEventListener("load",updateProgress);
+document.addEventListener("click",function(e){
+ const item=e.target.closest(".step-item");
+ if(!item)return;
+ const target=document.getElementById(item.dataset.target);
+ if(target){target.scrollIntoView({behavior:"smooth",block:"start"});}
+});
+</script>
+</body>
+</html>
