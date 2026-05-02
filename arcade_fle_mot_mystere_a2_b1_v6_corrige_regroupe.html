@@ -14,7 +14,7 @@ h1{text-align:center;margin:0;color:#1e293b;font-size:clamp(1.8rem,4vw,3rem)}
 .panel{border:2px solid #dbeafe;border-radius:20px;padding:18px;margin:16px 0;background:#f8fbff}
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
 .mode{border:3px solid transparent;border-radius:18px;padding:16px;background:white;cursor:pointer;transition:.2s;text-align:center}
-.mode:hover{transform:scale(1.02)}.mode.active{box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+.mode:hover{transform:scale(1.02)}.mode.active{box-shadow:0 0 0 4px rgba(37,99,235,.15)}.playmode{border-color:#cbd5e1}.playmode.active{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,163,74,.15)}
 .mode-a2{border-color:var(--orange)}.mode-b1{border-color:var(--blue)}.mode h2{margin:0 0 8px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
 .stat{background:white;border:1px solid #dbeafe;border-radius:14px;padding:12px;text-align:center}.stat strong{font-size:1.35rem;color:#174ea6}
@@ -43,11 +43,18 @@ select{width:100%;padding:10px;border:2px solid #cbd5e1;border-radius:12px;font-
 <div class="subtitle">Parties courtes : 15 mots maximum. Les mots changent à chaque partie. Les erreurs reviennent plus tard, sans répétitions immédiates.</div>
 
 <section class="panel">
-<h2>1. Choisis ton niveau et ton thème</h2>
+<h2>1. Choisis ton niveau, ton thème et ton mode</h2>
 <div class="modes">
 <div class="mode mode-a2 active" id="modeA2" onclick="setMode('A2')"><h2>🟠 A2</h2><p>quotidien, école, famille, loisirs, verbes utiles.</p></div>
 <div class="mode mode-b1" id="modeB1" onclick="setMode('B1')"><h2>🔵 B1</h2><p>DELF, situations-problèmes, travail, transport, environnement.</p></div>
 </div>
+<h3 class="small" style="margin:18px 0 6px;color:#1d3557;font-size:1.05rem">Mode de jeu</h3>
+<div class="modes" style="margin-top:8px">
+<div class="mode playmode active" id="playAnagramme" onclick="setPlayMode('anagramme')"><h2>🔀 Anagramme</h2><p>Remettre les lettres dans l’ordre.</p></div>
+<div class="mode playmode" id="playEcoute" onclick="setPlayMode('ecoute')"><h2>🎧 Écoute</h2><p>Écouter le mot puis l’écrire.</p></div>
+<div class="mode playmode" id="playDefinition" onclick="setPlayMode('definition')"><h2>💡 Définition</h2><p>Trouver le mot à partir d’une définition.</p></div>
+</div>
+
 <div class="selectrow">
 <div><label><strong>Thème</strong></label><select id="themeSelect" onchange="newGame(true)"></select></div>
 <div><label><strong>Longueur de partie</strong></label><select id="roundSelect" onchange="setRoundLimit()"><option value="10">10 mots</option><option value="15" selected>15 mots</option><option value="8">8 mots rapides</option></select></div>
@@ -79,7 +86,7 @@ select{width:100%;padding:10px;border:2px solid #cbd5e1;border-radius:12px;font-
 <button onclick="checkAnswer()">Valider</button>
 <button onclick="showHint()" class="orange">Indice</button>
 <button onclick="skipWord()" class="secondary">Passer</button>
-<button onclick="speakCurrent()" class="purple">🔊 Écouter</button>
+<button onclick="speakCurrent()" class="purple" id="listenBtn">🔊 Écouter</button>
 <div id="feedback" class="feedback">Objectif : retrouver le mot, comprendre son sens, puis le réutiliser.</div>
 </section>
 
@@ -1851,14 +1858,21 @@ const DATA={
     ]
   }
 };
-let mode="A2", current=null, score=0,total=0,streak=0,unlockedSet=new Set(),missed=[],used=[],roundLimit=15,roundAsked=0,challenge=false,timerInterval=null,timeLeft=60;
+let mode="A2", playMode="anagramme", current=null, score=0,total=0,streak=0,unlockedSet=new Set(),missed=[],used=[],roundLimit=15,roundAsked=0,challenge=false,timerInterval=null,timeLeft=60;
 
 function entry(arr){return {word:arr[0],cat:arr[1],clue:arr[2],phrase:arr[3]};}
 function getPool(){const theme=themeSelect.value||"Tous les thèmes";return (DATA[mode][theme]||DATA[mode]["Tous les thèmes"]).map(entry);}
 function shuffleWord(word){let arr=word.split("");for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}let mixed=arr.join("");return mixed===word?arr.reverse().join(""):mixed;}
-function normalize(s){return s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/æ/g,"ae");}
+function normalize(s){return s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/æ/g,"ae").replace(/[^a-z0-9]/g,"");}
 function populateThemes(){themeSelect.innerHTML="";Object.keys(DATA[mode]).forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;themeSelect.appendChild(o);});}
 function setMode(m){mode=m;modeA2.classList.toggle("active",m==="A2");modeB1.classList.toggle("active",m==="B1");levelBadge.textContent="Niveau "+m;populateThemes();startRound();}
+function setPlayMode(pm){
+  playMode=pm;
+  playAnagramme.classList.toggle("active",pm==="anagramme");
+  playEcoute.classList.toggle("active",pm==="ecoute");
+  playDefinition.classList.toggle("active",pm==="definition");
+  startRound();
+}
 function setRoundLimit(){roundLimit=parseInt(roundSelect.value,10);roundCount.textContent=roundAsked+"/"+roundLimit;}
 function startRound(){score=0;total=0;streak=0;roundAsked=0;used=[];recentWords=[];missed=[];challenge=false;clearInterval(timerInterval);timer.classList.add("hidden");setRoundLimit();updateBoxes();updateStats();newGame(true);}
 let recentWords=[];
@@ -1892,11 +1906,26 @@ function newGame(force=false){
   if(roundAsked>=roundLimit && !force){endRound();return;}
   current=pickWord();
   category.textContent=current.cat;
-  clue.textContent=current.clue;
-  scrambled.textContent=shuffleWord(current.word).toUpperCase();
   answer.value="";
   feedback.className="feedback";
-  feedback.innerHTML="Retrouve le mot mélangé. Les mots ratés peuvent revenir plus tard.";
+
+  if(playMode==="anagramme"){
+    clue.textContent=current.clue;
+    scrambled.textContent=shuffleWord(current.word).toUpperCase();
+    listenBtn.textContent="🔊 Écouter la définition";
+    feedback.innerHTML="Retrouve le mot mélangé. Les mots ratés peuvent revenir plus tard.";
+  }else if(playMode==="ecoute"){
+    clue.textContent="Écoute le mot, puis écris-le. Tu peux réécouter autant que nécessaire.";
+    scrambled.textContent="🎧 MOT DICTÉ";
+    listenBtn.textContent="🔊 Écouter le mot";
+    feedback.innerHTML="Clique sur “Écouter”, puis écris le mot entendu. L’indice donne la catégorie et les premières lettres.";
+  }else{
+    clue.textContent=current.clue;
+    scrambled.textContent="💡 DÉFINITION";
+    listenBtn.textContent="🔊 Écouter la définition";
+    feedback.innerHTML="Lis ou écoute la définition, puis écris le mot correspondant.";
+  }
+
   answer.focus();
 }
 function checkAnswer(){
@@ -1915,7 +1944,21 @@ function checkAnswer(){
   updateBoxes();updateStats();
   setTimeout(()=>newGame(false), challenge?650:1200);
 }
-function showHint(){if(!current)return;feedback.className="feedback hint";feedback.innerHTML="💡 Indice : le mot commence par <strong>"+current.word[0].toUpperCase()+"</strong> et contient <strong>"+current.word.length+"</strong> lettres.<br>Phrase utile : "+current.phrase;}
+function showHint(){
+  if(!current)return;
+  const cleanLength=normalize(current.word).length;
+  const lettersCount=mode==="A2"?2:2;
+  const startLetters=current.word.slice(0,lettersCount);
+  feedback.className="feedback hint";
+
+  if(playMode==="ecoute"){
+    feedback.innerHTML="💡 Indice : catégorie <strong>"+current.cat+"</strong>, commence par <strong>"+startLetters+"</strong>, environ <strong>"+cleanLength+"</strong> lettres.<br>Phrase utile : "+current.phrase;
+  }else if(playMode==="definition"){
+    feedback.innerHTML="💡 Indice : le mot commence par <strong>"+startLetters+"</strong>, catégorie <strong>"+current.cat+"</strong>.<br>Phrase utile : "+current.phrase;
+  }else{
+    feedback.innerHTML="💡 Indice : le mot commence par <strong>"+current.word[0].toUpperCase()+"</strong> et contient environ <strong>"+cleanLength+"</strong> lettres.<br>Phrase utile : "+current.phrase;
+  }
+}
 function skipWord(){if(!current)return;total++;roundAsked++;streak=0;missed.push(current);feedback.className="feedback hint";feedback.innerHTML="Le mot était : <strong>"+current.word+"</strong><br>Il reviendra plus tard.<br>"+current.phrase;updateBoxes();updateStats();setTimeout(()=>newGame(false),1000);}
 function updateBoxes(){
   unlocked.innerHTML="";Array.from(unlockedSet).slice(-24).forEach(w=>{let d=document.createElement("div");d.className="word-chip";d.textContent=w;unlocked.appendChild(d);});
@@ -1928,12 +1971,30 @@ function updateStats(){
   roundCount.textContent=roundAsked+"/"+roundLimit;
   let b="Début";if(pct>=90&&total>=8)b="🏆 Expert";else if(pct>=75&&total>=6)b="🔵 Stratège";else if(pct>=55&&total>=4)b="🟡 Explorateur";else if(total>=3)b="🟠 En route";
   badge.textContent=b;progressFill.style.width=Math.min(100,roundAsked/roundLimit*100)+"%";
-  finalText.innerHTML="<strong>"+b+"</strong><br>Réussite : <strong>"+pct+"%</strong><br>Mots débloqués : <strong>"+unlockedSet.size+"</strong><br>"+(mode==="A2"?"Objectif : reconnaître vite les mots utiles du quotidien.":"Objectif : utiliser des mots précis en situation DELF B1.");
+  finalText.innerHTML="<strong>"+b+"</strong><br>Réussite : <strong>"+pct+"%</strong><br>Mots débloqués : <strong>"+unlockedSet.size+"</strong><br>"+(mode==="A2"?"Objectif : reconnaître, écouter et réutiliser les mots utiles du quotidien.":"Objectif : utiliser des mots précis en situation DELF B1.");
 }
 function endRound(){feedback.className="feedback good";feedback.innerHTML="<strong>🏁 Partie terminée !</strong><br>Tu peux recommencer : une nouvelle série de mots sera proposée.";updateStats();}
 function startChallenge(){startRound();challenge=true;timeLeft=60;timer.classList.remove("hidden");timer.textContent=timeLeft;clearInterval(timerInterval);timerInterval=setInterval(()=>{timeLeft--;timer.textContent=timeLeft;if(timeLeft<=0){clearInterval(timerInterval);challenge=false;timer.textContent="Défi terminé";endRound();}},1000);}
 function resetAll(){unlockedSet.clear();startRound();}
-function speakCurrent(){if(!current)return;if(!("speechSynthesis" in window)){alert("Audio indisponible.");return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(current.clue+". Phrase exemple : "+current.phrase);u.lang="fr-FR";u.rate=.88;u.pitch=1.03;speechSynthesis.speak(u);}
+function speakText(text){
+  if(!("speechSynthesis" in window)){alert("Audio indisponible sur ce navigateur.");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="fr-FR";
+  u.rate=.86;
+  u.pitch=1.03;
+  speechSynthesis.speak(u);
+}
+function speakCurrent(){
+  if(!current)return;
+  if(playMode==="ecoute"){
+    speakText(current.word);
+  }else if(playMode==="definition"){
+    speakText(current.clue);
+  }else{
+    speakText(current.clue+". Phrase exemple : "+current.phrase);
+  }
+}
 window.addEventListener("load",()=>{populateThemes();startRound();});
 </script>
 </body>
