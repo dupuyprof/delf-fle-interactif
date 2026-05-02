@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade FLE - Mot Mystère A2/B1</title>
+<style>
+:root{--bg:#f4f7fb;--ink:#102033;--blue:#2563eb;--orange:#f59e0b;--green:#16a34a;--purple:#7c3aed;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;padding:18px;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.container{max-width:1080px;margin:auto;background:white;border-radius:24px;padding:26px;box-shadow:0 6px 22px rgba(0,0,0,.09)}
+h1{text-align:center;margin:0;color:#1e293b;font-size:clamp(1.8rem,4vw,3rem)}
+.subtitle{text-align:center;color:#475569;margin:8px 0 24px;font-size:1.1rem}
+.panel{border:2px solid #dbeafe;border-radius:20px;padding:18px;margin:16px 0;background:#f8fbff}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
+.mode{border:3px solid transparent;border-radius:18px;padding:16px;background:white;cursor:pointer;transition:.2s;text-align:center}
+.mode:hover{transform:scale(1.02)}.mode.active{box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+.mode-a2{border-color:var(--orange)}.mode-b1{border-color:var(--blue)}.mode h2{margin:0 0 8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:14px 0}
+.stat{background:white;border:1px solid #dbeafe;border-radius:14px;padding:12px;text-align:center}.stat strong{font-size:1.35rem;color:#174ea6}
+.game-card{background:#fff;border:3px solid #bfdbfe;border-radius:22px;padding:20px;margin:18px 0}
+.level-badge{display:inline-block;border-radius:999px;padding:7px 13px;color:white;font-weight:bold;background:var(--blue);margin-bottom:10px}
+.category{display:inline-block;border-radius:999px;padding:6px 12px;background:#e0f2fe;color:#075985;font-weight:bold;margin-left:6px}
+.clue{font-size:1.2rem;background:#f1f5f9;border-left:6px solid var(--blue);padding:14px;border-radius:12px;margin:10px 0}
+.scrambled{font-size:2rem;letter-spacing:6px;text-align:center;background:#111827;color:white;border-radius:16px;padding:18px;margin:16px 0;font-weight:bold;word-break:break-word}
+input{width:100%;padding:14px;font-size:1.15rem;border:2px solid #cbd5e1;border-radius:14px;margin:8px 0}
+button{border:none;border-radius:12px;padding:12px 16px;margin:8px 6px 0 0;background:var(--blue);color:white;font-weight:bold;cursor:pointer;font-size:1rem}
+button:hover{filter:brightness(.95)}.secondary{background:#64748b}.success{background:var(--green)}.purple{background:var(--purple)}.orange{background:var(--orange)}.danger{background:var(--red)}
+.feedback{margin-top:14px;padding:14px;border-radius:14px;background:#f1f5f9}.good{border-left:6px solid var(--green);background:#ecfdf5}.bad{border-left:6px solid var(--red);background:#fef2f2}.hint{border-left:6px solid var(--orange);background:#fff7ed}
+.unlock{background:#ecfdf5;border:2px dashed #22c55e;border-radius:16px;padding:14px;margin-top:12px}
+.progress{width:100%;height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.progress-fill{height:100%;background:linear-gradient(90deg,#f59e0b,#22c55e);width:0%;transition:.3s}
+.word-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px}.word-chip{background:#e0f2fe;border:1px solid #7dd3fc;border-radius:999px;padding:8px 10px;font-weight:bold;text-align:center}
+.timer{font-size:1.4rem;font-weight:bold;color:#db2777;background:#fdf2f8;border:2px solid #f9a8d4;border-radius:14px;padding:10px;display:inline-block}
+.final{background:#eef6ff;border:3px solid #60a5fa;border-radius:20px;padding:18px;margin-top:18px}.hidden{display:none}.small{font-size:.95rem;color:#475569}
+.selectrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+select{width:100%;padding:10px;border:2px solid #cbd5e1;border-radius:12px;font-weight:bold;background:white}
+@media(max-width:600px){.scrambled{font-size:1.4rem;letter-spacing:3px}.container{padding:16px}button{width:100%}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎮 Arcade FLE – Mot Mystère</h1>
+<div class="subtitle">Parties courtes : 15 mots maximum. Les mots changent à chaque partie. Les erreurs reviennent plus tard, sans répétitions immédiates.</div>
+
+<section class="panel">
+<h2>1. Choisis ton niveau et ton thème</h2>
+<div class="modes">
+<div class="mode mode-a2 active" id="modeA2" onclick="setMode('A2')"><h2>🟠 A2</h2><p>quotidien, école, famille, loisirs, verbes utiles.</p></div>
+<div class="mode mode-b1" id="modeB1" onclick="setMode('B1')"><h2>🔵 B1</h2><p>DELF, situations-problèmes, travail, transport, environnement.</p></div>
+</div>
+<div class="selectrow">
+<div><label><strong>Thème</strong></label><select id="themeSelect" onchange="newGame(true)"></select></div>
+<div><label><strong>Longueur de partie</strong></label><select id="roundSelect" onchange="setRoundLimit()"><option value="10">10 mots</option><option value="15" selected>15 mots</option><option value="8">8 mots rapides</option></select></div>
+</div>
+<button onclick="startRound()" class="success">Nouvelle partie</button>
+<button onclick="startChallenge()" class="purple">Mode défi chrono</button>
+<button onclick="resetAll()" class="secondary">Réinitialiser</button>
+</section>
+
+<section class="panel">
+<h2>2. Ta progression</h2>
+<div class="stats">
+<div class="stat"><div>Score</div><strong id="score">0</strong></div>
+<div class="stat"><div>Réussite</div><strong id="percent">0%</strong></div>
+<div class="stat"><div>Série</div><strong id="streak">0</strong></div>
+<div class="stat"><div>Badge</div><strong id="badge">Début</strong></div>
+<div class="stat"><div>Question</div><strong id="roundCount">0/15</strong></div>
+</div>
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div class="timer hidden" id="timer">60</div>
+</section>
+
+<section class="game-card">
+<span class="level-badge" id="levelBadge">Niveau A2</span>
+<span class="category" id="category">Vie quotidienne</span>
+<div class="clue" id="clue">Clique sur “Nouvelle partie” pour commencer.</div>
+<div class="scrambled" id="scrambled">---</div>
+<input id="answer" type="text" placeholder="Écris le mot ici..." onkeydown="if(event.key==='Enter'){checkAnswer()}">
+<button onclick="checkAnswer()">Valider</button>
+<button onclick="showHint()" class="orange">Indice</button>
+<button onclick="skipWord()" class="secondary">Passer</button>
+<button onclick="speakCurrent()" class="purple">🔊 Écouter</button>
+<div id="feedback" class="feedback">Objectif : retrouver le mot, comprendre son sens, puis le réutiliser.</div>
+</section>
+
+<section class="panel">
+<h2>🔁 Mots à revoir</h2>
+<p class="small">Quand tu rates ou passes un mot, il revient plus tard dans la partie.</p>
+<div class="word-list" id="missedBox"></div>
+</section>
+
+<section class="panel">
+<h2>🔓 Vocabulaire débloqué</h2>
+<div class="word-list" id="unlocked"></div>
+</section>
+
+<section class="final">
+<h2>🏆 Bilan rapide</h2>
+<div id="finalText">Joue quelques mots pour obtenir un bilan.</div>
+</section>
+</div>
+
+<script>
+const DATA={
+  "A2": {
+    "Tous les thèmes": [
+      [
+        "famille",
+        "Famille",
+        "Parents, frères, sœurs, cousins.",
+        "J’aime ma famille."
+      ],
+      [
+        "oncle",
+        "Famille",
+        "Le frère de mon père ou de ma mère.",
+        "Mon oncle habite loin."
+      ],
+      [
+        "tante",
+        "Famille",
+        "La sœur de mon père ou de ma mère.",
+        "Ma tante est gentille."
+      ],
+      [
+        "cousin",
+        "Famille",
+        "Le fils de mon oncle ou de ma tante.",
+        "Mon cousin aime le foot."
+      ],
+      [
+        "vêtements",
+        "Vie quotidienne",
+        "Habits que l’on porte.",
+        "J’achète des vêtements."
+      ],
+      [
+        "portefeuille",
+        "Vie quotidienne",
+        "Objet pour garder l’argent et les papiers.",
+        "J’ai perdu mon portefeuille."
+      ],
+      [
+        "abonnement",
+        "Vie quotidienne",
+        "Paiement régulier pour un service.",
+        "J’ai un abonnement de bus."
+      ],
+      [
+        "tarif",
+        "Services",
+        "Prix d’un service ou d’une activité.",
+        "Quel est le tarif ?"
+      ],
+      [
+        "inscription",
+        "Services",
+        "Action de s’inscrire.",
+        "Mon inscription est validée."
+      ],
+      [
+        "cadeau",
+        "Fête",
+        "Objet offert à quelqu’un.",
+        "J’achète un cadeau."
+      ],
+      [
+        "devoirs",
+        "École",
+        "Travail à faire après les cours.",
+        "Je fais mes devoirs."
+      ],
+      [
+        "rendre un devoir",
+        "École",
+        "Donner son travail au professeur.",
+        "Je dois rendre un devoir."
+      ],
+      [
+        "apprendre",
+        "École",
+        "Étudier quelque chose de nouveau.",
+        "J’apprends le français."
+      ],
+      [
+        "écrire",
+        "École",
+        "Tracer des mots ou des phrases.",
+        "J’écris une rédaction."
+      ],
+      [
+        "cahier",
+        "École",
+        "Objet où l’on écrit en classe.",
+        "J’écris dans mon cahier."
+      ],
+      [
+        "stylo",
+        "École",
+        "Objet pour écrire.",
+        "J’ai perdu mon stylo."
+      ],
+      [
+        "matière",
+        "École",
+        "Discipline étudiée à l’école.",
+        "Ma matière préférée est l’histoire."
+      ],
+      [
+        "histoire",
+        "École",
+        "Matière où l’on étudie le passé.",
+        "J’aime l’histoire."
+      ],
+      [
+        "géographie",
+        "École",
+        "Matière où l’on étudie les pays.",
+        "La géographie est intéressante."
+      ],
+      [
+        "mathématiques",
+        "École",
+        "Matière avec des calculs.",
+        "Je révise les mathématiques."
+      ],
+      [
+        "emploi du temps",
+        "École",
+        "Organisation des cours et des horaires.",
+        "Je regarde mon emploi du temps."
+      ],
+      [
+        "horaire",
+        "École",
+        "Heure prévue pour une activité.",
+        "Les horaires changent demain."
+      ],
+      [
+        "récréation",
+        "École",
+        "Pause entre les cours.",
+        "La récréation dure quinze minutes."
+      ],
+      [
+        "cantine",
+        "École",
+        "Lieu où les élèves mangent.",
+        "Je déjeune à la cantine."
+      ],
+      [
+        "atelier",
+        "Lycée professionnel",
+        "Cours pratique en lycée professionnel.",
+        "Nous avons atelier ce matin."
+      ],
+      [
+        "stage",
+        "Lycée professionnel",
+        "Période de découverte en entreprise.",
+        "Je fais un stage."
+      ],
+      [
+        "musique",
+        "Loisirs",
+        "Art avec des sons et des chansons.",
+        "J’écoute de la musique."
+      ],
+      [
+        "football",
+        "Loisirs",
+        "Sport avec un ballon et deux équipes.",
+        "Je joue au football."
+      ],
+      [
+        "nager",
+        "Loisirs",
+        "Se déplacer dans l’eau.",
+        "J’aime nager."
+      ],
+      [
+        "piscine",
+        "Loisirs",
+        "Lieu où l’on nage.",
+        "Je vais à la piscine."
+      ],
+      [
+        "cinéma",
+        "Loisirs",
+        "Lieu où l’on regarde des films.",
+        "Je vais au cinéma."
+      ],
+      [
+        "concert",
+        "Loisirs",
+        "Événement musical.",
+        "Le concert commence à 20 heures."
+      ],
+      [
+        "spectacle",
+        "Loisirs",
+        "Événement artistique avec du public.",
+        "Le spectacle est intéressant."
+      ],
+      [
+        "radio",
+        "Médias",
+        "Média qu’on écoute.",
+        "J’écoute la radio."
+      ],
+      [
+        "médias",
+        "Médias",
+        "Télévision, radio, journaux ou internet.",
+        "Les médias parlent du sport."
+      ],
+      [
+        "ordinateur",
+        "Technologie",
+        "Machine utilisée pour travailler ou communiquer.",
+        "Mon ordinateur est lent."
+      ],
+      [
+        "anniversaire",
+        "Fête",
+        "Fête organisée pour une personne.",
+        "Je prépare mon anniversaire."
+      ],
+      [
+        "pique-nique",
+        "Loisirs",
+        "Repas pris dehors.",
+        "Nous faisons un pique-nique."
+      ],
+      [
+        "valise",
+        "Voyage",
+        "Objet où l’on met ses vêtements pour voyager.",
+        "Je prépare ma valise."
+      ],
+      [
+        "billet",
+        "Transport",
+        "Document pour prendre le train, le bus ou l’avion.",
+        "J’achète un billet."
+      ],
+      [
+        "gare",
+        "Transport",
+        "Lieu où l’on prend le train.",
+        "J’attends à la gare."
+      ],
+      [
+        "guichet",
+        "Transport",
+        "Endroit où l’on demande un billet ou une information.",
+        "Je vais au guichet."
+      ],
+      [
+        "quai",
+        "Transport",
+        "Endroit où l’on attend le train.",
+        "Le train arrive sur le quai."
+      ],
+      [
+        "retard",
+        "Transport",
+        "Quand on arrive après l’heure prévue.",
+        "Le train a du retard."
+      ],
+      [
+        "trajet",
+        "Transport",
+        "Chemin entre deux lieux.",
+        "Le trajet est long."
+      ],
+      [
+        "réservation",
+        "Voyage",
+        "Action de garder une place ou une chambre.",
+        "J’ai une réservation."
+      ],
+      [
+        "hôtel",
+        "Voyage",
+        "Lieu où l’on dort en voyage.",
+        "Je dors à l’hôtel."
+      ],
+      [
+        "réception",
+        "Hôtel",
+        "Lieu où l’on accueille les clients.",
+        "Je vais à la réception."
+      ],
+      [
+        "plage",
+        "Vacances",
+        "Lieu avec du sable près de la mer.",
+        "Je vais à la plage."
+      ],
+      [
+        "visiter",
+        "Voyage",
+        "Découvrir un lieu.",
+        "Je vais visiter Paris."
+      ],
+      [
+        "médecin",
+        "Santé",
+        "Personne que l’on voit quand on est malade.",
+        "Je vais chez le médecin."
+      ],
+      [
+        "docteur",
+        "Santé",
+        "Personne qui soigne les malades.",
+        "Je vais chez le docteur."
+      ],
+      [
+        "ordonnance",
+        "Santé",
+        "Document donné par le médecin.",
+        "Le médecin écrit une ordonnance."
+      ],
+      [
+        "malade",
+        "Santé",
+        "Quand on ne se sent pas bien.",
+        "Je suis malade."
+      ],
+      [
+        "restaurant",
+        "Repas",
+        "Lieu où l’on mange dehors.",
+        "Nous allons au restaurant."
+      ],
+      [
+        "plat",
+        "Cuisine",
+        "Nourriture préparée pour un repas.",
+        "Mon plat préféré est le couscous."
+      ],
+      [
+        "recette",
+        "Cuisine",
+        "Explication pour préparer un plat.",
+        "Je lis une recette."
+      ],
+      [
+        "ingrédients",
+        "Cuisine",
+        "Produits nécessaires pour cuisiner.",
+        "Il manque des ingrédients."
+      ],
+      [
+        "cuisiner",
+        "Cuisine",
+        "Préparer à manger.",
+        "J’aime cuisiner."
+      ],
+      [
+        "acheter",
+        "Achats",
+        "Payer pour avoir quelque chose.",
+        "Je vais acheter du pain."
+      ],
+      [
+        "annuler",
+        "Verbes",
+        "Supprimer une activité prévue.",
+        "Je dois annuler ma réservation."
+      ],
+      [
+        "rembourser",
+        "Verbes",
+        "Redonner de l’argent après un problème.",
+        "Le magasin peut me rembourser."
+      ],
+      [
+        "rendre",
+        "Verbes",
+        "Redonner un objet.",
+        "Je dois rendre le livre."
+      ],
+      [
+        "emprunter",
+        "Verbes",
+        "Prendre quelque chose pour un temps limité.",
+        "Je veux emprunter un dictionnaire."
+      ],
+      [
+        "réserver",
+        "Verbes",
+        "Garder une place ou une chambre à l’avance.",
+        "Je vais réserver une chambre."
+      ],
+      [
+        "ranger",
+        "Verbes",
+        "Mettre les choses à leur place.",
+        "Je dois ranger ma chambre."
+      ],
+      [
+        "préparer",
+        "Verbes",
+        "Organiser avant une activité.",
+        "Je prépare une fête."
+      ],
+      [
+        "perdre",
+        "Verbes",
+        "Ne plus trouver quelque chose.",
+        "J’ai perdu mon sac."
+      ],
+      [
+        "retrouver",
+        "Verbes",
+        "Trouver quelque chose après l’avoir perdu.",
+        "Je retrouve mes clés."
+      ],
+      [
+        "fatigué",
+        "Émotions",
+        "Quand on a besoin de dormir ou de se reposer.",
+        "Je suis fatigué."
+      ],
+      [
+        "heureux",
+        "Émotions",
+        "Content, joyeux.",
+        "Je suis heureux."
+      ],
+      [
+        "stressé",
+        "Émotions",
+        "Inquiet ou sous pression.",
+        "Je suis stressé avant l’examen."
+      ],
+      [
+        "énervé",
+        "Émotions",
+        "En colère ou agacé.",
+        "Il est énervé aujourd’hui."
+      ],
+      [
+        "inquiet",
+        "Émotions",
+        "Quand on pense qu’un problème peut arriver.",
+        "Je suis inquiet pour le train."
+      ]
+    ],
+    "Vie quotidienne et famille": [
+      [
+        "famille",
+        "Famille",
+        "Parents, frères, sœurs, cousins.",
+        "J’aime ma famille."
+      ],
+      [
+        "oncle",
+        "Famille",
+        "Le frère de mon père ou de ma mère.",
+        "Mon oncle habite loin."
+      ],
+      [
+        "tante",
+        "Famille",
+        "La sœur de mon père ou de ma mère.",
+        "Ma tante est gentille."
+      ],
+      [
+        "cousin",
+        "Famille",
+        "Le fils de mon oncle ou de ma tante.",
+        "Mon cousin aime le foot."
+      ],
+      [
+        "vêtements",
+        "Vie quotidienne",
+        "Habits que l’on porte.",
+        "J’achète des vêtements."
+      ],
+      [
+        "portefeuille",
+        "Vie quotidienne",
+        "Objet pour garder l’argent et les papiers.",
+        "J’ai perdu mon portefeuille."
+      ],
+      [
+        "abonnement",
+        "Vie quotidienne",
+        "Paiement régulier pour un service.",
+        "J’ai un abonnement de bus."
+      ],
+      [
+        "tarif",
+        "Services",
+        "Prix d’un service ou d’une activité.",
+        "Quel est le tarif ?"
+      ],
+      [
+        "inscription",
+        "Services",
+        "Action de s’inscrire.",
+        "Mon inscription est validée."
+      ],
+      [
+        "cadeau",
+        "Fête",
+        "Objet offert à quelqu’un.",
+        "J’achète un cadeau."
+      ]
+    ],
+    "École et lycée professionnel": [
+      [
+        "devoirs",
+        "École",
+        "Travail à faire après les cours.",
+        "Je fais mes devoirs."
+      ],
+      [
+        "rendre un devoir",
+        "École",
+        "Donner son travail au professeur.",
+        "Je dois rendre un devoir."
+      ],
+      [
+        "apprendre",
+        "École",
+        "Étudier quelque chose de nouveau.",
+        "J’apprends le français."
+      ],
+      [
+        "écrire",
+        "École",
+        "Tracer des mots ou des phrases.",
+        "J’écris une rédaction."
+      ],
+      [
+        "cahier",
+        "École",
+        "Objet où l’on écrit en classe.",
+        "J’écris dans mon cahier."
+      ],
+      [
+        "stylo",
+        "École",
+        "Objet pour écrire.",
+        "J’ai perdu mon stylo."
+      ],
+      [
+        "matière",
+        "École",
+        "Discipline étudiée à l’école.",
+        "Ma matière préférée est l’histoire."
+      ],
+      [
+        "histoire",
+        "École",
+        "Matière où l’on étudie le passé.",
+        "J’aime l’histoire."
+      ],
+      [
+        "géographie",
+        "École",
+        "Matière où l’on étudie les pays.",
+        "La géographie est intéressante."
+      ],
+      [
+        "mathématiques",
+        "École",
+        "Matière avec des calculs.",
+        "Je révise les mathématiques."
+      ],
+      [
+        "emploi du temps",
+        "École",
+        "Organisation des cours et des horaires.",
+        "Je regarde mon emploi du temps."
+      ],
+      [
+        "horaire",
+        "École",
+        "Heure prévue pour une activité.",
+        "Les horaires changent demain."
+      ],
+      [
+        "récréation",
+        "École",
+        "Pause entre les cours.",
+        "La récréation dure quinze minutes."
+      ],
+      [
+        "cantine",
+        "École",
+        "Lieu où les élèves mangent.",
+        "Je déjeune à la cantine."
+      ],
+      [
+        "atelier",
+        "Lycée professionnel",
+        "Cours pratique en lycée professionnel.",
+        "Nous avons atelier ce matin."
+      ],
+      [
+        "stage",
+        "Lycée professionnel",
+        "Période de découverte en entreprise.",
+        "Je fais un stage."
+      ]
+    ],
+    "Loisirs, médias et fêtes": [
+      [
+        "musique",
+        "Loisirs",
+        "Art avec des sons et des chansons.",
+        "J’écoute de la musique."
+      ],
+      [
+        "football",
+        "Loisirs",
+        "Sport avec un ballon et deux équipes.",
+        "Je joue au football."
+      ],
+      [
+        "nager",
+        "Loisirs",
+        "Se déplacer dans l’eau.",
+        "J’aime nager."
+      ],
+      [
+        "piscine",
+        "Loisirs",
+        "Lieu où l’on nage.",
+        "Je vais à la piscine."
+      ],
+      [
+        "cinéma",
+        "Loisirs",
+        "Lieu où l’on regarde des films.",
+        "Je vais au cinéma."
+      ],
+      [
+        "concert",
+        "Loisirs",
+        "Événement musical.",
+        "Le concert commence à 20 heures."
+      ],
+      [
+        "spectacle",
+        "Loisirs",
+        "Événement artistique avec du public.",
+        "Le spectacle est intéressant."
+      ],
+      [
+        "radio",
+        "Médias",
+        "Média qu’on écoute.",
+        "J’écoute la radio."
+      ],
+      [
+        "médias",
+        "Médias",
+        "Télévision, radio, journaux ou internet.",
+        "Les médias parlent du sport."
+      ],
+      [
+        "ordinateur",
+        "Technologie",
+        "Machine utilisée pour travailler ou communiquer.",
+        "Mon ordinateur est lent."
+      ],
+      [
+        "anniversaire",
+        "Fête",
+        "Fête organisée pour une personne.",
+        "Je prépare mon anniversaire."
+      ],
+      [
+        "pique-nique",
+        "Loisirs",
+        "Repas pris dehors.",
+        "Nous faisons un pique-nique."
+      ]
+    ],
+    "Voyage, hôtel et transports": [
+      [
+        "valise",
+        "Voyage",
+        "Objet où l’on met ses vêtements pour voyager.",
+        "Je prépare ma valise."
+      ],
+      [
+        "billet",
+        "Transport",
+        "Document pour prendre le train, le bus ou l’avion.",
+        "J’achète un billet."
+      ],
+      [
+        "gare",
+        "Transport",
+        "Lieu où l’on prend le train.",
+        "J’attends à la gare."
+      ],
+      [
+        "guichet",
+        "Transport",
+        "Endroit où l’on demande un billet ou une information.",
+        "Je vais au guichet."
+      ],
+      [
+        "quai",
+        "Transport",
+        "Endroit où l’on attend le train.",
+        "Le train arrive sur le quai."
+      ],
+      [
+        "retard",
+        "Transport",
+        "Quand on arrive après l’heure prévue.",
+        "Le train a du retard."
+      ],
+      [
+        "trajet",
+        "Transport",
+        "Chemin entre deux lieux.",
+        "Le trajet est long."
+      ],
+      [
+        "réservation",
+        "Voyage",
+        "Action de garder une place ou une chambre.",
+        "J’ai une réservation."
+      ],
+      [
+        "hôtel",
+        "Voyage",
+        "Lieu où l’on dort en voyage.",
+        "Je dors à l’hôtel."
+      ],
+      [
+        "réception",
+        "Hôtel",
+        "Lieu où l’on accueille les clients.",
+        "Je vais à la réception."
+      ],
+      [
+        "plage",
+        "Vacances",
+        "Lieu avec du sable près de la mer.",
+        "Je vais à la plage."
+      ],
+      [
+        "visiter",
+        "Voyage",
+        "Découvrir un lieu.",
+        "Je vais visiter Paris."
+      ]
+    ],
+    "Santé, repas et cuisine": [
+      [
+        "médecin",
+        "Santé",
+        "Personne que l’on voit quand on est malade.",
+        "Je vais chez le médecin."
+      ],
+      [
+        "docteur",
+        "Santé",
+        "Personne qui soigne les malades.",
+        "Je vais chez le docteur."
+      ],
+      [
+        "ordonnance",
+        "Santé",
+        "Document donné par le médecin.",
+        "Le médecin écrit une ordonnance."
+      ],
+      [
+        "malade",
+        "Santé",
+        "Quand on ne se sent pas bien.",
+        "Je suis malade."
+      ],
+      [
+        "restaurant",
+        "Repas",
+        "Lieu où l’on mange dehors.",
+        "Nous allons au restaurant."
+      ],
+      [
+        "plat",
+        "Cuisine",
+        "Nourriture préparée pour un repas.",
+        "Mon plat préféré est le couscous."
+      ],
+      [
+        "recette",
+        "Cuisine",
+        "Explication pour préparer un plat.",
+        "Je lis une recette."
+      ],
+      [
+        "ingrédients",
+        "Cuisine",
+        "Produits nécessaires pour cuisiner.",
+        "Il manque des ingrédients."
+      ],
+      [
+        "cuisiner",
+        "Cuisine",
+        "Préparer à manger.",
+        "J’aime cuisiner."
+      ],
+      [
+        "acheter",
+        "Achats",
+        "Payer pour avoir quelque chose.",
+        "Je vais acheter du pain."
+      ]
+    ],
+    "Verbes, actions et émotions": [
+      [
+        "annuler",
+        "Verbes",
+        "Supprimer une activité prévue.",
+        "Je dois annuler ma réservation."
+      ],
+      [
+        "rembourser",
+        "Verbes",
+        "Redonner de l’argent après un problème.",
+        "Le magasin peut me rembourser."
+      ],
+      [
+        "rendre",
+        "Verbes",
+        "Redonner un objet.",
+        "Je dois rendre le livre."
+      ],
+      [
+        "emprunter",
+        "Verbes",
+        "Prendre quelque chose pour un temps limité.",
+        "Je veux emprunter un dictionnaire."
+      ],
+      [
+        "réserver",
+        "Verbes",
+        "Garder une place ou une chambre à l’avance.",
+        "Je vais réserver une chambre."
+      ],
+      [
+        "ranger",
+        "Verbes",
+        "Mettre les choses à leur place.",
+        "Je dois ranger ma chambre."
+      ],
+      [
+        "préparer",
+        "Verbes",
+        "Organiser avant une activité.",
+        "Je prépare une fête."
+      ],
+      [
+        "perdre",
+        "Verbes",
+        "Ne plus trouver quelque chose.",
+        "J’ai perdu mon sac."
+      ],
+      [
+        "retrouver",
+        "Verbes",
+        "Trouver quelque chose après l’avoir perdu.",
+        "Je retrouve mes clés."
+      ],
+      [
+        "fatigué",
+        "Émotions",
+        "Quand on a besoin de dormir ou de se reposer.",
+        "Je suis fatigué."
+      ],
+      [
+        "heureux",
+        "Émotions",
+        "Content, joyeux.",
+        "Je suis heureux."
+      ],
+      [
+        "stressé",
+        "Émotions",
+        "Inquiet ou sous pression.",
+        "Je suis stressé avant l’examen."
+      ],
+      [
+        "énervé",
+        "Émotions",
+        "En colère ou agacé.",
+        "Il est énervé aujourd’hui."
+      ],
+      [
+        "inquiet",
+        "Émotions",
+        "Quand on pense qu’un problème peut arriver.",
+        "Je suis inquiet pour le train."
+      ]
+    ]
+  },
+  "B1": {
+    "Tous les thèmes": [
+      [
+        "rembourser",
+        "Interaction",
+        "Redonner de l’argent après un problème.",
+        "Le club peut me rembourser."
+      ],
+      [
+        "annuler",
+        "Interaction",
+        "Supprimer une réservation ou une activité prévue.",
+        "Je dois annuler mon inscription."
+      ],
+      [
+        "rendre",
+        "Interaction",
+        "Redonner un objet emprunté.",
+        "Tu dois me rendre le livre."
+      ],
+      [
+        "prêter",
+        "Interaction",
+        "Donner quelque chose pour un temps limité.",
+        "Je peux te prêter ce livre."
+      ],
+      [
+        "emprunter",
+        "Interaction",
+        "Prendre quelque chose pour un temps limité.",
+        "Je voudrais emprunter un livre."
+      ],
+      [
+        "compromis",
+        "Interaction",
+        "Solution où chacun fait un effort.",
+        "On peut trouver un compromis."
+      ],
+      [
+        "mécontentement",
+        "Interaction",
+        "Fait de ne pas être content d’une situation.",
+        "J’exprime mon mécontentement."
+      ],
+      [
+        "portefeuille",
+        "Vie quotidienne",
+        "Objet pour garder l’argent et les papiers.",
+        "J’ai perdu mon portefeuille."
+      ],
+      [
+        "justificatif",
+        "Administration",
+        "Document qui sert de preuve.",
+        "Il faut apporter un justificatif."
+      ],
+      [
+        "formulaire",
+        "Administration",
+        "Document à remplir.",
+        "Je dois remplir un formulaire."
+      ],
+      [
+        "tarif",
+        "Services",
+        "Prix d’un service.",
+        "Je voudrais connaître les tarifs."
+      ],
+      [
+        "inscription",
+        "Services",
+        "Action de s’inscrire.",
+        "L’inscription au club coûte vingt euros."
+      ],
+      [
+        "convaincre",
+        "Argumentation",
+        "Faire changer l’avis de quelqu’un.",
+        "Je veux convaincre mes parents."
+      ],
+      [
+        "persuader",
+        "Argumentation",
+        "Amener quelqu’un à accepter une idée.",
+        "Elle essaie de persuader son ami."
+      ],
+      [
+        "argument",
+        "Argumentation",
+        "Idée utilisée pour défendre une opinion.",
+        "Ton argument est pertinent."
+      ],
+      [
+        "convaincant",
+        "Argumentation",
+        "Qui donne envie d’être d’accord.",
+        "Son exemple est convaincant."
+      ],
+      [
+        "pertinent",
+        "Argumentation",
+        "Bien choisi et adapté au sujet.",
+        "Ton argument est pertinent."
+      ],
+      [
+        "nuancer",
+        "Argumentation",
+        "Dire une idée avec plus de précision.",
+        "Il faut nuancer ton opinion."
+      ],
+      [
+        "justifier",
+        "Argumentation",
+        "Donner une raison ou un exemple.",
+        "Tu dois justifier ton avis."
+      ],
+      [
+        "illustrer",
+        "Argumentation",
+        "Donner un exemple pour rendre clair.",
+        "Tu peux illustrer ton argument."
+      ],
+      [
+        "désaccord",
+        "Argumentation",
+        "Contraire de l’accord.",
+        "J’exprime mon désaccord calmement."
+      ],
+      [
+        "avantage",
+        "Argumentation",
+        "Point positif.",
+        "C’est un avantage important."
+      ],
+      [
+        "inconvénient",
+        "Argumentation",
+        "Point négatif.",
+        "Il y a aussi des inconvénients."
+      ],
+      [
+        "technologie",
+        "Technologie",
+        "Ensemble des outils modernes.",
+        "La technologie évolue vite."
+      ],
+      [
+        "application",
+        "Technologie",
+        "Programme utilisé sur téléphone.",
+        "Cette application est pratique."
+      ],
+      [
+        "réseau social",
+        "Technologie",
+        "Site ou application pour communiquer.",
+        "Les réseaux sociaux prennent du temps."
+      ],
+      [
+        "autonome",
+        "Technologie",
+        "Qui fonctionne seul.",
+        "La voiture autonome intrigue beaucoup."
+      ],
+      [
+        "manuel",
+        "École",
+        "Qui se fait avec les mains.",
+        "J’aime les activités manuelles."
+      ],
+      [
+        "écriture",
+        "École",
+        "Action d’écrire.",
+        "L’écriture manuelle reste importante."
+      ],
+      [
+        "apprentissage",
+        "École",
+        "Action d’apprendre.",
+        "Chaque élève a une méthode d’apprentissage."
+      ],
+      [
+        "méthode",
+        "École",
+        "Manière de travailler.",
+        "Cette méthode est efficace."
+      ],
+      [
+        "formation",
+        "École",
+        "Apprentissage pour acquérir des compétences.",
+        "Je suis une formation professionnelle."
+      ],
+      [
+        "orientation",
+        "École",
+        "Choix des études ou du métier futur.",
+        "Je réfléchis à mon orientation."
+      ],
+      [
+        "forum",
+        "Travail",
+        "Événement où l’on rencontre des professionnels.",
+        "Je vais au forum des métiers."
+      ],
+      [
+        "métier",
+        "Travail",
+        "Profession.",
+        "Je veux apprendre un métier."
+      ],
+      [
+        "stage",
+        "Travail",
+        "Période de découverte en entreprise.",
+        "Je fais un stage."
+      ],
+      [
+        "entreprise",
+        "Travail",
+        "Société où l’on travaille.",
+        "Je travaille dans une entreprise."
+      ],
+      [
+        "employeur",
+        "Travail",
+        "Personne ou entreprise qui donne du travail.",
+        "Mon employeur est exigeant."
+      ],
+      [
+        "entretien",
+        "Travail",
+        "Rencontre pour obtenir un travail ou un stage.",
+        "J’ai un entretien demain."
+      ],
+      [
+        "compétence",
+        "Travail",
+        "Capacité utile pour faire quelque chose.",
+        "Cette compétence est importante."
+      ],
+      [
+        "candidature",
+        "Travail",
+        "Demande pour un emploi ou une formation.",
+        "J’envoie ma candidature."
+      ],
+      [
+        "responsabilité",
+        "Travail",
+        "Ce qu’une personne doit gérer.",
+        "J’ai de nouvelles responsabilités."
+      ],
+      [
+        "week-end",
+        "Projet",
+        "Samedi et dimanche.",
+        "Nous organisons un week-end."
+      ],
+      [
+        "organisation",
+        "Projet",
+        "Manière de préparer une activité.",
+        "L’organisation est compliquée."
+      ],
+      [
+        "colocataire",
+        "Logement",
+        "Personne qui partage un logement.",
+        "Mon colocataire est bruyant."
+      ],
+      [
+        "désordonné",
+        "Logement",
+        "Qui ne range pas ses affaires.",
+        "L’appartement est désordonné."
+      ],
+      [
+        "bruyant",
+        "Logement",
+        "Qui fait beaucoup de bruit.",
+        "Le voisin est bruyant."
+      ],
+      [
+        "intimité",
+        "Relations",
+        "Vie privée d’une personne.",
+        "Tout le monde a besoin d’intimité."
+      ],
+      [
+        "insupportable",
+        "Relations",
+        "Très difficile à supporter.",
+        "Le bruit devient insupportable."
+      ],
+      [
+        "agaçant",
+        "Émotions",
+        "Énervant, irritant.",
+        "Ce bruit devient agaçant."
+      ],
+      [
+        "frustré",
+        "Émotions",
+        "Quand une situation empêche de réussir.",
+        "Je suis frustré par cette erreur."
+      ],
+      [
+        "soulagé",
+        "Émotions",
+        "Quand un problème est terminé.",
+        "Je suis soulagé après l’examen."
+      ],
+      [
+        "préoccupé",
+        "Émotions",
+        "Qui pense beaucoup à un problème.",
+        "Elle semble préoccupée."
+      ],
+      [
+        "anxieux",
+        "Émotions",
+        "Très inquiet.",
+        "Il est anxieux avant l’entretien."
+      ],
+      [
+        "indifférent",
+        "Émotions",
+        "Qui ne montre pas d’intérêt.",
+        "Il semble indifférent au problème."
+      ],
+      [
+        "stressant",
+        "Émotions",
+        "Qui provoque du stress.",
+        "Cette situation est stressante."
+      ],
+      [
+        "réservation",
+        "Voyage",
+        "Action de garder une chambre ou une place.",
+        "J’ai fait une réservation."
+      ],
+      [
+        "hébergement",
+        "Voyage",
+        "Lieu où l’on dort pendant un séjour.",
+        "L’hébergement est compris dans le prix."
+      ],
+      [
+        "séjour",
+        "Voyage",
+        "Période passée dans un lieu.",
+        "Le séjour dure une semaine."
+      ],
+      [
+        "réception",
+        "Hôtel",
+        "Lieu de l’hôtel où l’on accueille les clients.",
+        "Je vais à la réception."
+      ],
+      [
+        "correspondance",
+        "Transports",
+        "Changement entre deux transports.",
+        "J’ai raté ma correspondance."
+      ],
+      [
+        "contrôleur",
+        "Transports",
+        "Personne qui vérifie les billets.",
+        "Le contrôleur arrive."
+      ],
+      [
+        "trajet",
+        "Transports",
+        "Chemin entre deux lieux.",
+        "Le trajet est long."
+      ],
+      [
+        "tourisme responsable",
+        "Environnement",
+        "Façon de voyager en respectant les lieux et les habitants.",
+        "Le tourisme responsable limite les dégâts."
+      ],
+      [
+        "pollution",
+        "Environnement",
+        "Dégradation de l’air, de l’eau ou du sol.",
+        "La pollution augmente."
+      ],
+      [
+        "déchets",
+        "Environnement",
+        "Ce que l’on jette.",
+        "Il faut trier les déchets."
+      ],
+      [
+        "recycler",
+        "Environnement",
+        "Transformer pour réutiliser.",
+        "On doit recycler le papier."
+      ],
+      [
+        "gaspiller",
+        "Environnement",
+        "Utiliser inutilement.",
+        "Il faut éviter de gaspiller."
+      ],
+      [
+        "responsable",
+        "Société",
+        "Qui agit avec sérieux.",
+        "Une attitude responsable est nécessaire."
+      ]
+    ],
+    "Situations-problèmes et services": [
+      [
+        "rembourser",
+        "Interaction",
+        "Redonner de l’argent après un problème.",
+        "Le club peut me rembourser."
+      ],
+      [
+        "annuler",
+        "Interaction",
+        "Supprimer une réservation ou une activité prévue.",
+        "Je dois annuler mon inscription."
+      ],
+      [
+        "rendre",
+        "Interaction",
+        "Redonner un objet emprunté.",
+        "Tu dois me rendre le livre."
+      ],
+      [
+        "prêter",
+        "Interaction",
+        "Donner quelque chose pour un temps limité.",
+        "Je peux te prêter ce livre."
+      ],
+      [
+        "emprunter",
+        "Interaction",
+        "Prendre quelque chose pour un temps limité.",
+        "Je voudrais emprunter un livre."
+      ],
+      [
+        "compromis",
+        "Interaction",
+        "Solution où chacun fait un effort.",
+        "On peut trouver un compromis."
+      ],
+      [
+        "mécontentement",
+        "Interaction",
+        "Fait de ne pas être content d’une situation.",
+        "J’exprime mon mécontentement."
+      ],
+      [
+        "portefeuille",
+        "Vie quotidienne",
+        "Objet pour garder l’argent et les papiers.",
+        "J’ai perdu mon portefeuille."
+      ],
+      [
+        "justificatif",
+        "Administration",
+        "Document qui sert de preuve.",
+        "Il faut apporter un justificatif."
+      ],
+      [
+        "formulaire",
+        "Administration",
+        "Document à remplir.",
+        "Je dois remplir un formulaire."
+      ],
+      [
+        "tarif",
+        "Services",
+        "Prix d’un service.",
+        "Je voudrais connaître les tarifs."
+      ],
+      [
+        "inscription",
+        "Services",
+        "Action de s’inscrire.",
+        "L’inscription au club coûte vingt euros."
+      ]
+    ],
+    "Argumenter et convaincre": [
+      [
+        "convaincre",
+        "Argumentation",
+        "Faire changer l’avis de quelqu’un.",
+        "Je veux convaincre mes parents."
+      ],
+      [
+        "persuader",
+        "Argumentation",
+        "Amener quelqu’un à accepter une idée.",
+        "Elle essaie de persuader son ami."
+      ],
+      [
+        "argument",
+        "Argumentation",
+        "Idée utilisée pour défendre une opinion.",
+        "Ton argument est pertinent."
+      ],
+      [
+        "convaincant",
+        "Argumentation",
+        "Qui donne envie d’être d’accord.",
+        "Son exemple est convaincant."
+      ],
+      [
+        "pertinent",
+        "Argumentation",
+        "Bien choisi et adapté au sujet.",
+        "Ton argument est pertinent."
+      ],
+      [
+        "nuancer",
+        "Argumentation",
+        "Dire une idée avec plus de précision.",
+        "Il faut nuancer ton opinion."
+      ],
+      [
+        "justifier",
+        "Argumentation",
+        "Donner une raison ou un exemple.",
+        "Tu dois justifier ton avis."
+      ],
+      [
+        "illustrer",
+        "Argumentation",
+        "Donner un exemple pour rendre clair.",
+        "Tu peux illustrer ton argument."
+      ],
+      [
+        "désaccord",
+        "Argumentation",
+        "Contraire de l’accord.",
+        "J’exprime mon désaccord calmement."
+      ],
+      [
+        "avantage",
+        "Argumentation",
+        "Point positif.",
+        "C’est un avantage important."
+      ],
+      [
+        "inconvénient",
+        "Argumentation",
+        "Point négatif.",
+        "Il y a aussi des inconvénients."
+      ]
+    ],
+    "Technologie, école et apprentissage": [
+      [
+        "technologie",
+        "Technologie",
+        "Ensemble des outils modernes.",
+        "La technologie évolue vite."
+      ],
+      [
+        "application",
+        "Technologie",
+        "Programme utilisé sur téléphone.",
+        "Cette application est pratique."
+      ],
+      [
+        "réseau social",
+        "Technologie",
+        "Site ou application pour communiquer.",
+        "Les réseaux sociaux prennent du temps."
+      ],
+      [
+        "autonome",
+        "Technologie",
+        "Qui fonctionne seul.",
+        "La voiture autonome intrigue beaucoup."
+      ],
+      [
+        "manuel",
+        "École",
+        "Qui se fait avec les mains.",
+        "J’aime les activités manuelles."
+      ],
+      [
+        "écriture",
+        "École",
+        "Action d’écrire.",
+        "L’écriture manuelle reste importante."
+      ],
+      [
+        "apprentissage",
+        "École",
+        "Action d’apprendre.",
+        "Chaque élève a une méthode d’apprentissage."
+      ],
+      [
+        "méthode",
+        "École",
+        "Manière de travailler.",
+        "Cette méthode est efficace."
+      ],
+      [
+        "formation",
+        "École",
+        "Apprentissage pour acquérir des compétences.",
+        "Je suis une formation professionnelle."
+      ],
+      [
+        "orientation",
+        "École",
+        "Choix des études ou du métier futur.",
+        "Je réfléchis à mon orientation."
+      ]
+    ],
+    "Travail, métiers et projets": [
+      [
+        "forum",
+        "Travail",
+        "Événement où l’on rencontre des professionnels.",
+        "Je vais au forum des métiers."
+      ],
+      [
+        "métier",
+        "Travail",
+        "Profession.",
+        "Je veux apprendre un métier."
+      ],
+      [
+        "stage",
+        "Travail",
+        "Période de découverte en entreprise.",
+        "Je fais un stage."
+      ],
+      [
+        "entreprise",
+        "Travail",
+        "Société où l’on travaille.",
+        "Je travaille dans une entreprise."
+      ],
+      [
+        "employeur",
+        "Travail",
+        "Personne ou entreprise qui donne du travail.",
+        "Mon employeur est exigeant."
+      ],
+      [
+        "entretien",
+        "Travail",
+        "Rencontre pour obtenir un travail ou un stage.",
+        "J’ai un entretien demain."
+      ],
+      [
+        "compétence",
+        "Travail",
+        "Capacité utile pour faire quelque chose.",
+        "Cette compétence est importante."
+      ],
+      [
+        "candidature",
+        "Travail",
+        "Demande pour un emploi ou une formation.",
+        "J’envoie ma candidature."
+      ],
+      [
+        "responsabilité",
+        "Travail",
+        "Ce qu’une personne doit gérer.",
+        "J’ai de nouvelles responsabilités."
+      ],
+      [
+        "week-end",
+        "Projet",
+        "Samedi et dimanche.",
+        "Nous organisons un week-end."
+      ],
+      [
+        "organisation",
+        "Projet",
+        "Manière de préparer une activité.",
+        "L’organisation est compliquée."
+      ]
+    ],
+    "Logement, relations et émotions": [
+      [
+        "colocataire",
+        "Logement",
+        "Personne qui partage un logement.",
+        "Mon colocataire est bruyant."
+      ],
+      [
+        "désordonné",
+        "Logement",
+        "Qui ne range pas ses affaires.",
+        "L’appartement est désordonné."
+      ],
+      [
+        "bruyant",
+        "Logement",
+        "Qui fait beaucoup de bruit.",
+        "Le voisin est bruyant."
+      ],
+      [
+        "intimité",
+        "Relations",
+        "Vie privée d’une personne.",
+        "Tout le monde a besoin d’intimité."
+      ],
+      [
+        "insupportable",
+        "Relations",
+        "Très difficile à supporter.",
+        "Le bruit devient insupportable."
+      ],
+      [
+        "agaçant",
+        "Émotions",
+        "Énervant, irritant.",
+        "Ce bruit devient agaçant."
+      ],
+      [
+        "frustré",
+        "Émotions",
+        "Quand une situation empêche de réussir.",
+        "Je suis frustré par cette erreur."
+      ],
+      [
+        "soulagé",
+        "Émotions",
+        "Quand un problème est terminé.",
+        "Je suis soulagé après l’examen."
+      ],
+      [
+        "préoccupé",
+        "Émotions",
+        "Qui pense beaucoup à un problème.",
+        "Elle semble préoccupée."
+      ],
+      [
+        "anxieux",
+        "Émotions",
+        "Très inquiet.",
+        "Il est anxieux avant l’entretien."
+      ],
+      [
+        "indifférent",
+        "Émotions",
+        "Qui ne montre pas d’intérêt.",
+        "Il semble indifférent au problème."
+      ],
+      [
+        "stressant",
+        "Émotions",
+        "Qui provoque du stress.",
+        "Cette situation est stressante."
+      ]
+    ],
+    "Voyage, environnement et société": [
+      [
+        "réservation",
+        "Voyage",
+        "Action de garder une chambre ou une place.",
+        "J’ai fait une réservation."
+      ],
+      [
+        "hébergement",
+        "Voyage",
+        "Lieu où l’on dort pendant un séjour.",
+        "L’hébergement est compris dans le prix."
+      ],
+      [
+        "séjour",
+        "Voyage",
+        "Période passée dans un lieu.",
+        "Le séjour dure une semaine."
+      ],
+      [
+        "réception",
+        "Hôtel",
+        "Lieu de l’hôtel où l’on accueille les clients.",
+        "Je vais à la réception."
+      ],
+      [
+        "correspondance",
+        "Transports",
+        "Changement entre deux transports.",
+        "J’ai raté ma correspondance."
+      ],
+      [
+        "contrôleur",
+        "Transports",
+        "Personne qui vérifie les billets.",
+        "Le contrôleur arrive."
+      ],
+      [
+        "trajet",
+        "Transports",
+        "Chemin entre deux lieux.",
+        "Le trajet est long."
+      ],
+      [
+        "tourisme responsable",
+        "Environnement",
+        "Façon de voyager en respectant les lieux et les habitants.",
+        "Le tourisme responsable limite les dégâts."
+      ],
+      [
+        "pollution",
+        "Environnement",
+        "Dégradation de l’air, de l’eau ou du sol.",
+        "La pollution augmente."
+      ],
+      [
+        "déchets",
+        "Environnement",
+        "Ce que l’on jette.",
+        "Il faut trier les déchets."
+      ],
+      [
+        "recycler",
+        "Environnement",
+        "Transformer pour réutiliser.",
+        "On doit recycler le papier."
+      ],
+      [
+        "gaspiller",
+        "Environnement",
+        "Utiliser inutilement.",
+        "Il faut éviter de gaspiller."
+      ],
+      [
+        "responsable",
+        "Société",
+        "Qui agit avec sérieux.",
+        "Une attitude responsable est nécessaire."
+      ]
+    ]
+  }
+};
+let mode="A2", current=null, score=0,total=0,streak=0,unlockedSet=new Set(),missed=[],used=[],roundLimit=15,roundAsked=0,challenge=false,timerInterval=null,timeLeft=60;
+
+function entry(arr){return {word:arr[0],cat:arr[1],clue:arr[2],phrase:arr[3]};}
+function getPool(){const theme=themeSelect.value||"Tous les thèmes";return (DATA[mode][theme]||DATA[mode]["Tous les thèmes"]).map(entry);}
+function shuffleWord(word){let arr=word.split("");for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}let mixed=arr.join("");return mixed===word?arr.reverse().join(""):mixed;}
+function normalize(s){return s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/æ/g,"ae");}
+function populateThemes(){themeSelect.innerHTML="";Object.keys(DATA[mode]).forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;themeSelect.appendChild(o);});}
+function setMode(m){mode=m;modeA2.classList.toggle("active",m==="A2");modeB1.classList.toggle("active",m==="B1");levelBadge.textContent="Niveau "+m;populateThemes();startRound();}
+function setRoundLimit(){roundLimit=parseInt(roundSelect.value,10);roundCount.textContent=roundAsked+"/"+roundLimit;}
+function startRound(){score=0;total=0;streak=0;roundAsked=0;used=[];recentWords=[];missed=[];challenge=false;clearInterval(timerInterval);timer.classList.add("hidden");setRoundLimit();updateBoxes();updateStats();newGame(true);}
+let recentWords=[];
+
+function pickWord(){
+  const pool=getPool();
+
+  if(missed.length){
+    const safeMissed=missed.filter(x=>!recentWords.includes(x.word));
+    if(safeMissed.length && Math.random()<0.30){
+      const item=safeMissed[Math.floor(Math.random()*safeMissed.length)];
+      missed=missed.filter(x=>x.word!==item.word);
+      recentWords.push(item.word);
+      if(recentWords.length>12){recentWords.shift();}
+      return item;
+    }
+  }
+
+  if(used.length>=pool.length){used=[];}
+  let available=pool.filter(x=>!used.includes(x.word) && !recentWords.includes(x.word));
+  if(!available.length){recentWords=[];available=pool.filter(x=>!used.includes(x.word));}
+  if(!available.length){used=[];available=pool;}
+
+  let item=available[Math.floor(Math.random()*available.length)];
+  used.push(item.word);
+  recentWords.push(item.word);
+  if(recentWords.length>12){recentWords.shift();}
+  return item;
+}
+function newGame(force=false){
+  if(roundAsked>=roundLimit && !force){endRound();return;}
+  current=pickWord();
+  category.textContent=current.cat;
+  clue.textContent=current.clue;
+  scrambled.textContent=shuffleWord(current.word).toUpperCase();
+  answer.value="";
+  feedback.className="feedback";
+  feedback.innerHTML="Retrouve le mot mélangé. Les mots ratés peuvent revenir plus tard.";
+  answer.focus();
+}
+function checkAnswer(){
+  if(!current){newGame();return;}
+  const ans=normalize(answer.value), good=normalize(current.word);
+  total++;roundAsked++;
+  if(ans===good){
+    score++;streak++;unlockedSet.add(current.word);
+    feedback.className="feedback good";
+    feedback.innerHTML="<strong>✅ Bravo !</strong> Mot trouvé : <strong>"+current.word+"</strong><br>"+current.phrase+"<div class='unlock'>🔓 Mot débloqué : "+current.word+"</div>";
+  }else{
+    streak=0;missed.push(current);
+    feedback.className="feedback bad";
+    feedback.innerHTML="<strong>❌ Pas encore.</strong> Le mot reviendra plus tard.<br>Indice : "+current.clue;
+  }
+  updateBoxes();updateStats();
+  setTimeout(()=>newGame(false), challenge?650:1200);
+}
+function showHint(){if(!current)return;feedback.className="feedback hint";feedback.innerHTML="💡 Indice : le mot commence par <strong>"+current.word[0].toUpperCase()+"</strong> et contient <strong>"+current.word.length+"</strong> lettres.<br>Phrase utile : "+current.phrase;}
+function skipWord(){if(!current)return;total++;roundAsked++;streak=0;missed.push(current);feedback.className="feedback hint";feedback.innerHTML="Le mot était : <strong>"+current.word+"</strong><br>Il reviendra plus tard.<br>"+current.phrase;updateBoxes();updateStats();setTimeout(()=>newGame(false),1000);}
+function updateBoxes(){
+  unlocked.innerHTML="";Array.from(unlockedSet).slice(-24).forEach(w=>{let d=document.createElement("div");d.className="word-chip";d.textContent=w;unlocked.appendChild(d);});
+  missedBox.innerHTML="";missed.slice(0,12).forEach(x=>{let d=document.createElement("div");d.className="word-chip";d.textContent=x.word;missedBox.appendChild(d);});
+}
+function updateStats(){
+  const pct=total?Math.round(score/total*100):0;
+  document.getElementById("score").textContent=score+" / "+total;
+  percent.textContent=pct+"%";document.getElementById("streak").textContent=streak;
+  roundCount.textContent=roundAsked+"/"+roundLimit;
+  let b="Début";if(pct>=90&&total>=8)b="🏆 Expert";else if(pct>=75&&total>=6)b="🔵 Stratège";else if(pct>=55&&total>=4)b="🟡 Explorateur";else if(total>=3)b="🟠 En route";
+  badge.textContent=b;progressFill.style.width=Math.min(100,roundAsked/roundLimit*100)+"%";
+  finalText.innerHTML="<strong>"+b+"</strong><br>Réussite : <strong>"+pct+"%</strong><br>Mots débloqués : <strong>"+unlockedSet.size+"</strong><br>"+(mode==="A2"?"Objectif : reconnaître vite les mots utiles du quotidien.":"Objectif : utiliser des mots précis en situation DELF B1.");
+}
+function endRound(){feedback.className="feedback good";feedback.innerHTML="<strong>🏁 Partie terminée !</strong><br>Tu peux recommencer : une nouvelle série de mots sera proposée.";updateStats();}
+function startChallenge(){startRound();challenge=true;timeLeft=60;timer.classList.remove("hidden");timer.textContent=timeLeft;clearInterval(timerInterval);timerInterval=setInterval(()=>{timeLeft--;timer.textContent=timeLeft;if(timeLeft<=0){clearInterval(timerInterval);challenge=false;timer.textContent="Défi terminé";endRound();}},1000);}
+function resetAll(){unlockedSet.clear();startRound();}
+function speakCurrent(){if(!current)return;if(!("speechSynthesis" in window)){alert("Audio indisponible.");return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(current.clue+". Phrase exemple : "+current.phrase);u.lang="fr-FR";u.rate=.88;u.pitch=1.03;speechSynthesis.speak(u);}
+window.addEventListener("load",()=>{populateThemes();startRound();});
+</script>
+</body>
+</html>
