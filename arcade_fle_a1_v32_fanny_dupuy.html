@@ -1,0 +1,4966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade FLE – Fanny Dupuy A1 - Mots simples</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7fb;--ink:#102033;--blue:#2563eb;--orange:#f59e0b;--green:#16a34a;--purple:#7c3aed;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;padding:18px;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);line-height:1.8;letter-spacing:.3px}
+.container{max-width:980px;margin:auto;background:white;border-radius:24px;padding:24px;box-shadow:0 6px 22px rgba(0,0,0,.09)}
+h1{text-align:center;margin:0;color:#1e293b;font-size:clamp(1.8rem,4vw,2.8rem)}
+.subtitle{text-align:center;color:#475569;margin:8px 0 22px;font-size:1.05rem}
+.panel{border:2px solid #dbeafe;border-radius:20px;padding:20px;margin:18px 0;background:#f8fbff}
+.modegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0}
+.modebtn{border:3px solid #cbd5e1;border-radius:18px;padding:14px;background:white;cursor:pointer;font-weight:bold;font-size:1rem;transition:.2s;color:#102033}
+.modebtn:hover{transform:scale(1.02)}.modebtn.active{border-color:var(--orange);box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+.selectrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+select,input{width:100%;padding:15px;font-size:1.15rem;line-height:1.8;border:2px solid #cbd5e1;border-radius:14px;margin:10px 0;background:white}
+button{border:none;border-radius:12px;padding:14px 18px;line-height:1.5;margin:8px 6px 0 0;background:var(--blue);color:white;font-weight:bold;cursor:pointer;font-size:1.05rem}
+button:hover{filter:brightness(.95)}.secondary{background:#64748b}.success{background:var(--green)}.purple{background:var(--purple)}.orange{background:var(--orange)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.stat{background:white;border:1px solid #dbeafe;border-radius:14px;padding:10px;text-align:center}.stat strong{font-size:1.25rem;color:#174ea6}
+.game-card{background:#fff;border:3px solid #bfdbfe;border-radius:22px;padding:20px;margin:16px 0}
+.category{display:inline-block;border-radius:999px;padding:6px 12px;background:#e0f2fe;color:#075985;font-weight:bold}
+.clue{font-size:1.2rem;line-height:1.9;background:#f1f5f9;border-left:6px solid var(--blue);padding:16px;border-radius:12px;margin:12px 0}
+.display{font-size:1.65rem;letter-spacing:2px;text-align:center;background:#111827;color:white;border-radius:16px;padding:18px;margin:15px 0;font-weight:bold;word-break:break-word;min-height:76px}
+.imagebox{font-size:4.5rem;letter-spacing:0}
+.syllable{display:inline-block;background:#e0f2fe;color:#075985;border:2px solid #7dd3fc;border-radius:14px;padding:8px 12px;margin:5px;font-size:1.25rem}
+.feedback{margin-top:14px;padding:14px;border-radius:14px;background:#f1f5f9}.good{border-left:6px solid var(--green);background:#ecfdf5}.bad{border-left:6px solid var(--red);background:#fef2f2}.hint{border-left:6px solid var(--orange);background:#fff7ed}
+.progress{width:100%;height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}.progress-fill{height:100%;background:linear-gradient(90deg,#f59e0b,#22c55e);width:0%;transition:.3s}
+.word-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:10px}.word-chip{background:#e0f2fe;border:1px solid #7dd3fc;border-radius:999px;padding:8px 10px;font-weight:bold;text-align:center}
+.final{background:#eef6ff;border:3px solid #60a5fa;border-radius:20px;padding:16px;margin-top:16px}.small{font-size:.95rem;color:#475569}
+
+
+
+.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.matchcol{background:#f8fafc;border:2px solid #dbeafe;border-radius:16px;padding:12px}
+.matchcol h3{margin:4px 0 10px;font-size:1.15rem;color:#102033}
+.matchitem{display:block;width:100%;margin:8px 0;padding:12px 10px;border-radius:14px;border:3px solid #cbd5e1;background:white;font-size:clamp(.95rem,2.4vw,1.12rem);line-height:1.35;font-weight:800;cursor:pointer;text-align:center;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.matchverb{color:#b91c1c;border-color:#fecaca;background:#fff7f7}
+.matchobj{color:#1d4ed8;border-color:#bfdbfe;background:#eff6ff}
+.matchitem:hover{transform:scale(1.01);filter:brightness(.98)}
+.matchitem.selected{background:#fef3c7;border-color:#f59e0b;color:#92400e}
+.matchitem.good{background:#dcfce7;border-color:#16a34a;color:#166534}
+.matchitem.wrong{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+
+.auto-good{background:#dcfce7 !important;border-color:#16a34a !important;color:#166534 !important}
+.auto-bad{background:#fee2e2 !important;border-color:#dc2626 !important;color:#991b1b !important}
+
+.match-controls-hidden{display:none}
+
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
+.choicebtn{background:#fff;color:#102033;border:3px solid #cbd5e1;border-radius:16px;padding:16px 18px;line-height:1.7;font-size:1.25rem;font-weight:bold;cursor:pointer}
+.choicebtn:hover{border-color:#2563eb;background:#eff6ff}
+.choicebtn.selected{border-color:#16a34a;background:#dcfce7;color:#166534}
+
+.tiles{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}
+.tile{background:#e0f2fe;color:#075985;border:2px solid #7dd3fc;border-radius:14px;padding:12px 16px;line-height:1.7;font-size:1.25rem;font-weight:bold;cursor:pointer;user-select:none}
+.tile:hover{filter:brightness(.96)}
+.answerline{min-height:52px;background:#f8fafc;border:2px dashed #94a3b8;border-radius:14px;padding:10px;margin:10px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tile.chosen{background:#dcfce7;color:#166534;border-color:#86efac}
+
+@media(max-width:600px){.display{font-size:1.25rem}.imagebox{font-size:3.5rem}.container{padding:15px}button{width:100%}.matchgrid{grid-template-columns:1fr}.matchitem{font-size:1rem;padding:11px 8px}}
+
+.choices{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px
+}
+.choicebtn{
+padding:14px;
+border-radius:16px;
+border:3px solid #cbd5e1;
+background:white;
+font-size:1.08rem;
+font-weight:700;
+cursor:pointer
+}
+.choicebtn:hover{
+transform:scale(1.01)
+}
+@media(max-width:600px){
+.choices{grid-template-columns:1fr}
+}
+
+
+.syllable.chosen{background:#dcfce7;color:#166534;border-color:#16a34a}
+.syllable.auto-bad{background:#fee2e2;color:#991b1b;border-color:#dc2626}
+
+
+.choicebtn{
+color:#102033 !important;
+background:#ffffff !important;
+}
+
+.choicebtn.selected{
+color:#102033 !important;
+}
+
+.choicebtn.auto-good{
+background:#22c55e !important;
+border-color:#15803d !important;
+color:white !important;
+font-weight:900;
+box-shadow:0 0 0 4px rgba(34,197,94,.25);
+}
+
+.choicebtn.auto-bad{
+background:#ef4444 !important;
+border-color:#b91c1c !important;
+color:white !important;
+font-weight:900;
+box-shadow:0 0 0 4px rgba(239,68,68,.25);
+}
+
+.soundtitle{
+color:#102033 !important;
+font-weight:800;
+}
+
+
+/* Version compacte A1 */
+.panel.compact-panel{padding:12px 14px;margin:10px 0}
+.panel.compact-panel h2{font-size:1.15rem;margin:0 0 8px}
+.modegrid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:8px 0}
+.modebtn{padding:10px 8px;font-size:.95rem;border-radius:14px}
+.selectrow{gap:8px}
+select,input{padding:10px 12px;margin:6px 0}
+.stats.compact-stats{grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.stat{padding:7px}.stat div{font-size:.85rem}.stat strong{font-size:1rem}
+.progress{height:10px;margin:6px 0}
+.game-card{margin-top:10px}
+.matchitem.hidden-match{visibility:hidden;pointer-events:none}
+@media(max-width:600px){
+  body{padding:8px}
+  .container{padding:12px}
+  h1{font-size:1.55rem}
+  .subtitle{font-size:.95rem;margin-bottom:10px}
+  .modegrid{grid-template-columns:repeat(2,1fr)}
+  .modebtn{font-size:.88rem;padding:9px 6px}
+  .panel.compact-panel{padding:10px;margin:8px 0}
+  .stats.compact-stats{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(4), .stat:nth-child(5){display:none}
+}
+
+
+.word-chip.unlocked-chip{
+  background:#dcfce7;
+  border-color:#16a34a;
+  color:#166534;
+}
+.word-chip.missed-chip{
+  background:#fff7ed;
+  border-color:#f97316;
+  color:#9a3412;
+}
+
+
+.timer{
+font-size:1.25rem;
+font-weight:800;
+color:#be185d;
+background:#fdf2f8;
+border:2px solid #f9a8d4;
+border-radius:14px;
+padding:8px 12px;
+display:inline-block;
+margin-top:8px;
+}
+.hidden{display:none}
+.phrase-good{
+ background:#dcfce7 !important;
+ border-color:#16a34a !important;
+ color:#166534 !important;
+}
+.phrase-wrong{
+ background:#ffedd5 !important;
+ border-color:#f97316 !important;
+ color:#9a3412 !important;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎮 Arcade FLE A1 – Mots simples</h1>
+<div class="subtitle">Écouter, lire, écrire : mots utiles, sons difficiles, homophones, choix sonore, images avec choix, homophones en contexte, syllabes et ordre des mots.</div>
+
+<section class="panel compact-panel">
+<h2>1. Mode et thème</h2>
+<div class="modegrid">
+<button class="modebtn active" id="modeListen" onclick="setGameMode('listen')">🎧 Écoute</button>
+<button class="modebtn" id="modeImage" onclick="setGameMode('image')">🖼️ Image</button>
+<button class="modebtn" id="modeAnagram" onclick="setGameMode('anagram')">🔀 Syllabes</button>
+<button class="modebtn" id="modeSentence" onclick="setGameMode('sentence')">🧩 Phrase</button>
+<button class="modebtn" id="modeMatch" onclick="setGameMode('match')">🔗 Associer</button>
+<button class="modebtn" id="modeSound" onclick="setGameMode('sound')">👂 Sons</button>
+</div>
+<div class="selectrow">
+<div><label><strong>Thème</strong></label><select id="themeSelect" onchange="startRound()"></select></div>
+<div><label><strong>Longueur</strong></label><select id="roundSelect" onchange="setRoundLimit()"><option value="8">8 mots</option><option value="10" selected>10 mots</option><option value="12">12 mots</option></select></div>
+</div>
+<button onclick="startRound()" class="success">Nouvelle partie</button>
+<button onclick="startChallenge()" class="purple">⏱️ Mode chrono</button>
+<button onclick="resetAll()" class="secondary">Réinitialiser</button>
+</section>
+
+<section class="panel compact-panel">
+<h2>2. Progression</h2>
+<div class="stats compact-stats">
+<div class="stat"><div>Score</div><strong id="score">0</strong></div>
+<div class="stat"><div>Réussite</div><strong id="percent">0%</strong></div>
+<div class="stat"><div>Série</div><strong id="streak">0</strong></div>
+<div class="stat"><div>Badge</div><strong id="badge">Début</strong></div>
+<div class="stat"><div>Question</div><strong id="roundCount">0/10</strong></div>
+</div>
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div id="timer" class="timer hidden">60</div>
+</section>
+
+<section class="game-card">
+<span class="category" id="category">A1</span>
+<div class="clue" id="clue">Clique sur “Nouvelle partie”.</div>
+<div class="display" id="displayBox">---</div>
+<input id="answer" type="text" placeholder="Écris ici..." oninput="autoCheck()" onkeydown="if(event.key==='Enter'){checkAnswer()}">
+<button id="validateBtn" onclick="checkAnswer()" style="display:none">Valider</button>
+<button id="audioBtn" onclick="playAudio()" class="purple">🔊 Écouter</button>
+<button id="hintBtn" onclick="showHint()" class="orange">Indice</button>
+<button id="skipBtn" onclick="skipWord()" class="secondary">Passer</button>
+<div id="feedback" class="feedback">Objectif : écouter, reconnaître et écrire des mots simples.</div>
+</section>
+
+<section class="panel">
+<h2>🔁 Mots à revoir</h2>
+<p class="small">Les mots passés ou ratés reviennent plus tard, pas immédiatement.</p>
+<div class="word-list" id="missedBox"></div>
+</section>
+
+<section class="panel">
+<h2>🔓 Mots réussis</h2>
+<div class="word-list" id="unlocked"></div>
+</section>
+
+<section class="final">
+<h2>🏆 Bilan</h2>
+<div id="finalText">Joue quelques mots pour obtenir un bilan.</div>
+</section>
+</div>
+
+<script>
+const DATA = {
+  "A1": {
+    "Tous les thèmes": [
+      [
+        "bonjour",
+        "Saluer",
+        "Mot pour saluer.",
+        "Bonjour.",
+        "bo/n/jour",
+        "👋"
+      ],
+      [
+        "salut",
+        "Saluer",
+        "Mot familier pour saluer.",
+        "Salut.",
+        "sa/lut",
+        "👋"
+      ],
+      [
+        "merci",
+        "Saluer",
+        "Mot pour remercier.",
+        "Merci.",
+        "mer/ci",
+        "🙏"
+      ],
+      [
+        "pardon",
+        "Saluer",
+        "Mot pour s’excuser.",
+        "Pardon.",
+        "par/don",
+        "🙏"
+      ],
+      [
+        "au revoir",
+        "Saluer",
+        "Mot pour partir.",
+        "Au revoir.",
+        "au/re/voir",
+        "👋"
+      ],
+      [
+        "madame",
+        "Saluer",
+        "Mot poli pour une femme.",
+        "Bonjour madame.",
+        "ma/dame",
+        "👩"
+      ],
+      [
+        "monsieur",
+        "Saluer",
+        "Mot poli pour un homme.",
+        "Bonjour monsieur.",
+        "mon/sieur",
+        "👨"
+      ],
+      [
+        "prénom",
+        "Se présenter",
+        "Nom utilisé tous les jours.",
+        "Mon prénom est Ali.",
+        "pré/nom",
+        "🪪"
+      ],
+      [
+        "nom",
+        "Se présenter",
+        "Nom de famille.",
+        "Mon nom est Diallo.",
+        "nom",
+        "🪪"
+      ],
+      [
+        "âge",
+        "Se présenter",
+        "Nombre d’années.",
+        "J’ai 15 ans.",
+        "âge",
+        "🔢"
+      ],
+      [
+        "pays",
+        "Se présenter",
+        "État où on habite ou d’où on vient.",
+        "Mon pays est loin.",
+        "pays",
+        "🌍"
+      ],
+      [
+        "ville",
+        "Se présenter",
+        "Lieu où on habite.",
+        "J’habite en ville.",
+        "ville",
+        "🏙️"
+      ],
+      [
+        "adresse",
+        "Se présenter",
+        "Lieu où on habite.",
+        "Mon adresse est ici.",
+        "a/dresse",
+        "🏠"
+      ],
+      [
+        "nationalité",
+        "Se présenter",
+        "Lien avec un pays.",
+        "Ma nationalité est française.",
+        "na/tio/na/li/té",
+        "🌍"
+      ],
+      [
+        "français",
+        "Langues",
+        "Langue parlée en France.",
+        "Je parle français.",
+        "fran/çais",
+        "🇫🇷"
+      ],
+      [
+        "arabe",
+        "Langues",
+        "Langue parlée dans plusieurs pays.",
+        "Je parle arabe.",
+        "a/rabe",
+        "🗣️"
+      ],
+      [
+        "anglais",
+        "Langues",
+        "Langue parlée dans plusieurs pays.",
+        "Je parle anglais.",
+        "an/glais",
+        "🗣️"
+      ],
+      [
+        "téléphone",
+        "Vie quotidienne",
+        "Objet pour appeler.",
+        "Mon téléphone sonne.",
+        "té/lé/phone",
+        "📱"
+      ],
+      [
+        "mail",
+        "Vie quotidienne",
+        "Message sur internet.",
+        "J’écris un mail.",
+        "mail",
+        "✉️"
+      ],
+      [
+        "ami",
+        "Relations",
+        "Personne qu’on aime bien.",
+        "J’ai un ami.",
+        "a/mi",
+        "🙂"
+      ],
+      [
+        "amie",
+        "Relations",
+        "Fille qu’on aime bien.",
+        "J’ai une amie.",
+        "a/mie",
+        "🙂"
+      ],
+      [
+        "amis",
+        "Relations",
+        "Plusieurs personnes qu’on aime bien.",
+        "J’ai des amis.",
+        "a/mis",
+        "🙂"
+      ],
+      [
+        "copain",
+        "Relations",
+        "Ami familier.",
+        "Mon copain arrive.",
+        "co/pain",
+        "🙂"
+      ],
+      [
+        "copine",
+        "Relations",
+        "Amie familière.",
+        "Ma copine arrive.",
+        "co/pine",
+        "🙂"
+      ],
+      [
+        "famille",
+        "Famille",
+        "Parents, frères, sœurs.",
+        "Ma famille est ici.",
+        "fa/mille",
+        "👨‍👩‍👧"
+      ],
+      [
+        "mère",
+        "Famille",
+        "La maman.",
+        "Ma mère travaille.",
+        "mère",
+        "👩"
+      ],
+      [
+        "père",
+        "Famille",
+        "Le papa.",
+        "Mon père cuisine.",
+        "père",
+        "👨"
+      ],
+      [
+        "frère",
+        "Famille",
+        "Garçon de la famille.",
+        "Mon frère joue.",
+        "frère",
+        "👦"
+      ],
+      [
+        "sœur",
+        "Famille",
+        "Fille de la famille.",
+        "Ma sœur lit.",
+        "sœur",
+        "👧"
+      ],
+      [
+        "parents",
+        "Famille",
+        "Le père et la mère.",
+        "Mes parents parlent.",
+        "pa/rents",
+        "👨‍👩‍👧"
+      ],
+      [
+        "enfant",
+        "Famille",
+        "Garçon ou fille jeune.",
+        "L’enfant joue.",
+        "en/fant",
+        "🧒"
+      ],
+      [
+        "bébé",
+        "Famille",
+        "Très jeune enfant.",
+        "Le bébé dort.",
+        "bé/bé",
+        "👶"
+      ],
+      [
+        "école",
+        "École",
+        "Lieu pour apprendre.",
+        "Je vais à l’école.",
+        "é/cole",
+        "🏫"
+      ],
+      [
+        "lycée",
+        "École",
+        "Établissement scolaire.",
+        "Je vais au lycée.",
+        "ly/cée",
+        "🏫"
+      ],
+      [
+        "classe",
+        "École",
+        "Lieu où on apprend.",
+        "Je suis en classe.",
+        "classe",
+        "🏫"
+      ],
+      [
+        "salle",
+        "École",
+        "Pièce pour travailler.",
+        "La salle est grande.",
+        "salle",
+        "🚪"
+      ],
+      [
+        "cours",
+        "École",
+        "Moment pour apprendre.",
+        "Le cours commence.",
+        "cours",
+        "📚"
+      ],
+      [
+        "professeur",
+        "École",
+        "Personne qui enseigne.",
+        "Le professeur parle.",
+        "pro/fes/seur",
+        "👩‍🏫"
+      ],
+      [
+        "élève",
+        "École",
+        "Personne qui apprend.",
+        "L’élève écoute.",
+        "é/lève",
+        "🧑‍🎓"
+      ],
+      [
+        "tableau",
+        "École",
+        "Support où on écrit.",
+        "Je regarde le tableau.",
+        "ta/bleau",
+        "⬛"
+      ],
+      [
+        "emploi du temps",
+        "École",
+        "Liste des cours.",
+        "Je lis l’emploi du temps.",
+        "em/ploi/du/temps",
+        "📅"
+      ],
+      [
+        "horaire",
+        "École",
+        "Heure d’une activité.",
+        "L’horaire change.",
+        "ho/raire",
+        "🕘"
+      ],
+      [
+        "pause",
+        "École",
+        "Moment sans cours.",
+        "C’est la pause.",
+        "pause",
+        "⏸️"
+      ],
+      [
+        "récréation",
+        "École",
+        "Pause à l’école.",
+        "La récréation commence.",
+        "ré/cré/a/tion",
+        "⏸️"
+      ],
+      [
+        "cantine",
+        "École",
+        "Lieu pour manger.",
+        "Je mange à la cantine.",
+        "can/tine",
+        "🍽️"
+      ],
+      [
+        "atelier",
+        "Lycée professionnel",
+        "Cours pratique.",
+        "Je vais à l’atelier.",
+        "a/te/lier",
+        "🧰"
+      ],
+      [
+        "stage",
+        "Lycée professionnel",
+        "Temps en entreprise.",
+        "Je fais un stage.",
+        "stage",
+        "💼"
+      ],
+      [
+        "matière",
+        "Matières",
+        "Discipline à l’école.",
+        "J’aime cette matière.",
+        "ma/tière",
+        "📚"
+      ],
+      [
+        "maths",
+        "Matières",
+        "Matière avec les nombres.",
+        "J’ai maths.",
+        "maths",
+        "🔢"
+      ],
+      [
+        "histoire",
+        "Matières",
+        "Matière sur le passé.",
+        "J’ai histoire.",
+        "his/toire",
+        "📜"
+      ],
+      [
+        "géographie",
+        "Matières",
+        "Matière sur les pays.",
+        "J’ai géographie.",
+        "gé/o/gra/phie",
+        "🌍"
+      ],
+      [
+        "cahier",
+        "Fournitures",
+        "Objet où on écrit.",
+        "J’ai un cahier.",
+        "ca/hier",
+        "📓"
+      ],
+      [
+        "stylo",
+        "Fournitures",
+        "Objet pour écrire.",
+        "J’ai un stylo.",
+        "sty/lo",
+        "🖊️"
+      ],
+      [
+        "crayon",
+        "Fournitures",
+        "Objet pour écrire ou dessiner.",
+        "J’ai un crayon.",
+        "cra/yon",
+        "✏️"
+      ],
+      [
+        "gomme",
+        "Fournitures",
+        "Objet pour effacer.",
+        "J’ai une gomme.",
+        "gomme",
+        "🧽"
+      ],
+      [
+        "règle",
+        "Fournitures",
+        "Objet pour tracer.",
+        "J’ai une règle.",
+        "rè/gle",
+        "📏"
+      ],
+      [
+        "sac",
+        "Fournitures",
+        "Objet pour porter ses affaires.",
+        "J’ai un sac.",
+        "sac",
+        "🎒"
+      ],
+      [
+        "livre",
+        "Fournitures",
+        "Objet avec des pages.",
+        "Je lis un livre.",
+        "li/vre",
+        "📖"
+      ],
+      [
+        "feuille",
+        "Fournitures",
+        "Papier pour écrire.",
+        "Je prends une feuille.",
+        "feuille",
+        "📄"
+      ],
+      [
+        "trousse",
+        "Fournitures",
+        "Objet pour ranger les stylos.",
+        "J’ai une trousse.",
+        "trousse",
+        "✏️"
+      ],
+      [
+        "colle",
+        "Fournitures",
+        "Produit pour coller.",
+        "Je prends la colle.",
+        "colle",
+        "🧴"
+      ],
+      [
+        "ciseaux",
+        "Fournitures",
+        "Objet pour couper.",
+        "J’ai des ciseaux.",
+        "ci/seaux",
+        "✂️"
+      ],
+      [
+        "classeur",
+        "Fournitures",
+        "Objet pour ranger les feuilles.",
+        "J’ai un classeur.",
+        "clas/seur",
+        "🗂️"
+      ],
+      [
+        "devoir",
+        "École",
+        "Travail à faire.",
+        "Je fais mon devoir.",
+        "de/voir",
+        "📝"
+      ],
+      [
+        "exercice",
+        "École",
+        "Travail pour s’entraîner.",
+        "Je fais un exercice.",
+        "e/xer/cice",
+        "📝"
+      ],
+      [
+        "consigne",
+        "École",
+        "Ce qu’il faut faire.",
+        "Je lis la consigne.",
+        "con/signe",
+        "📋"
+      ],
+      [
+        "lire",
+        "Actions école",
+        "Comprendre des mots écrits.",
+        "Je lis.",
+        "lire",
+        "📖"
+      ],
+      [
+        "écrire",
+        "Actions école",
+        "Faire des mots écrits.",
+        "J’écris.",
+        "é/crire",
+        "✍️"
+      ],
+      [
+        "écouter",
+        "Actions école",
+        "Faire attention avec les oreilles.",
+        "J’écoute.",
+        "é/cou/ter",
+        "👂"
+      ],
+      [
+        "répéter",
+        "Actions école",
+        "Dire encore une fois.",
+        "Je répète.",
+        "ré/pé/ter",
+        "🗣️"
+      ],
+      [
+        "comprendre",
+        "Actions école",
+        "Savoir le sens.",
+        "Je comprends.",
+        "com/pren/dre",
+        "💡"
+      ],
+      [
+        "parler",
+        "Actions école",
+        "Dire des mots.",
+        "Je parle.",
+        "par/ler",
+        "🗣️"
+      ],
+      [
+        "regarder",
+        "Actions école",
+        "Voir avec les yeux.",
+        "Je regarde.",
+        "re/gar/der",
+        "👀"
+      ],
+      [
+        "ouvrir",
+        "Actions école",
+        "Mettre ouvert.",
+        "J’ouvre.",
+        "ou/vrir",
+        "📖"
+      ],
+      [
+        "fermer",
+        "Actions école",
+        "Mettre fermé.",
+        "Je ferme.",
+        "fer/mer",
+        "📕"
+      ],
+      [
+        "copier",
+        "Actions école",
+        "Écrire comme le modèle.",
+        "Je copie.",
+        "co/pier",
+        "✍️"
+      ],
+      [
+        "coller",
+        "Actions école",
+        "Mettre avec de la colle.",
+        "Je colle.",
+        "col/ler",
+        "🧴"
+      ],
+      [
+        "couper",
+        "Actions école",
+        "Utiliser des ciseaux.",
+        "Je coupe.",
+        "cou/per",
+        "✂️"
+      ],
+      [
+        "dessiner",
+        "Actions école",
+        "Faire un dessin.",
+        "Je dessine.",
+        "des/si/ner",
+        "🎨"
+      ],
+      [
+        "colorier",
+        "Actions école",
+        "Mettre de la couleur.",
+        "Je colorie.",
+        "co/lo/rier",
+        "🎨"
+      ],
+      [
+        "effacer",
+        "Actions école",
+        "Enlever ce qui est écrit.",
+        "J’efface.",
+        "ef/fa/cer",
+        "🧽"
+      ],
+      [
+        "souligner",
+        "Actions école",
+        "Tracer un trait sous un mot.",
+        "Je souligne.",
+        "sou/li/gner",
+        "📝"
+      ],
+      [
+        "entourer",
+        "Actions école",
+        "Faire un cercle autour.",
+        "J’entoure.",
+        "en/tou/rer",
+        "⭕"
+      ],
+      [
+        "cocher",
+        "Actions école",
+        "Mettre une croix.",
+        "Je coche.",
+        "co/cher",
+        "☑️"
+      ],
+      [
+        "boulangerie",
+        "Commerces",
+        "Magasin où on achète du pain.",
+        "Je vais à la boulangerie.",
+        "bou/lan/ge/rie",
+        "🥖"
+      ],
+      [
+        "pain",
+        "Commerces",
+        "Aliment de boulangerie.",
+        "Je veux du pain.",
+        "pain",
+        "🥖"
+      ],
+      [
+        "baguette",
+        "Commerces",
+        "Pain long.",
+        "Une baguette.",
+        "ba/guette",
+        "🥖"
+      ],
+      [
+        "croissant",
+        "Commerces",
+        "Viennoiserie du matin.",
+        "Un croissant.",
+        "crois/sant",
+        "🥐"
+      ],
+      [
+        "gâteau",
+        "Commerces",
+        "Aliment sucré.",
+        "Je prends un gâteau.",
+        "gâ/teau",
+        "🍰"
+      ],
+      [
+        "sandwich",
+        "Commerces",
+        "Pain avec quelque chose dedans.",
+        "Je prends un sandwich.",
+        "sand/wich",
+        "🥪"
+      ],
+      [
+        "supermarché",
+        "Commerces",
+        "Grand magasin.",
+        "Je vais au supermarché.",
+        "su/per/mar/ché",
+        "🛒"
+      ],
+      [
+        "magasin",
+        "Commerces",
+        "Lieu pour acheter.",
+        "Je vais au magasin.",
+        "ma/ga/sin",
+        "🏪"
+      ],
+      [
+        "pharmacie",
+        "Commerces",
+        "Magasin pour les médicaments.",
+        "Je vais à la pharmacie.",
+        "phar/ma/cie",
+        "💊"
+      ],
+      [
+        "caisse",
+        "Commerces",
+        "Lieu où on paie.",
+        "Je vais à la caisse.",
+        "caisse",
+        "💶"
+      ],
+      [
+        "ticket",
+        "Commerces",
+        "Papier après un achat.",
+        "Je prends le ticket.",
+        "tic/ket",
+        "🧾"
+      ],
+      [
+        "prix",
+        "Commerces",
+        "Combien ça coûte.",
+        "Le prix est bas.",
+        "prix",
+        "💶"
+      ],
+      [
+        "monnaie",
+        "Commerces",
+        "Argent rendu.",
+        "Je prends la monnaie.",
+        "mon/naie",
+        "💶"
+      ],
+      [
+        "carte",
+        "Commerces",
+        "Carte pour payer.",
+        "Je paie par carte.",
+        "carte",
+        "💳"
+      ],
+      [
+        "argent",
+        "Commerces",
+        "Ce qu’on utilise pour payer.",
+        "J’ai de l’argent.",
+        "ar/gent",
+        "💶"
+      ],
+      [
+        "euro",
+        "Commerces",
+        "Monnaie en France.",
+        "C’est deux euros.",
+        "eu/ro",
+        "💶"
+      ],
+      [
+        "payer",
+        "Actions sociales",
+        "Donner de l’argent.",
+        "Je paie.",
+        "pa/yer",
+        "💶"
+      ],
+      [
+        "acheter",
+        "Actions sociales",
+        "Prendre avec de l’argent.",
+        "J’achète.",
+        "a/che/ter",
+        "🛒"
+      ],
+      [
+        "commander",
+        "Actions sociales",
+        "Demander à acheter.",
+        "Je commande.",
+        "com/man/der",
+        "🗣️"
+      ],
+      [
+        "je voudrais",
+        "Actions sociales",
+        "Formule polie pour demander.",
+        "Je voudrais du pain.",
+        "je/vou/drais",
+        "🙏"
+      ],
+      [
+        "combien",
+        "Actions sociales",
+        "Mot pour demander le prix.",
+        "Combien ça coûte ?",
+        "com/bien",
+        "❓"
+      ],
+      [
+        "eau",
+        "Nourriture",
+        "Boisson simple.",
+        "Je bois de l’eau.",
+        "eau",
+        "💧"
+      ],
+      [
+        "café",
+        "Nourriture",
+        "Boisson chaude.",
+        "Je prends un café.",
+        "ca/fé",
+        "☕"
+      ],
+      [
+        "thé",
+        "Nourriture",
+        "Boisson chaude.",
+        "Je bois du thé.",
+        "thé",
+        "🍵"
+      ],
+      [
+        "lait",
+        "Nourriture",
+        "Boisson blanche.",
+        "Je bois du lait.",
+        "lait",
+        "🥛"
+      ],
+      [
+        "jus",
+        "Nourriture",
+        "Boisson aux fruits.",
+        "Je bois du jus.",
+        "jus",
+        "🧃"
+      ],
+      [
+        "pomme",
+        "Nourriture",
+        "Fruit rond.",
+        "Je mange une pomme.",
+        "pomme",
+        "🍎"
+      ],
+      [
+        "banane",
+        "Nourriture",
+        "Fruit jaune.",
+        "Je mange une banane.",
+        "ba/nane",
+        "🍌"
+      ],
+      [
+        "orange",
+        "Nourriture",
+        "Fruit orange.",
+        "Je mange une orange.",
+        "o/range",
+        "🍊"
+      ],
+      [
+        "salade",
+        "Nourriture",
+        "Plat froid.",
+        "Je mange une salade.",
+        "sa/lade",
+        "🥗"
+      ],
+      [
+        "riz",
+        "Nourriture",
+        "Aliment blanc.",
+        "Je mange du riz.",
+        "riz",
+        "🍚"
+      ],
+      [
+        "pâtes",
+        "Nourriture",
+        "Aliment italien.",
+        "Je mange des pâtes.",
+        "pâtes",
+        "🍝"
+      ],
+      [
+        "soupe",
+        "Nourriture",
+        "Plat liquide chaud.",
+        "Je mange une soupe.",
+        "soupe",
+        "🍲"
+      ],
+      [
+        "viande",
+        "Nourriture",
+        "Aliment d’animal.",
+        "Je mange de la viande.",
+        "viande",
+        "🥩"
+      ],
+      [
+        "poisson",
+        "Nourriture",
+        "Animal qu’on mange.",
+        "Je mange du poisson.",
+        "pois/son",
+        "🐟"
+      ],
+      [
+        "fromage",
+        "Nourriture",
+        "Aliment avec du lait.",
+        "Je mange du fromage.",
+        "fro/mage",
+        "🧀"
+      ],
+      [
+        "yaourt",
+        "Nourriture",
+        "Aliment avec du lait.",
+        "Je prends un yaourt.",
+        "ya/ourt",
+        "🥛"
+      ],
+      [
+        "docteur",
+        "Santé",
+        "Personne qui soigne.",
+        "Je vois le docteur.",
+        "doc/teur",
+        "🧑‍⚕️"
+      ],
+      [
+        "médecin",
+        "Santé",
+        "Personne qui soigne.",
+        "Je vois le médecin.",
+        "mé/de/cin",
+        "🧑‍⚕️"
+      ],
+      [
+        "malade",
+        "Santé",
+        "Quand on ne va pas bien.",
+        "Je suis malade.",
+        "ma/lade",
+        "🤒"
+      ],
+      [
+        "mal",
+        "Santé",
+        "Douleur.",
+        "J’ai mal.",
+        "mal",
+        "🤕"
+      ],
+      [
+        "tête",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal à la tête.",
+        "tête",
+        "🙂"
+      ],
+      [
+        "main",
+        "Corps",
+        "Partie du corps.",
+        "Je lève la main.",
+        "main",
+        "✋"
+      ],
+      [
+        "pied",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal au pied.",
+        "pied",
+        "🦶"
+      ],
+      [
+        "bras",
+        "Corps",
+        "Partie du corps.",
+        "Je lève le bras.",
+        "bras",
+        "💪"
+      ],
+      [
+        "jambe",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal à la jambe.",
+        "jambe",
+        "🦵"
+      ],
+      [
+        "yeux",
+        "Corps",
+        "Pour voir.",
+        "J’ouvre les yeux.",
+        "yeux",
+        "👀"
+      ],
+      [
+        "oreille",
+        "Corps",
+        "Pour entendre.",
+        "J’ai mal à l’oreille.",
+        "o/reille",
+        "👂"
+      ],
+      [
+        "bouche",
+        "Corps",
+        "Pour parler et manger.",
+        "J’ouvre la bouche.",
+        "bouche",
+        "👄"
+      ],
+      [
+        "nez",
+        "Corps",
+        "Pour sentir.",
+        "J’ai mal au nez.",
+        "nez",
+        "👃"
+      ],
+      [
+        "football",
+        "Sports",
+        "Sport avec un ballon.",
+        "Je joue au football.",
+        "foot/ball",
+        "⚽"
+      ],
+      [
+        "basket",
+        "Sports",
+        "Sport avec un ballon.",
+        "Je joue au basket.",
+        "bas/ket",
+        "🏀"
+      ],
+      [
+        "lutte",
+        "Sports",
+        "Sport de combat.",
+        "Je fais de la lutte.",
+        "lutte",
+        "🤼"
+      ],
+      [
+        "natation",
+        "Sports",
+        "Sport dans l’eau.",
+        "Je fais de la natation.",
+        "na/ta/tion",
+        "🏊"
+      ],
+      [
+        "danse",
+        "Loisirs",
+        "Activité avec la musique.",
+        "J’aime la danse.",
+        "danse",
+        "💃"
+      ],
+      [
+        "musique",
+        "Loisirs",
+        "Sons et chansons.",
+        "J’écoute la musique.",
+        "mu/sique",
+        "🎵"
+      ],
+      [
+        "chanson",
+        "Loisirs",
+        "Musique avec paroles.",
+        "J’écoute une chanson.",
+        "chan/son",
+        "🎵"
+      ],
+      [
+        "cinéma",
+        "Loisirs",
+        "Lieu pour voir un film.",
+        "Je vais au cinéma.",
+        "ci/né/ma",
+        "🎬"
+      ],
+      [
+        "film",
+        "Loisirs",
+        "Histoire à regarder.",
+        "Je regarde un film.",
+        "film",
+        "🎬"
+      ],
+      [
+        "jeu",
+        "Loisirs",
+        "Activité pour s’amuser.",
+        "Je joue à un jeu.",
+        "jeu",
+        "🎲"
+      ],
+      [
+        "photo",
+        "Loisirs",
+        "Image prise avec un téléphone.",
+        "Je prends une photo.",
+        "pho/to",
+        "📷"
+      ],
+      [
+        "ordinateur",
+        "Loisirs",
+        "Machine pour travailler ou jouer.",
+        "J’ai un ordinateur.",
+        "or/di/na/teur",
+        "💻"
+      ],
+      [
+        "passion",
+        "Loisirs",
+        "Activité qu’on aime beaucoup.",
+        "Ma passion est la danse.",
+        "pas/sion",
+        "⭐"
+      ],
+      [
+        "aimer",
+        "Goûts",
+        "Trouver agréable.",
+        "J’aime le sport.",
+        "ai/mer",
+        "❤️"
+      ],
+      [
+        "adorer",
+        "Goûts",
+        "Aimer beaucoup.",
+        "J’adore la musique.",
+        "a/do/rer",
+        "❤️"
+      ],
+      [
+        "détester",
+        "Goûts",
+        "Ne pas aimer du tout.",
+        "Je déteste le bruit.",
+        "dé/tes/ter",
+        "❌"
+      ],
+      [
+        "jouer",
+        "Loisirs",
+        "Faire un jeu ou un sport.",
+        "Je joue.",
+        "jou/er",
+        "🎲"
+      ],
+      [
+        "lundi",
+        "Temps",
+        "Jour de la semaine.",
+        "Lundi, j’ai cours.",
+        "lun/di",
+        "📅"
+      ],
+      [
+        "mardi",
+        "Temps",
+        "Jour de la semaine.",
+        "Mardi, j’ai sport.",
+        "mar/di",
+        "📅"
+      ],
+      [
+        "mercredi",
+        "Temps",
+        "Jour de la semaine.",
+        "Mercredi, je lis.",
+        "mer/cre/di",
+        "📅"
+      ],
+      [
+        "jeudi",
+        "Temps",
+        "Jour de la semaine.",
+        "Jeudi, je travaille.",
+        "jeu/di",
+        "📅"
+      ],
+      [
+        "vendredi",
+        "Temps",
+        "Jour de la semaine.",
+        "Vendredi, je sors.",
+        "ven/dre/di",
+        "📅"
+      ],
+      [
+        "samedi",
+        "Temps",
+        "Jour de la semaine.",
+        "Samedi, je joue.",
+        "sa/me/di",
+        "📅"
+      ],
+      [
+        "dimanche",
+        "Temps",
+        "Jour de la semaine.",
+        "Dimanche, je dors.",
+        "di/manche",
+        "📅"
+      ],
+      [
+        "matin",
+        "Temps",
+        "Début de journée.",
+        "Le matin, je lis.",
+        "ma/tin",
+        "🌅"
+      ],
+      [
+        "midi",
+        "Temps",
+        "Milieu de journée.",
+        "À midi, je mange.",
+        "mi/di",
+        "🕛"
+      ],
+      [
+        "soir",
+        "Temps",
+        "Fin de journée.",
+        "Le soir, je dors.",
+        "soir",
+        "🌙"
+      ],
+      [
+        "aujourd’hui",
+        "Temps",
+        "Le jour présent.",
+        "Aujourd’hui, j’ai cours.",
+        "au/jour/d’hui",
+        "📅"
+      ],
+      [
+        "demain",
+        "Temps",
+        "Le jour après aujourd’hui.",
+        "Demain, je travaille.",
+        "de/main",
+        "📅"
+      ],
+      [
+        "grand",
+        "Description",
+        "De grande taille.",
+        "Il est grand.",
+        "grand",
+        "⬆️"
+      ],
+      [
+        "petit",
+        "Description",
+        "De petite taille.",
+        "Il est petit.",
+        "pe/tit",
+        "⬇️"
+      ],
+      [
+        "mince",
+        "Description",
+        "Pas gros.",
+        "Elle est mince.",
+        "mince",
+        "🧍"
+      ],
+      [
+        "brun",
+        "Description",
+        "Cheveux foncés.",
+        "Il est brun.",
+        "brun",
+        "🧑"
+      ],
+      [
+        "blond",
+        "Description",
+        "Cheveux clairs.",
+        "Elle est blonde.",
+        "blond",
+        "👱"
+      ],
+      [
+        "cheveux",
+        "Description",
+        "Sur la tête.",
+        "J’ai les cheveux noirs.",
+        "che/veux",
+        "💇"
+      ],
+      [
+        "yeux",
+        "Description",
+        "Pour voir.",
+        "J’ai les yeux marron.",
+        "yeux",
+        "👀"
+      ],
+      [
+        "lunettes",
+        "Description",
+        "Objet pour mieux voir.",
+        "Il porte des lunettes.",
+        "lu/nettes",
+        "👓"
+      ],
+      [
+        "gentil",
+        "Description morale",
+        "Aimable.",
+        "Il est gentil.",
+        "gen/til",
+        "🙂"
+      ],
+      [
+        "calme",
+        "Description morale",
+        "Tranquille.",
+        "Elle est calme.",
+        "calme",
+        "😌"
+      ],
+      [
+        "drôle",
+        "Description morale",
+        "Qui fait rire.",
+        "Il est drôle.",
+        "drôle",
+        "😄"
+      ],
+      [
+        "timide",
+        "Description morale",
+        "Qui parle peu.",
+        "Elle est timide.",
+        "ti/mide",
+        "🤐"
+      ],
+      [
+        "poli",
+        "Description morale",
+        "Qui dit merci et bonjour.",
+        "Il est poli.",
+        "po/li",
+        "🙏"
+      ],
+      [
+        "sérieux",
+        "Description morale",
+        "Qui travaille bien.",
+        "Elle est sérieuse.",
+        "sé/rieux",
+        "📚"
+      ],
+      [
+        "pantalon",
+        "Vêtements",
+        "Vêtement pour les jambes.",
+        "Je porte un pantalon.",
+        "pan/ta/lon",
+        "👖"
+      ],
+      [
+        "pull",
+        "Vêtements",
+        "Vêtement chaud.",
+        "Je porte un pull.",
+        "pull",
+        "🧥"
+      ],
+      [
+        "veste",
+        "Vêtements",
+        "Vêtement du haut.",
+        "Je porte une veste.",
+        "veste",
+        "🧥"
+      ],
+      [
+        "manteau",
+        "Vêtements",
+        "Vêtement chaud pour dehors.",
+        "Je porte un manteau.",
+        "man/teau",
+        "🧥"
+      ],
+      [
+        "robe",
+        "Vêtements",
+        "Vêtement souvent féminin.",
+        "Je porte une robe.",
+        "robe",
+        "👗"
+      ],
+      [
+        "jupe",
+        "Vêtements",
+        "Vêtement du bas.",
+        "Je porte une jupe.",
+        "jupe",
+        "👗"
+      ],
+      [
+        "tee-shirt",
+        "Vêtements",
+        "Vêtement du haut.",
+        "Je porte un tee-shirt.",
+        "tee/shirt",
+        "👕"
+      ],
+      [
+        "chaussures",
+        "Vêtements",
+        "Vêtements pour les pieds.",
+        "Je mets mes chaussures.",
+        "chaus/sures",
+        "👟"
+      ],
+      [
+        "baskets",
+        "Vêtements",
+        "Chaussures de sport.",
+        "Je porte des baskets.",
+        "bas/kets",
+        "👟"
+      ],
+      [
+        "bonnet",
+        "Vêtements",
+        "Vêtement pour la tête.",
+        "Je porte un bonnet.",
+        "bon/net",
+        "🧢"
+      ],
+      [
+        "rouge",
+        "Couleurs",
+        "Couleur.",
+        "Le stylo est rouge.",
+        "rouge",
+        "🔴"
+      ],
+      [
+        "bleu",
+        "Couleurs",
+        "Couleur.",
+        "Le sac est bleu.",
+        "bleu",
+        "🔵"
+      ],
+      [
+        "vert",
+        "Couleurs",
+        "Couleur.",
+        "Le cahier est vert.",
+        "vert",
+        "🟢"
+      ],
+      [
+        "jaune",
+        "Couleurs",
+        "Couleur.",
+        "La gomme est jaune.",
+        "jaune",
+        "🟡"
+      ],
+      [
+        "noir",
+        "Couleurs",
+        "Couleur.",
+        "Le crayon est noir.",
+        "noir",
+        "⚫"
+      ],
+      [
+        "blanc",
+        "Couleurs",
+        "Couleur.",
+        "Le papier est blanc.",
+        "blanc",
+        "⚪"
+      ],
+      [
+        "rose",
+        "Couleurs",
+        "Couleur.",
+        "La trousse est rose.",
+        "rose",
+        "🌸"
+      ],
+      [
+        "gris",
+        "Couleurs",
+        "Couleur.",
+        "Le pantalon est gris.",
+        "gris",
+        "◻️"
+      ],
+      [
+        "marron",
+        "Couleurs",
+        "Couleur.",
+        "Les yeux sont marron.",
+        "mar/ron",
+        "🟤"
+      ],
+      [
+        "et",
+        "Homophones",
+        "Mot pour ajouter.",
+        "Un cahier et un stylo.",
+        "et",
+        "➕"
+      ],
+      [
+        "est",
+        "Homophones",
+        "Verbe être.",
+        "Il est content.",
+        "est",
+        "✅"
+      ],
+      [
+        "a",
+        "Homophones",
+        "Verbe avoir.",
+        "Il a un sac.",
+        "a",
+        "🎒"
+      ],
+      [
+        "à",
+        "Homophones",
+        "Petit mot de lieu.",
+        "Je vais à l’école.",
+        "à",
+        "➡️"
+      ],
+      [
+        "son",
+        "Homophones",
+        "Ce qui appartient à il ou elle.",
+        "Il prend son sac.",
+        "son",
+        "🎒"
+      ],
+      [
+        "sont",
+        "Homophones",
+        "Verbe être au pluriel.",
+        "Ils sont ici.",
+        "sont",
+        "👥"
+      ],
+      [
+        "on",
+        "Homophones",
+        "Pronom sujet.",
+        "On parle français.",
+        "on",
+        "🗣️"
+      ],
+      [
+        "ont",
+        "Homophones",
+        "Verbe avoir au pluriel.",
+        "Ils ont un livre.",
+        "ont",
+        "📖"
+      ],
+      [
+        "ou",
+        "Homophones",
+        "Mot pour choisir.",
+        "Tu veux thé ou café ?",
+        "ou",
+        "❓"
+      ],
+      [
+        "où",
+        "Homophones",
+        "Mot pour demander un lieu.",
+        "Où est la classe ?",
+        "où",
+        "📍"
+      ],
+      [
+        "maman",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an/am.",
+        "Ma maman arrive.",
+        "ma/man",
+        "👩"
+      ],
+      [
+        "enfant",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son en/an.",
+        "L’enfant joue.",
+        "en/fant",
+        "🧒"
+      ],
+      [
+        "orange",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an.",
+        "Je mange une orange.",
+        "o/range",
+        "🍊"
+      ],
+      [
+        "lampe",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am.",
+        "La lampe est là.",
+        "lampe",
+        "💡"
+      ],
+      [
+        "chambre",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am/en.",
+        "La chambre est grande.",
+        "cham/bre",
+        "🛏️"
+      ],
+      [
+        "jambe",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am.",
+        "J’ai mal à la jambe.",
+        "jambe",
+        "🦵"
+      ],
+      [
+        "blanc",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an.",
+        "Le papier est blanc.",
+        "blanc",
+        "⚪"
+      ],
+      [
+        "bonjour",
+        "Son ON",
+        "Mot avec le son on.",
+        "Bonjour monsieur.",
+        "bon/jour",
+        "👋"
+      ],
+      [
+        "maison",
+        "Son ON",
+        "Mot avec le son on.",
+        "La maison est grande.",
+        "mai/son",
+        "🏠"
+      ],
+      [
+        "ballon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Le ballon est rond.",
+        "bal/lon",
+        "⚽"
+      ],
+      [
+        "garçon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Le garçon joue.",
+        "gar/çon",
+        "👦"
+      ],
+      [
+        "bonbon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Je mange un bonbon.",
+        "bon/bon",
+        "🍬"
+      ],
+      [
+        "montre",
+        "Son ON",
+        "Mot avec le son on.",
+        "J’ai une montre.",
+        "mon/tre",
+        "⌚"
+      ],
+      [
+        "matin",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son in.",
+        "Le matin, je lis.",
+        "ma/tin",
+        "🌅"
+      ],
+      [
+        "train",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Je prends le train.",
+        "train",
+        "🚆"
+      ],
+      [
+        "main",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Je lève la main.",
+        "main",
+        "✋"
+      ],
+      [
+        "copain",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Mon copain arrive.",
+        "co/pain",
+        "🙂"
+      ],
+      [
+        "faim",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son aim.",
+        "J’ai faim.",
+        "faim",
+        "🍽️"
+      ],
+      [
+        "jardin",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son in.",
+        "Je vais au jardin.",
+        "jar/din",
+        "🌳"
+      ],
+      [
+        "bouche",
+        "Son OU",
+        "Mot avec le son ou.",
+        "J’ouvre la bouche.",
+        "bouche",
+        "👄"
+      ],
+      [
+        "douche",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Je prends une douche.",
+        "douche",
+        "🚿"
+      ],
+      [
+        "rouge",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Le stylo est rouge.",
+        "rouge",
+        "🔴"
+      ],
+      [
+        "souris",
+        "Son OU",
+        "Mot avec le son ou.",
+        "La souris est petite.",
+        "sou/ris",
+        "🐭"
+      ],
+      [
+        "couteau",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Je prends un couteau.",
+        "cou/teau",
+        "🔪"
+      ],
+      [
+        "lune",
+        "Son U",
+        "Mot avec le son u.",
+        "La lune est belle.",
+        "lune",
+        "🌙"
+      ],
+      [
+        "rue",
+        "Son U",
+        "Mot avec le son u.",
+        "Je marche dans la rue.",
+        "rue",
+        "🛣️"
+      ],
+      [
+        "bus",
+        "Son U",
+        "Mot avec le son u.",
+        "Je prends le bus.",
+        "bus",
+        "🚌"
+      ],
+      [
+        "pull",
+        "Son U",
+        "Mot avec le son u.",
+        "Je porte un pull.",
+        "pull",
+        "🧥"
+      ],
+      [
+        "plume",
+        "Son U",
+        "Mot avec le son u.",
+        "La plume est légère.",
+        "plume",
+        "🪶"
+      ]
+    ],
+    "Se présenter, famille, pays": [
+      [
+        "bonjour",
+        "Saluer",
+        "Mot pour saluer.",
+        "Bonjour.",
+        "bo/n/jour",
+        "👋"
+      ],
+      [
+        "salut",
+        "Saluer",
+        "Mot familier pour saluer.",
+        "Salut.",
+        "sa/lut",
+        "👋"
+      ],
+      [
+        "merci",
+        "Saluer",
+        "Mot pour remercier.",
+        "Merci.",
+        "mer/ci",
+        "🙏"
+      ],
+      [
+        "pardon",
+        "Saluer",
+        "Mot pour s’excuser.",
+        "Pardon.",
+        "par/don",
+        "🙏"
+      ],
+      [
+        "au revoir",
+        "Saluer",
+        "Mot pour partir.",
+        "Au revoir.",
+        "au/re/voir",
+        "👋"
+      ],
+      [
+        "madame",
+        "Saluer",
+        "Mot poli pour une femme.",
+        "Bonjour madame.",
+        "ma/dame",
+        "👩"
+      ],
+      [
+        "monsieur",
+        "Saluer",
+        "Mot poli pour un homme.",
+        "Bonjour monsieur.",
+        "mon/sieur",
+        "👨"
+      ],
+      [
+        "prénom",
+        "Se présenter",
+        "Nom utilisé tous les jours.",
+        "Mon prénom est Ali.",
+        "pré/nom",
+        "🪪"
+      ],
+      [
+        "nom",
+        "Se présenter",
+        "Nom de famille.",
+        "Mon nom est Diallo.",
+        "nom",
+        "🪪"
+      ],
+      [
+        "âge",
+        "Se présenter",
+        "Nombre d’années.",
+        "J’ai 15 ans.",
+        "âge",
+        "🔢"
+      ],
+      [
+        "pays",
+        "Se présenter",
+        "État où on habite ou d’où on vient.",
+        "Mon pays est loin.",
+        "pays",
+        "🌍"
+      ],
+      [
+        "ville",
+        "Se présenter",
+        "Lieu où on habite.",
+        "J’habite en ville.",
+        "ville",
+        "🏙️"
+      ],
+      [
+        "adresse",
+        "Se présenter",
+        "Lieu où on habite.",
+        "Mon adresse est ici.",
+        "a/dresse",
+        "🏠"
+      ],
+      [
+        "nationalité",
+        "Se présenter",
+        "Lien avec un pays.",
+        "Ma nationalité est française.",
+        "na/tio/na/li/té",
+        "🌍"
+      ],
+      [
+        "français",
+        "Langues",
+        "Langue parlée en France.",
+        "Je parle français.",
+        "fran/çais",
+        "🇫🇷"
+      ],
+      [
+        "arabe",
+        "Langues",
+        "Langue parlée dans plusieurs pays.",
+        "Je parle arabe.",
+        "a/rabe",
+        "🗣️"
+      ],
+      [
+        "anglais",
+        "Langues",
+        "Langue parlée dans plusieurs pays.",
+        "Je parle anglais.",
+        "an/glais",
+        "🗣️"
+      ],
+      [
+        "téléphone",
+        "Vie quotidienne",
+        "Objet pour appeler.",
+        "Mon téléphone sonne.",
+        "té/lé/phone",
+        "📱"
+      ],
+      [
+        "mail",
+        "Vie quotidienne",
+        "Message sur internet.",
+        "J’écris un mail.",
+        "mail",
+        "✉️"
+      ],
+      [
+        "ami",
+        "Relations",
+        "Personne qu’on aime bien.",
+        "J’ai un ami.",
+        "a/mi",
+        "🙂"
+      ],
+      [
+        "amie",
+        "Relations",
+        "Fille qu’on aime bien.",
+        "J’ai une amie.",
+        "a/mie",
+        "🙂"
+      ],
+      [
+        "amis",
+        "Relations",
+        "Plusieurs personnes qu’on aime bien.",
+        "J’ai des amis.",
+        "a/mis",
+        "🙂"
+      ],
+      [
+        "copain",
+        "Relations",
+        "Ami familier.",
+        "Mon copain arrive.",
+        "co/pain",
+        "🙂"
+      ],
+      [
+        "copine",
+        "Relations",
+        "Amie familière.",
+        "Ma copine arrive.",
+        "co/pine",
+        "🙂"
+      ],
+      [
+        "famille",
+        "Famille",
+        "Parents, frères, sœurs.",
+        "Ma famille est ici.",
+        "fa/mille",
+        "👨‍👩‍👧"
+      ],
+      [
+        "mère",
+        "Famille",
+        "La maman.",
+        "Ma mère travaille.",
+        "mère",
+        "👩"
+      ],
+      [
+        "père",
+        "Famille",
+        "Le papa.",
+        "Mon père cuisine.",
+        "père",
+        "👨"
+      ],
+      [
+        "frère",
+        "Famille",
+        "Garçon de la famille.",
+        "Mon frère joue.",
+        "frère",
+        "👦"
+      ],
+      [
+        "sœur",
+        "Famille",
+        "Fille de la famille.",
+        "Ma sœur lit.",
+        "sœur",
+        "👧"
+      ],
+      [
+        "parents",
+        "Famille",
+        "Le père et la mère.",
+        "Mes parents parlent.",
+        "pa/rents",
+        "👨‍👩‍👧"
+      ],
+      [
+        "enfant",
+        "Famille",
+        "Garçon ou fille jeune.",
+        "L’enfant joue.",
+        "en/fant",
+        "🧒"
+      ],
+      [
+        "bébé",
+        "Famille",
+        "Très jeune enfant.",
+        "Le bébé dort.",
+        "bé/bé",
+        "👶"
+      ]
+    ],
+    "École, lycée, fournitures": [
+      [
+        "école",
+        "École",
+        "Lieu pour apprendre.",
+        "Je vais à l’école.",
+        "é/cole",
+        "🏫"
+      ],
+      [
+        "lycée",
+        "École",
+        "Établissement scolaire.",
+        "Je vais au lycée.",
+        "ly/cée",
+        "🏫"
+      ],
+      [
+        "classe",
+        "École",
+        "Lieu où on apprend.",
+        "Je suis en classe.",
+        "classe",
+        "🏫"
+      ],
+      [
+        "salle",
+        "École",
+        "Pièce pour travailler.",
+        "La salle est grande.",
+        "salle",
+        "🚪"
+      ],
+      [
+        "cours",
+        "École",
+        "Moment pour apprendre.",
+        "Le cours commence.",
+        "cours",
+        "📚"
+      ],
+      [
+        "professeur",
+        "École",
+        "Personne qui enseigne.",
+        "Le professeur parle.",
+        "pro/fes/seur",
+        "👩‍🏫"
+      ],
+      [
+        "élève",
+        "École",
+        "Personne qui apprend.",
+        "L’élève écoute.",
+        "é/lève",
+        "🧑‍🎓"
+      ],
+      [
+        "tableau",
+        "École",
+        "Support où on écrit.",
+        "Je regarde le tableau.",
+        "ta/bleau",
+        "⬛"
+      ],
+      [
+        "emploi du temps",
+        "École",
+        "Liste des cours.",
+        "Je lis l’emploi du temps.",
+        "em/ploi/du/temps",
+        "📅"
+      ],
+      [
+        "horaire",
+        "École",
+        "Heure d’une activité.",
+        "L’horaire change.",
+        "ho/raire",
+        "🕘"
+      ],
+      [
+        "pause",
+        "École",
+        "Moment sans cours.",
+        "C’est la pause.",
+        "pause",
+        "⏸️"
+      ],
+      [
+        "récréation",
+        "École",
+        "Pause à l’école.",
+        "La récréation commence.",
+        "ré/cré/a/tion",
+        "⏸️"
+      ],
+      [
+        "cantine",
+        "École",
+        "Lieu pour manger.",
+        "Je mange à la cantine.",
+        "can/tine",
+        "🍽️"
+      ],
+      [
+        "atelier",
+        "Lycée professionnel",
+        "Cours pratique.",
+        "Je vais à l’atelier.",
+        "a/te/lier",
+        "🧰"
+      ],
+      [
+        "stage",
+        "Lycée professionnel",
+        "Temps en entreprise.",
+        "Je fais un stage.",
+        "stage",
+        "💼"
+      ],
+      [
+        "matière",
+        "Matières",
+        "Discipline à l’école.",
+        "J’aime cette matière.",
+        "ma/tière",
+        "📚"
+      ],
+      [
+        "maths",
+        "Matières",
+        "Matière avec les nombres.",
+        "J’ai maths.",
+        "maths",
+        "🔢"
+      ],
+      [
+        "histoire",
+        "Matières",
+        "Matière sur le passé.",
+        "J’ai histoire.",
+        "his/toire",
+        "📜"
+      ],
+      [
+        "géographie",
+        "Matières",
+        "Matière sur les pays.",
+        "J’ai géographie.",
+        "gé/o/gra/phie",
+        "🌍"
+      ],
+      [
+        "cahier",
+        "Fournitures",
+        "Objet où on écrit.",
+        "J’ai un cahier.",
+        "ca/hier",
+        "📓"
+      ],
+      [
+        "stylo",
+        "Fournitures",
+        "Objet pour écrire.",
+        "J’ai un stylo.",
+        "sty/lo",
+        "🖊️"
+      ],
+      [
+        "crayon",
+        "Fournitures",
+        "Objet pour écrire ou dessiner.",
+        "J’ai un crayon.",
+        "cra/yon",
+        "✏️"
+      ],
+      [
+        "gomme",
+        "Fournitures",
+        "Objet pour effacer.",
+        "J’ai une gomme.",
+        "gomme",
+        "🧽"
+      ],
+      [
+        "règle",
+        "Fournitures",
+        "Objet pour tracer.",
+        "J’ai une règle.",
+        "rè/gle",
+        "📏"
+      ],
+      [
+        "sac",
+        "Fournitures",
+        "Objet pour porter ses affaires.",
+        "J’ai un sac.",
+        "sac",
+        "🎒"
+      ],
+      [
+        "livre",
+        "Fournitures",
+        "Objet avec des pages.",
+        "Je lis un livre.",
+        "li/vre",
+        "📖"
+      ],
+      [
+        "feuille",
+        "Fournitures",
+        "Papier pour écrire.",
+        "Je prends une feuille.",
+        "feuille",
+        "📄"
+      ],
+      [
+        "trousse",
+        "Fournitures",
+        "Objet pour ranger les stylos.",
+        "J’ai une trousse.",
+        "trousse",
+        "✏️"
+      ],
+      [
+        "colle",
+        "Fournitures",
+        "Produit pour coller.",
+        "Je prends la colle.",
+        "colle",
+        "🧴"
+      ],
+      [
+        "ciseaux",
+        "Fournitures",
+        "Objet pour couper.",
+        "J’ai des ciseaux.",
+        "ci/seaux",
+        "✂️"
+      ],
+      [
+        "classeur",
+        "Fournitures",
+        "Objet pour ranger les feuilles.",
+        "J’ai un classeur.",
+        "clas/seur",
+        "🗂️"
+      ],
+      [
+        "devoir",
+        "École",
+        "Travail à faire.",
+        "Je fais mon devoir.",
+        "de/voir",
+        "📝"
+      ],
+      [
+        "exercice",
+        "École",
+        "Travail pour s’entraîner.",
+        "Je fais un exercice.",
+        "e/xer/cice",
+        "📝"
+      ],
+      [
+        "consigne",
+        "École",
+        "Ce qu’il faut faire.",
+        "Je lis la consigne.",
+        "con/signe",
+        "📋"
+      ],
+      [
+        "lire",
+        "Actions école",
+        "Comprendre des mots écrits.",
+        "Je lis.",
+        "lire",
+        "📖"
+      ],
+      [
+        "écrire",
+        "Actions école",
+        "Faire des mots écrits.",
+        "J’écris.",
+        "é/crire",
+        "✍️"
+      ],
+      [
+        "écouter",
+        "Actions école",
+        "Faire attention avec les oreilles.",
+        "J’écoute.",
+        "é/cou/ter",
+        "👂"
+      ],
+      [
+        "répéter",
+        "Actions école",
+        "Dire encore une fois.",
+        "Je répète.",
+        "ré/pé/ter",
+        "🗣️"
+      ],
+      [
+        "comprendre",
+        "Actions école",
+        "Savoir le sens.",
+        "Je comprends.",
+        "com/pren/dre",
+        "💡"
+      ],
+      [
+        "parler",
+        "Actions école",
+        "Dire des mots.",
+        "Je parle.",
+        "par/ler",
+        "🗣️"
+      ],
+      [
+        "regarder",
+        "Actions école",
+        "Voir avec les yeux.",
+        "Je regarde.",
+        "re/gar/der",
+        "👀"
+      ],
+      [
+        "ouvrir",
+        "Actions école",
+        "Mettre ouvert.",
+        "J’ouvre.",
+        "ou/vrir",
+        "📖"
+      ],
+      [
+        "fermer",
+        "Actions école",
+        "Mettre fermé.",
+        "Je ferme.",
+        "fer/mer",
+        "📕"
+      ],
+      [
+        "copier",
+        "Actions école",
+        "Écrire comme le modèle.",
+        "Je copie.",
+        "co/pier",
+        "✍️"
+      ],
+      [
+        "coller",
+        "Actions école",
+        "Mettre avec de la colle.",
+        "Je colle.",
+        "col/ler",
+        "🧴"
+      ],
+      [
+        "couper",
+        "Actions école",
+        "Utiliser des ciseaux.",
+        "Je coupe.",
+        "cou/per",
+        "✂️"
+      ],
+      [
+        "dessiner",
+        "Actions école",
+        "Faire un dessin.",
+        "Je dessine.",
+        "des/si/ner",
+        "🎨"
+      ],
+      [
+        "colorier",
+        "Actions école",
+        "Mettre de la couleur.",
+        "Je colorie.",
+        "co/lo/rier",
+        "🎨"
+      ],
+      [
+        "effacer",
+        "Actions école",
+        "Enlever ce qui est écrit.",
+        "J’efface.",
+        "ef/fa/cer",
+        "🧽"
+      ],
+      [
+        "souligner",
+        "Actions école",
+        "Tracer un trait sous un mot.",
+        "Je souligne.",
+        "sou/li/gner",
+        "📝"
+      ],
+      [
+        "entourer",
+        "Actions école",
+        "Faire un cercle autour.",
+        "J’entoure.",
+        "en/tou/rer",
+        "⭕"
+      ],
+      [
+        "cocher",
+        "Actions école",
+        "Mettre une croix.",
+        "Je coche.",
+        "co/cher",
+        "☑️"
+      ]
+    ],
+    "Commerces et nourriture": [
+      [
+        "boulangerie",
+        "Commerces",
+        "Magasin où on achète du pain.",
+        "Je vais à la boulangerie.",
+        "bou/lan/ge/rie",
+        "🥖"
+      ],
+      [
+        "pain",
+        "Commerces",
+        "Aliment de boulangerie.",
+        "Je veux du pain.",
+        "pain",
+        "🥖"
+      ],
+      [
+        "baguette",
+        "Commerces",
+        "Pain long.",
+        "Une baguette.",
+        "ba/guette",
+        "🥖"
+      ],
+      [
+        "croissant",
+        "Commerces",
+        "Viennoiserie du matin.",
+        "Un croissant.",
+        "crois/sant",
+        "🥐"
+      ],
+      [
+        "gâteau",
+        "Commerces",
+        "Aliment sucré.",
+        "Je prends un gâteau.",
+        "gâ/teau",
+        "🍰"
+      ],
+      [
+        "sandwich",
+        "Commerces",
+        "Pain avec quelque chose dedans.",
+        "Je prends un sandwich.",
+        "sand/wich",
+        "🥪"
+      ],
+      [
+        "supermarché",
+        "Commerces",
+        "Grand magasin.",
+        "Je vais au supermarché.",
+        "su/per/mar/ché",
+        "🛒"
+      ],
+      [
+        "magasin",
+        "Commerces",
+        "Lieu pour acheter.",
+        "Je vais au magasin.",
+        "ma/ga/sin",
+        "🏪"
+      ],
+      [
+        "pharmacie",
+        "Commerces",
+        "Magasin pour les médicaments.",
+        "Je vais à la pharmacie.",
+        "phar/ma/cie",
+        "💊"
+      ],
+      [
+        "caisse",
+        "Commerces",
+        "Lieu où on paie.",
+        "Je vais à la caisse.",
+        "caisse",
+        "💶"
+      ],
+      [
+        "ticket",
+        "Commerces",
+        "Papier après un achat.",
+        "Je prends le ticket.",
+        "tic/ket",
+        "🧾"
+      ],
+      [
+        "prix",
+        "Commerces",
+        "Combien ça coûte.",
+        "Le prix est bas.",
+        "prix",
+        "💶"
+      ],
+      [
+        "monnaie",
+        "Commerces",
+        "Argent rendu.",
+        "Je prends la monnaie.",
+        "mon/naie",
+        "💶"
+      ],
+      [
+        "carte",
+        "Commerces",
+        "Carte pour payer.",
+        "Je paie par carte.",
+        "carte",
+        "💳"
+      ],
+      [
+        "argent",
+        "Commerces",
+        "Ce qu’on utilise pour payer.",
+        "J’ai de l’argent.",
+        "ar/gent",
+        "💶"
+      ],
+      [
+        "euro",
+        "Commerces",
+        "Monnaie en France.",
+        "C’est deux euros.",
+        "eu/ro",
+        "💶"
+      ],
+      [
+        "payer",
+        "Actions sociales",
+        "Donner de l’argent.",
+        "Je paie.",
+        "pa/yer",
+        "💶"
+      ],
+      [
+        "acheter",
+        "Actions sociales",
+        "Prendre avec de l’argent.",
+        "J’achète.",
+        "a/che/ter",
+        "🛒"
+      ],
+      [
+        "commander",
+        "Actions sociales",
+        "Demander à acheter.",
+        "Je commande.",
+        "com/man/der",
+        "🗣️"
+      ],
+      [
+        "je voudrais",
+        "Actions sociales",
+        "Formule polie pour demander.",
+        "Je voudrais du pain.",
+        "je/vou/drais",
+        "🙏"
+      ],
+      [
+        "combien",
+        "Actions sociales",
+        "Mot pour demander le prix.",
+        "Combien ça coûte ?",
+        "com/bien",
+        "❓"
+      ],
+      [
+        "eau",
+        "Nourriture",
+        "Boisson simple.",
+        "Je bois de l’eau.",
+        "eau",
+        "💧"
+      ],
+      [
+        "café",
+        "Nourriture",
+        "Boisson chaude.",
+        "Je prends un café.",
+        "ca/fé",
+        "☕"
+      ],
+      [
+        "thé",
+        "Nourriture",
+        "Boisson chaude.",
+        "Je bois du thé.",
+        "thé",
+        "🍵"
+      ],
+      [
+        "lait",
+        "Nourriture",
+        "Boisson blanche.",
+        "Je bois du lait.",
+        "lait",
+        "🥛"
+      ],
+      [
+        "jus",
+        "Nourriture",
+        "Boisson aux fruits.",
+        "Je bois du jus.",
+        "jus",
+        "🧃"
+      ],
+      [
+        "pomme",
+        "Nourriture",
+        "Fruit rond.",
+        "Je mange une pomme.",
+        "pomme",
+        "🍎"
+      ],
+      [
+        "banane",
+        "Nourriture",
+        "Fruit jaune.",
+        "Je mange une banane.",
+        "ba/nane",
+        "🍌"
+      ],
+      [
+        "orange",
+        "Nourriture",
+        "Fruit orange.",
+        "Je mange une orange.",
+        "o/range",
+        "🍊"
+      ],
+      [
+        "salade",
+        "Nourriture",
+        "Plat froid.",
+        "Je mange une salade.",
+        "sa/lade",
+        "🥗"
+      ],
+      [
+        "riz",
+        "Nourriture",
+        "Aliment blanc.",
+        "Je mange du riz.",
+        "riz",
+        "🍚"
+      ],
+      [
+        "pâtes",
+        "Nourriture",
+        "Aliment italien.",
+        "Je mange des pâtes.",
+        "pâtes",
+        "🍝"
+      ],
+      [
+        "soupe",
+        "Nourriture",
+        "Plat liquide chaud.",
+        "Je mange une soupe.",
+        "soupe",
+        "🍲"
+      ],
+      [
+        "viande",
+        "Nourriture",
+        "Aliment d’animal.",
+        "Je mange de la viande.",
+        "viande",
+        "🥩"
+      ],
+      [
+        "poisson",
+        "Nourriture",
+        "Animal qu’on mange.",
+        "Je mange du poisson.",
+        "pois/son",
+        "🐟"
+      ],
+      [
+        "fromage",
+        "Nourriture",
+        "Aliment avec du lait.",
+        "Je mange du fromage.",
+        "fro/mage",
+        "🧀"
+      ],
+      [
+        "yaourt",
+        "Nourriture",
+        "Aliment avec du lait.",
+        "Je prends un yaourt.",
+        "ya/ourt",
+        "🥛"
+      ]
+    ],
+    "Santé, corps, loisirs": [
+      [
+        "docteur",
+        "Santé",
+        "Personne qui soigne.",
+        "Je vois le docteur.",
+        "doc/teur",
+        "🧑‍⚕️"
+      ],
+      [
+        "médecin",
+        "Santé",
+        "Personne qui soigne.",
+        "Je vois le médecin.",
+        "mé/de/cin",
+        "🧑‍⚕️"
+      ],
+      [
+        "malade",
+        "Santé",
+        "Quand on ne va pas bien.",
+        "Je suis malade.",
+        "ma/lade",
+        "🤒"
+      ],
+      [
+        "mal",
+        "Santé",
+        "Douleur.",
+        "J’ai mal.",
+        "mal",
+        "🤕"
+      ],
+      [
+        "tête",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal à la tête.",
+        "tête",
+        "🙂"
+      ],
+      [
+        "main",
+        "Corps",
+        "Partie du corps.",
+        "Je lève la main.",
+        "main",
+        "✋"
+      ],
+      [
+        "pied",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal au pied.",
+        "pied",
+        "🦶"
+      ],
+      [
+        "bras",
+        "Corps",
+        "Partie du corps.",
+        "Je lève le bras.",
+        "bras",
+        "💪"
+      ],
+      [
+        "jambe",
+        "Corps",
+        "Partie du corps.",
+        "J’ai mal à la jambe.",
+        "jambe",
+        "🦵"
+      ],
+      [
+        "yeux",
+        "Corps",
+        "Pour voir.",
+        "J’ouvre les yeux.",
+        "yeux",
+        "👀"
+      ],
+      [
+        "oreille",
+        "Corps",
+        "Pour entendre.",
+        "J’ai mal à l’oreille.",
+        "o/reille",
+        "👂"
+      ],
+      [
+        "bouche",
+        "Corps",
+        "Pour parler et manger.",
+        "J’ouvre la bouche.",
+        "bouche",
+        "👄"
+      ],
+      [
+        "nez",
+        "Corps",
+        "Pour sentir.",
+        "J’ai mal au nez.",
+        "nez",
+        "👃"
+      ],
+      [
+        "football",
+        "Sports",
+        "Sport avec un ballon.",
+        "Je joue au football.",
+        "foot/ball",
+        "⚽"
+      ],
+      [
+        "basket",
+        "Sports",
+        "Sport avec un ballon.",
+        "Je joue au basket.",
+        "bas/ket",
+        "🏀"
+      ],
+      [
+        "lutte",
+        "Sports",
+        "Sport de combat.",
+        "Je fais de la lutte.",
+        "lutte",
+        "🤼"
+      ],
+      [
+        "natation",
+        "Sports",
+        "Sport dans l’eau.",
+        "Je fais de la natation.",
+        "na/ta/tion",
+        "🏊"
+      ],
+      [
+        "danse",
+        "Loisirs",
+        "Activité avec la musique.",
+        "J’aime la danse.",
+        "danse",
+        "💃"
+      ],
+      [
+        "musique",
+        "Loisirs",
+        "Sons et chansons.",
+        "J’écoute la musique.",
+        "mu/sique",
+        "🎵"
+      ],
+      [
+        "chanson",
+        "Loisirs",
+        "Musique avec paroles.",
+        "J’écoute une chanson.",
+        "chan/son",
+        "🎵"
+      ],
+      [
+        "cinéma",
+        "Loisirs",
+        "Lieu pour voir un film.",
+        "Je vais au cinéma.",
+        "ci/né/ma",
+        "🎬"
+      ],
+      [
+        "film",
+        "Loisirs",
+        "Histoire à regarder.",
+        "Je regarde un film.",
+        "film",
+        "🎬"
+      ],
+      [
+        "jeu",
+        "Loisirs",
+        "Activité pour s’amuser.",
+        "Je joue à un jeu.",
+        "jeu",
+        "🎲"
+      ],
+      [
+        "photo",
+        "Loisirs",
+        "Image prise avec un téléphone.",
+        "Je prends une photo.",
+        "pho/to",
+        "📷"
+      ],
+      [
+        "ordinateur",
+        "Loisirs",
+        "Machine pour travailler ou jouer.",
+        "J’ai un ordinateur.",
+        "or/di/na/teur",
+        "💻"
+      ],
+      [
+        "passion",
+        "Loisirs",
+        "Activité qu’on aime beaucoup.",
+        "Ma passion est la danse.",
+        "pas/sion",
+        "⭐"
+      ],
+      [
+        "aimer",
+        "Goûts",
+        "Trouver agréable.",
+        "J’aime le sport.",
+        "ai/mer",
+        "❤️"
+      ],
+      [
+        "adorer",
+        "Goûts",
+        "Aimer beaucoup.",
+        "J’adore la musique.",
+        "a/do/rer",
+        "❤️"
+      ],
+      [
+        "détester",
+        "Goûts",
+        "Ne pas aimer du tout.",
+        "Je déteste le bruit.",
+        "dé/tes/ter",
+        "❌"
+      ],
+      [
+        "jouer",
+        "Loisirs",
+        "Faire un jeu ou un sport.",
+        "Je joue.",
+        "jou/er",
+        "🎲"
+      ]
+    ],
+    "Temps, description, vêtements": [
+      [
+        "lundi",
+        "Temps",
+        "Jour de la semaine.",
+        "Lundi, j’ai cours.",
+        "lun/di",
+        "📅"
+      ],
+      [
+        "mardi",
+        "Temps",
+        "Jour de la semaine.",
+        "Mardi, j’ai sport.",
+        "mar/di",
+        "📅"
+      ],
+      [
+        "mercredi",
+        "Temps",
+        "Jour de la semaine.",
+        "Mercredi, je lis.",
+        "mer/cre/di",
+        "📅"
+      ],
+      [
+        "jeudi",
+        "Temps",
+        "Jour de la semaine.",
+        "Jeudi, je travaille.",
+        "jeu/di",
+        "📅"
+      ],
+      [
+        "vendredi",
+        "Temps",
+        "Jour de la semaine.",
+        "Vendredi, je sors.",
+        "ven/dre/di",
+        "📅"
+      ],
+      [
+        "samedi",
+        "Temps",
+        "Jour de la semaine.",
+        "Samedi, je joue.",
+        "sa/me/di",
+        "📅"
+      ],
+      [
+        "dimanche",
+        "Temps",
+        "Jour de la semaine.",
+        "Dimanche, je dors.",
+        "di/manche",
+        "📅"
+      ],
+      [
+        "matin",
+        "Temps",
+        "Début de journée.",
+        "Le matin, je lis.",
+        "ma/tin",
+        "🌅"
+      ],
+      [
+        "midi",
+        "Temps",
+        "Milieu de journée.",
+        "À midi, je mange.",
+        "mi/di",
+        "🕛"
+      ],
+      [
+        "soir",
+        "Temps",
+        "Fin de journée.",
+        "Le soir, je dors.",
+        "soir",
+        "🌙"
+      ],
+      [
+        "aujourd’hui",
+        "Temps",
+        "Le jour présent.",
+        "Aujourd’hui, j’ai cours.",
+        "au/jour/d’hui",
+        "📅"
+      ],
+      [
+        "demain",
+        "Temps",
+        "Le jour après aujourd’hui.",
+        "Demain, je travaille.",
+        "de/main",
+        "📅"
+      ],
+      [
+        "grand",
+        "Description",
+        "De grande taille.",
+        "Il est grand.",
+        "grand",
+        "⬆️"
+      ],
+      [
+        "petit",
+        "Description",
+        "De petite taille.",
+        "Il est petit.",
+        "pe/tit",
+        "⬇️"
+      ],
+      [
+        "mince",
+        "Description",
+        "Pas gros.",
+        "Elle est mince.",
+        "mince",
+        "🧍"
+      ],
+      [
+        "brun",
+        "Description",
+        "Cheveux foncés.",
+        "Il est brun.",
+        "brun",
+        "🧑"
+      ],
+      [
+        "blond",
+        "Description",
+        "Cheveux clairs.",
+        "Elle est blonde.",
+        "blond",
+        "👱"
+      ],
+      [
+        "cheveux",
+        "Description",
+        "Sur la tête.",
+        "J’ai les cheveux noirs.",
+        "che/veux",
+        "💇"
+      ],
+      [
+        "yeux",
+        "Description",
+        "Pour voir.",
+        "J’ai les yeux marron.",
+        "yeux",
+        "👀"
+      ],
+      [
+        "lunettes",
+        "Description",
+        "Objet pour mieux voir.",
+        "Il porte des lunettes.",
+        "lu/nettes",
+        "👓"
+      ],
+      [
+        "gentil",
+        "Description morale",
+        "Aimable.",
+        "Il est gentil.",
+        "gen/til",
+        "🙂"
+      ],
+      [
+        "calme",
+        "Description morale",
+        "Tranquille.",
+        "Elle est calme.",
+        "calme",
+        "😌"
+      ],
+      [
+        "drôle",
+        "Description morale",
+        "Qui fait rire.",
+        "Il est drôle.",
+        "drôle",
+        "😄"
+      ],
+      [
+        "timide",
+        "Description morale",
+        "Qui parle peu.",
+        "Elle est timide.",
+        "ti/mide",
+        "🤐"
+      ],
+      [
+        "poli",
+        "Description morale",
+        "Qui dit merci et bonjour.",
+        "Il est poli.",
+        "po/li",
+        "🙏"
+      ],
+      [
+        "sérieux",
+        "Description morale",
+        "Qui travaille bien.",
+        "Elle est sérieuse.",
+        "sé/rieux",
+        "📚"
+      ],
+      [
+        "pantalon",
+        "Vêtements",
+        "Vêtement pour les jambes.",
+        "Je porte un pantalon.",
+        "pan/ta/lon",
+        "👖"
+      ],
+      [
+        "pull",
+        "Vêtements",
+        "Vêtement chaud.",
+        "Je porte un pull.",
+        "pull",
+        "🧥"
+      ],
+      [
+        "veste",
+        "Vêtements",
+        "Vêtement du haut.",
+        "Je porte une veste.",
+        "veste",
+        "🧥"
+      ],
+      [
+        "manteau",
+        "Vêtements",
+        "Vêtement chaud pour dehors.",
+        "Je porte un manteau.",
+        "man/teau",
+        "🧥"
+      ],
+      [
+        "robe",
+        "Vêtements",
+        "Vêtement souvent féminin.",
+        "Je porte une robe.",
+        "robe",
+        "👗"
+      ],
+      [
+        "jupe",
+        "Vêtements",
+        "Vêtement du bas.",
+        "Je porte une jupe.",
+        "jupe",
+        "👗"
+      ],
+      [
+        "tee-shirt",
+        "Vêtements",
+        "Vêtement du haut.",
+        "Je porte un tee-shirt.",
+        "tee/shirt",
+        "👕"
+      ],
+      [
+        "chaussures",
+        "Vêtements",
+        "Vêtements pour les pieds.",
+        "Je mets mes chaussures.",
+        "chaus/sures",
+        "👟"
+      ],
+      [
+        "baskets",
+        "Vêtements",
+        "Chaussures de sport.",
+        "Je porte des baskets.",
+        "bas/kets",
+        "👟"
+      ],
+      [
+        "bonnet",
+        "Vêtements",
+        "Vêtement pour la tête.",
+        "Je porte un bonnet.",
+        "bon/net",
+        "🧢"
+      ],
+      [
+        "rouge",
+        "Couleurs",
+        "Couleur.",
+        "Le stylo est rouge.",
+        "rouge",
+        "🔴"
+      ],
+      [
+        "bleu",
+        "Couleurs",
+        "Couleur.",
+        "Le sac est bleu.",
+        "bleu",
+        "🔵"
+      ],
+      [
+        "vert",
+        "Couleurs",
+        "Couleur.",
+        "Le cahier est vert.",
+        "vert",
+        "🟢"
+      ],
+      [
+        "jaune",
+        "Couleurs",
+        "Couleur.",
+        "La gomme est jaune.",
+        "jaune",
+        "🟡"
+      ],
+      [
+        "noir",
+        "Couleurs",
+        "Couleur.",
+        "Le crayon est noir.",
+        "noir",
+        "⚫"
+      ],
+      [
+        "blanc",
+        "Couleurs",
+        "Couleur.",
+        "Le papier est blanc.",
+        "blanc",
+        "⚪"
+      ],
+      [
+        "rose",
+        "Couleurs",
+        "Couleur.",
+        "La trousse est rose.",
+        "rose",
+        "🌸"
+      ],
+      [
+        "gris",
+        "Couleurs",
+        "Couleur.",
+        "Le pantalon est gris.",
+        "gris",
+        "◻️"
+      ],
+      [
+        "marron",
+        "Couleurs",
+        "Couleur.",
+        "Les yeux sont marron.",
+        "mar/ron",
+        "🟤"
+      ]
+    ],
+    "Homophones et sons difficiles": [
+      [
+        "et",
+        "Homophones",
+        "Mot pour ajouter.",
+        "Un cahier et un stylo.",
+        "et",
+        "➕"
+      ],
+      [
+        "est",
+        "Homophones",
+        "Verbe être.",
+        "Il est content.",
+        "est",
+        "✅"
+      ],
+      [
+        "a",
+        "Homophones",
+        "Verbe avoir.",
+        "Il a un sac.",
+        "a",
+        "🎒"
+      ],
+      [
+        "à",
+        "Homophones",
+        "Petit mot de lieu.",
+        "Je vais à l’école.",
+        "à",
+        "➡️"
+      ],
+      [
+        "son",
+        "Homophones",
+        "Ce qui appartient à il ou elle.",
+        "Il prend son sac.",
+        "son",
+        "🎒"
+      ],
+      [
+        "sont",
+        "Homophones",
+        "Verbe être au pluriel.",
+        "Ils sont ici.",
+        "sont",
+        "👥"
+      ],
+      [
+        "on",
+        "Homophones",
+        "Pronom sujet.",
+        "On parle français.",
+        "on",
+        "🗣️"
+      ],
+      [
+        "ont",
+        "Homophones",
+        "Verbe avoir au pluriel.",
+        "Ils ont un livre.",
+        "ont",
+        "📖"
+      ],
+      [
+        "ou",
+        "Homophones",
+        "Mot pour choisir.",
+        "Tu veux thé ou café ?",
+        "ou",
+        "❓"
+      ],
+      [
+        "où",
+        "Homophones",
+        "Mot pour demander un lieu.",
+        "Où est la classe ?",
+        "où",
+        "📍"
+      ],
+      [
+        "maman",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an/am.",
+        "Ma maman arrive.",
+        "ma/man",
+        "👩"
+      ],
+      [
+        "enfant",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son en/an.",
+        "L’enfant joue.",
+        "en/fant",
+        "🧒"
+      ],
+      [
+        "orange",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an.",
+        "Je mange une orange.",
+        "o/range",
+        "🍊"
+      ],
+      [
+        "lampe",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am.",
+        "La lampe est là.",
+        "lampe",
+        "💡"
+      ],
+      [
+        "chambre",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am/en.",
+        "La chambre est grande.",
+        "cham/bre",
+        "🛏️"
+      ],
+      [
+        "jambe",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son am.",
+        "J’ai mal à la jambe.",
+        "jambe",
+        "🦵"
+      ],
+      [
+        "blanc",
+        "Son AN/AM/EN/EM",
+        "Mot avec le son an.",
+        "Le papier est blanc.",
+        "blanc",
+        "⚪"
+      ],
+      [
+        "bonjour",
+        "Son ON",
+        "Mot avec le son on.",
+        "Bonjour monsieur.",
+        "bon/jour",
+        "👋"
+      ],
+      [
+        "maison",
+        "Son ON",
+        "Mot avec le son on.",
+        "La maison est grande.",
+        "mai/son",
+        "🏠"
+      ],
+      [
+        "ballon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Le ballon est rond.",
+        "bal/lon",
+        "⚽"
+      ],
+      [
+        "garçon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Le garçon joue.",
+        "gar/çon",
+        "👦"
+      ],
+      [
+        "bonbon",
+        "Son ON",
+        "Mot avec le son on.",
+        "Je mange un bonbon.",
+        "bon/bon",
+        "🍬"
+      ],
+      [
+        "montre",
+        "Son ON",
+        "Mot avec le son on.",
+        "J’ai une montre.",
+        "mon/tre",
+        "⌚"
+      ],
+      [
+        "matin",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son in.",
+        "Le matin, je lis.",
+        "ma/tin",
+        "🌅"
+      ],
+      [
+        "train",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Je prends le train.",
+        "train",
+        "🚆"
+      ],
+      [
+        "main",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Je lève la main.",
+        "main",
+        "✋"
+      ],
+      [
+        "copain",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son ain.",
+        "Mon copain arrive.",
+        "co/pain",
+        "🙂"
+      ],
+      [
+        "faim",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son aim.",
+        "J’ai faim.",
+        "faim",
+        "🍽️"
+      ],
+      [
+        "jardin",
+        "Son IN/AIN/EIN/AIM",
+        "Mot avec le son in.",
+        "Je vais au jardin.",
+        "jar/din",
+        "🌳"
+      ],
+      [
+        "bouche",
+        "Son OU",
+        "Mot avec le son ou.",
+        "J’ouvre la bouche.",
+        "bouche",
+        "👄"
+      ],
+      [
+        "douche",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Je prends une douche.",
+        "douche",
+        "🚿"
+      ],
+      [
+        "rouge",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Le stylo est rouge.",
+        "rouge",
+        "🔴"
+      ],
+      [
+        "souris",
+        "Son OU",
+        "Mot avec le son ou.",
+        "La souris est petite.",
+        "sou/ris",
+        "🐭"
+      ],
+      [
+        "couteau",
+        "Son OU",
+        "Mot avec le son ou.",
+        "Je prends un couteau.",
+        "cou/teau",
+        "🔪"
+      ],
+      [
+        "lune",
+        "Son U",
+        "Mot avec le son u.",
+        "La lune est belle.",
+        "lune",
+        "🌙"
+      ],
+      [
+        "rue",
+        "Son U",
+        "Mot avec le son u.",
+        "Je marche dans la rue.",
+        "rue",
+        "🛣️"
+      ],
+      [
+        "bus",
+        "Son U",
+        "Mot avec le son u.",
+        "Je prends le bus.",
+        "bus",
+        "🚌"
+      ],
+      [
+        "pull",
+        "Son U",
+        "Mot avec le son u.",
+        "Je porte un pull.",
+        "pull",
+        "🧥"
+      ],
+      [
+        "plume",
+        "Son U",
+        "Mot avec le son u.",
+        "La plume est légère.",
+        "plume",
+        "🪶"
+      ]
+    ]
+  }
+};
+let gameMode="listen";
+const SENTENCES = [
+  "Je suis élève.",
+  "Je suis content.",
+  "Je suis fatigué.",
+  "Il est grand.",
+  "Elle est petite.",
+  "J’ai un sac.",
+  "J’ai un cahier.",
+  "J’ai une gomme.",
+  "J’ai des amis.",
+  "Il a un stylo.",
+  "Elle a un livre.",
+  "J’aime le football.",
+  "J’aime la musique.",
+  "J’aime le basket.",
+  "J’adore le cinéma.",
+  "J’adore la danse.",
+  "Je n’aime pas le bruit.",
+  "Je n’aime pas les maths.",
+  "Je joue au football.",
+  "Je joue au basket.",
+  "Je fais de la lutte.",
+  "Je vais au lycée.",
+  "Je vais à l’école.",
+  "Je vais à la boulangerie.",
+  "Je prends le bus.",
+  "Je prends un café.",
+  "Je prends une baguette.",
+  "Je mange une pomme.",
+  "Je bois de l’eau.",
+  "Je parle français.",
+  "Je lis un livre.",
+  "J’écris mon nom.",
+  "Le professeur parle.",
+  "L’élève écoute.",
+  "Le cours commence.",
+  "Le sac est bleu.",
+  "La trousse est rouge.",
+  "Mon pantalon est noir.",
+  "Ma veste est verte.",
+  "Je porte un pull.",
+  "Je porte des baskets.",
+  "J’ai mal à la tête.",
+  "Je suis malade.",
+  "Je voudrais du pain.",
+  "Combien ça coûte ?",
+  "Je fais du sport.",
+  "Je fais de la danse.",
+  "Je fais des courses.",
+  "Je joue aux cartes.",
+  "J’aime le cinéma.",
+  "J’aime les animaux.",
+  "Je prends la voiture.",
+  "Je prends des notes.",
+  "Je mange des pâtes.",
+  "J’ai des cahiers.",
+  "Ils ont des livres.",
+  "Les élèves écoutent.",
+  "Je vais aux toilettes.",
+  "Je porte une veste.",
+  "Comment ça va ?",
+  "Quel âge tu as ?",
+  "Tu as quel âge ?",
+  "Où tu habites ?",
+  "Tu habites où ?",
+  "Tu viens d’où ?",
+  "Tu es nouveau ?",
+  "Tu es nouvelle ?",
+  "Est-ce que tu comprends ?",
+  "Est-ce que tu aimes le sport ?",
+  "Est-ce que tu joues au football ?",
+  "Est-ce que tu vas au lycée ?",
+  "Qu’est-ce que tu aimes ?",
+  "Qu’est-ce que tu veux ?",
+  "Qu’est-ce que tu fais ?",
+  "Qui est absent ?",
+  "Qui parle ?",
+  "Où est la classe ?",
+  "Où est la boulangerie ?",
+  "Quand est le cours ?",
+  "Quand tu vas au sport ?",
+  "Tu veux du pain ?",
+  "Tu veux un café ?",
+  "Tu prends le bus ?",
+  "Tu fais de la danse ?",
+  "Tu fais du sport ?",
+  "Tu as un stylo ?",
+  "Tu as des amis ?"
+];
+let current=null, score=0,total=0,streak=0,unlockedSet=new Set(),missed=[],used=[],recentWords=[],roundLimit=10,roundAsked=0;
+let challenge=false, timeLeft=60, timerInterval=null;
+let selectedWords=[];
+let currentSentence="";
+let currentChoices=[];
+let selectedChoice="";
+let selectedSyllables=[];
+const MATCHES = [
+["manger","une pomme"],
+["manger","des pâtes"],
+["boire","de l’eau"],
+["boire","un café"],
+["prendre","le bus"],
+["prendre","une douche"],
+["prendre","des notes"],
+["faire","du sport"],
+["faire","de la danse"],
+["faire","des courses"],
+["jouer","au football"],
+["jouer","au basket"],
+["jouer","aux cartes"],
+["aller","au lycée"],
+["aller","à l’école"],
+["aller","à la boulangerie"],
+["écrire","un mot"],
+["écrire","son nom"],
+["lire","un livre"],
+["porter","un pantalon"],
+["porter","des baskets"],
+["acheter","du pain"],
+["acheter","une pomme"],
+["acheter","un cahier"],
+["écouter","de la musique"],
+["regarder","un film"],
+["ouvrir","le livre"],
+["ouvrir","la porte"],
+["fermer","le livre"],
+["fermer","la porte"],
+["dessiner","une maison"]
+];
+
+const VALID_MATCHES = {
+ "manger":["une pomme","des pâtes","une orange","un sandwich","du pain"],
+ "boire":["de l’eau","un café","du thé","du lait","du jus"],
+ "prendre":["le bus","une douche","des notes","un café","une baguette"],
+ "faire":["du sport","de la danse","des courses","un exercice","un devoir"],
+ "jouer":["au football","au basket","aux cartes","à un jeu"],
+ "aller":["au lycée","à l’école","à la boulangerie","au supermarché","à la pharmacie"],
+ "écrire":["un mot","son nom","une phrase","une réponse"],
+ "lire":["un livre","la consigne","une phrase"],
+ "porter":["un pantalon","un pull","une veste","des baskets","des chaussures"],
+ "acheter":["du pain","une pomme","un cahier","une baguette","un stylo"],
+ "écouter":["de la musique","le professeur","une chanson"],
+ "regarder":["un film","le tableau","une photo"],
+ "ouvrir":["le livre","la porte","le cahier"],
+ "fermer":["le livre","la porte","le cahier"],
+ "dessiner":["une maison","un ballon","un arbre"]
+};
+const SOUND_ITEMS = [
+ {word:"bonjour", sound:"on/om", choices:["on/om","en/em/an/am","in/im/ain/ein","ou"]},
+ {word:"maison", sound:"on/om", choices:["on/om","en/em/an/am","in/im/ain/ein","ou"]},
+ {word:"ballon", sound:"on/om", choices:["on/om","en/em/an/am","in/im/ain/ein","ou"]},
+ {word:"bonbon", sound:"on/om", choices:["on/om","en/em/an/am","in/im/ain/ein","ou"]},
+ {word:"maman", sound:"en/em/an/am", choices:["en/em/an/am","on/om","in/im/ain/ein","ou"]},
+ {word:"enfant", sound:"en/em/an/am", choices:["en/em/an/am","on/om","in/im/ain/ein","ou"]},
+ {word:"orange", sound:"en/em/an/am", choices:["en/em/an/am","on/om","in/im/ain/ein","ou"]},
+ {word:"chambre", sound:"en/em/an/am", choices:["en/em/an/am","on/om","in/im/ain/ein","ou"]},
+ {word:"matin", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"main", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"pain", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"train", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"faim", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"copain", sound:"in/im/ain/ein", choices:["in/im/ain/ein","en/em/an/am","on/om","ou"]},
+ {word:"coin", sound:"oin", choices:["oin","on/om","in/im/ain/ein","en/em/an/am"]},
+ {word:"loin", sound:"oin", choices:["oin","on/om","in/im/ain/ein","en/em/an/am"]},
+ {word:"moins", sound:"oin", choices:["oin","on/om","in/im/ain/ein","ou"]},
+ {word:"point", sound:"oin", choices:["oin","on/om","in/im/ain/ein","en/em/an/am"]},
+ {word:"bouche", sound:"ou", choices:["ou","u","on/om","en/em/an/am"]},
+ {word:"douche", sound:"ou", choices:["ou","u","on/om","en/em/an/am"]},
+ {word:"rouge", sound:"ou", choices:["ou","u","on/om","en/em/an/am"]},
+ {word:"souris", sound:"ou", choices:["ou","u","on/om","in/im/ain/ein"]},
+ {word:"bus", sound:"u", choices:["u","ou","on/om","in/im/ain/ein"]},
+ {word:"rue", sound:"u", choices:["u","ou","on/om","in/im/ain/ein"]},
+ {word:"lune", sound:"u", choices:["u","ou","on/om","in/im/ain/ein"]},
+ {word:"pull", sound:"u", choices:["u","ou","on/om","in/im/ain/ein"]}
+];
+let currentSound=null;
+let selectedVerb=null;
+let selectedObject=null;
+let selectedVerbBtn=null;
+let selectedObjectBtn=null;
+let remainingMatches=0;
+let currentMatchPairs=[];
+
+
+function entry(arr){return {word:arr[0],cat:arr[1],clue:arr[2],phrase:arr[3],syll:arr[4]||"",emoji:arr[5]||"❔"};}
+function getPool(){const theme=themeSelect.value||"Tous les thèmes";return (DATA.A1[theme]||DATA.A1["Tous les thèmes"]).map(entry);}
+function normalize(s){return s.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/æ/g,"ae").replace(/[’']/g,"'").replace(/[.!?]/g,"").replace(/\s+/g," ");}
+function shuffleArray(a){let arr=[...a];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function shuffleLetters(word){let arr=word.split("");let mixed=shuffleArray(arr).join("");return mixed===word?arr.reverse().join(""):mixed;}
+function firstLetters(word){let clean=word.trim();return clean.length<=3?clean[0]:clean.slice(0,2);}
+function makeSentenceScramble(sentence){return shuffleArray(sentence.replace(/[.!?]/g,"").split(/\s+/)).join(" / ");}
+
+function pickSentence(){
+ const pool=SENTENCES.filter(s=>!recentWords.includes(s));
+ let available=pool.length?pool:SENTENCES;
+ const s=available[Math.floor(Math.random()*available.length)];
+ remember(s);
+ return s;
+}
+function getSentenceWords(){
+ return currentSentence.trim().split(/\s+/).filter(Boolean);
+}
+function getSentenceTarget(){
+ return currentSentence.trim();
+}
+function getSentencePunctuation(){
+ const m=currentSentence.trim().match(/[.!?]$/);
+ return m ? m[0] : ".";
+}
+function renderSentenceTiles(){
+ selectedWords=[];
+ const words=shuffleArray(getSentenceWords()).filter(w=>w && w.trim().length>0);
+ let html="<div class='answerline' id='answerLine'>Clique sur les mots dans l’ordre.</div><div class='tiles'>";
+ words.forEach((w,i)=>{html+="<span class='tile' id='tile_"+i+"' onclick='chooseTile("+JSON.stringify(w)+", "+i+")'>"+w+"</span>";});
+ html+="</div><button onclick='clearTiles()' class='secondary'>Effacer la phrase</button><button onclick='validateSentenceOrder()' class='success'>Valider</button>";
+ displayBox.innerHTML=html;
+}
+function chooseTile(word,index){
+ const tile=document.getElementById("tile_"+index);
+ if(!tile || tile.classList.contains("chosen")) return;
+ tile.classList.add("chosen");
+ selectedWords.push(word);
+ const sentence=selectedWords.join(" ").replace(/\s+([.!?])/g,"$1");
+ document.getElementById("answerLine").innerHTML=selectedWords.map(w=>"<span class='tile chosen'>"+w+"</span>").join("");
+ answer.value=sentence;
+}
+function clearTiles(){
+ selectedWords=[];
+ document.querySelectorAll(".tile").forEach(t=>t.classList.remove("chosen"));
+ const line=document.getElementById("answerLine");
+ if(line) line.textContent="Clique sur les mots dans l’ordre.";
+ answer.value="";
+ answer.classList.remove("auto-good","auto-bad");
+}
+
+function makeSyllableDisplay(item){
+ const syll=(item.syll||"").split("/").filter(Boolean);
+ if(syll.length>=2 && item.word.length>5){
+   return shuffleArray(syll).map(s=>"<span class='syllable'>"+s+"</span>").join("");
+ }
+ return shuffleLetters(item.word).toUpperCase();
+}
+
+function hasSyllableClickMode(item){
+ const syll=(item.syll||"").split("/").filter(Boolean);
+ return syll.length>=2 && item.word.length>5;
+}
+
+function renderSyllableClickMode(item){
+ selectedSyllables=[];
+ const syll=shuffleArray((item.syll||"").split("/").filter(Boolean));
+ let html="<div class='answerline' id='answerLine'>Clique sur les syllabes dans l’ordre.</div><div class='tiles'>";
+ syll.forEach((s,i)=>{
+   html+="<span class='syllable' id='syll_"+i+"' onclick='chooseSyllable("+JSON.stringify(s)+","+i+")'>"+s+"</span>";
+ });
+ html+="</div><button onclick='clearSyllables()' class='secondary'>Effacer</button>";
+ displayBox.innerHTML=html;
+ answer.value="";
+ answer.style.display="none";
+}
+
+function chooseSyllable(s,i){
+ const tile=document.getElementById("syll_"+i);
+ if(!tile || tile.classList.contains("chosen")) return;
+ tile.classList.add("chosen");
+ selectedSyllables.push(s);
+ const built=selectedSyllables.join("");
+ document.getElementById("answerLine").innerHTML=selectedSyllables.map(x=>"<span class='syllable chosen'>"+x+"</span>").join("");
+ answer.value=built;
+
+ if(normalize(built)===normalize(current.word)){
+   document.getElementById("answerLine").classList.add("auto-good");
+   setTimeout(()=>checkAnswer(),300);
+ } else {
+   const expected=(current.syll||"").split("/").filter(Boolean);
+   if(selectedSyllables.length===expected.length){
+     document.getElementById("answerLine").classList.add("auto-bad");
+     setTimeout(()=>checkAnswer(),500);
+   }
+ }
+}
+
+function clearSyllables(){
+ selectedSyllables=[];
+ document.querySelectorAll(".syllable").forEach(t=>t.classList.remove("chosen","auto-bad"));
+ const line=document.getElementById("answerLine");
+ if(line){line.textContent="Clique sur les syllabes dans l’ordre.";line.classList.remove("auto-good","auto-bad");}
+ answer.value="";
+}
+
+
+
+function isHomophoneWord(word){
+ return ["et","est","a","à","son","sont","on","ont","ou","où"].includes(word);
+}
+
+function getChoiceDistractors(word){
+ const map={
+  "pain":["pain","main","train","matin"],
+  "main":["main","pain","matin","train"],
+  "train":["train","pain","main","matin"],
+  "matin":["matin","main","pain","train"],
+  "bonjour":["bonjour","bonbon","ballon","maison"],
+  "bonbon":["bonbon","bonjour","ballon","maison"],
+  "ballon":["ballon","pantalon","bonjour","maison"],
+  "maison":["maison","bonjour","ballon","bonbon"],
+  "bouche":["bouche","douche","rouge","couteau"],
+  "douche":["douche","bouche","rouge","couteau"],
+  "rouge":["rouge","bouche","douche","rue"],
+  "rue":["rue","rouge","lune","bus"],
+  "bus":["bus","pull","rue","lune"],
+  "pull":["pull","bus","plume","rue"],
+  "lune":["lune","rue","plume","bus"],
+  "maman":["maman","maison","matin","main"],
+  "enfant":["enfant","enfin","orange","maman"],
+  "orange":["orange","argent","maman","enfant"],
+  "blanc":["blanc","bon","ballon","pantalon"],
+  "jardin":["jardin","matin","main","train"],
+  "copain":["copain","pain","copine","main"]
+ };
+ let base=map[word] ? [...map[word]] : [word];
+ const pool=getPool()
+   .map(x=>x.word)
+   .filter(w=>w!==word && !base.includes(w) && !isHomophoneWord(w) && w.length<=10 && !w.includes(" "));
+ while(base.length<4 && pool.length){
+  const idx=Math.floor(Math.random()*pool.length);
+  base.push(pool.splice(idx,1)[0]);
+ }
+ return shuffleArray(base).slice(0,4);
+}
+
+
+const HOMOPHONE_SENTENCES=[
+ {audio:"est, comme dans la phrase : il est content.", phrase:"Il est content.", answer:"est", choices:["est","et"]},
+ {audio:"et, comme dans la phrase : j’ai un cahier et un stylo.", phrase:"J’ai un cahier et un stylo.", answer:"et", choices:["et","est"]},
+ {audio:"a, comme dans la phrase : il a un beau manteau.", phrase:"Il a un beau manteau.", answer:"a", choices:["a","à"]},
+ {audio:"à, comme dans la phrase : je vais à l’école.", phrase:"Je vais à l’école.", answer:"à", choices:["à","a"]},
+ {audio:"son, comme dans la phrase : il prend son sac.", phrase:"Il prend son sac.", answer:"son", choices:["son","sont"]},
+ {audio:"sont, comme dans la phrase : ils sont ici.", phrase:"Ils sont ici.", answer:"sont", choices:["sont","son"]},
+ {audio:"on, comme dans la phrase : on parle français.", phrase:"On parle français.", answer:"on", choices:["on","ont"]},
+ {audio:"ont, comme dans la phrase : ils ont un livre.", phrase:"Ils ont un livre.", answer:"ont", choices:["ont","on"]},
+ {audio:"ou, comme dans la phrase : tu veux thé ou café ?", phrase:"Tu veux thé ou café ?", answer:"ou", choices:["ou","où"]},
+ {audio:"où, comme dans la phrase : où est la classe ?", phrase:"Où est la classe ?", answer:"où", choices:["où","ou"]}
+];
+let currentHomophone=null;
+
+function pickHomophoneSentenceFor(word){
+ const possibles=HOMOPHONE_SENTENCES.filter(x=>x.answer===word);
+ if(possibles.length) return possibles[Math.floor(Math.random()*possibles.length)];
+ return HOMOPHONE_SENTENCES[Math.floor(Math.random()*HOMOPHONE_SENTENCES.length)];
+}
+
+
+function getImageChoices(word){
+ const preferred=["sac","stylo","cahier","livre","gomme","crayon","règle","pomme","banane","orange","pain","baguette","croissant","eau","café","bus","maison","école","téléphone","ordinateur","football","basket","pantalon","pull","veste","chaussures","lunettes","main","pied","tête","bouche","nez"];
+ let base=[word];
+ const pool=getPool().map(x=>x.word).filter(w=>w!==word && preferred.includes(w) && !w.includes(" "));
+ while(base.length<4 && pool.length){
+   const idx=Math.floor(Math.random()*pool.length);
+   base.push(pool.splice(idx,1)[0]);
+ }
+ const fallback=getPool().map(x=>x.word).filter(w=>w!==word && !base.includes(w) && !w.includes(" ") && w.length<=10);
+ while(base.length<4 && fallback.length){
+   const idx=Math.floor(Math.random()*fallback.length);
+   base.push(fallback.splice(idx,1)[0]);
+ }
+ return shuffleArray(base).slice(0,4);
+}
+
+function renderImageChoices(){
+ selectedChoice="";
+ currentChoices=getImageChoices(current.word);
+ let html="<div class='imagebox'>"+current.emoji+"</div><div class='choices'>";
+ currentChoices.forEach((w,i)=>{
+  html+="<button type='button' class='choicebtn' id='choice_"+i+"' onclick='chooseAnswer("+JSON.stringify(w)+", "+i+")'>"+w+"</button>";
+ });
+ html+="</div>";
+ displayBox.className="display";
+ displayBox.style.display="block";
+ displayBox.innerHTML=html;
+ answer.value="";
+}
+
+function renderChoices(){
+ selectedChoice="";
+ currentHomophone=null;
+
+ if(isHomophoneWord(current.word)){
+   currentHomophone=pickHomophoneSentenceFor(current.word);
+   currentChoices=shuffleArray(currentHomophone.choices);
+   let html="<div class='clue'><strong>Écoute l’exemple :</strong> clique sur le bon homophone.</div><div class='choices'>";
+   currentChoices.forEach((w,i)=>{
+    html+="<button type='button' class='choicebtn' id='choice_"+i+"' onclick='chooseAnswer("+JSON.stringify(w)+", "+i+")'>"+w+"</button>";
+   });
+   html+="</div>";
+   displayBox.innerHTML=html;
+   answer.value="";
+ answer.classList.remove("auto-good","auto-bad");
+   return;
+ }
+
+ currentChoices=getChoiceDistractors(current.word);
+ let html="<div class='choices'>";
+ currentChoices.forEach((w,i)=>{
+  html+="<button type='button' class='choicebtn' id='choice_"+i+"' onclick='chooseAnswer("+JSON.stringify(w)+", "+i+")'>"+w+"</button>";
+ });
+ html+="</div>";
+ displayBox.innerHTML=html;
+ answer.value="";
+ answer.classList.remove("auto-good","auto-bad");
+}
+
+function chooseAnswer(word,index){
+ selectedChoice=word;
+ answer.value=word;
+ document.querySelectorAll(".choicebtn").forEach(b=>b.classList.remove("selected","auto-good","auto-bad"));
+ const btn=document.getElementById("choice_"+index);
+ if(btn) btn.classList.add("selected");
+
+ const target=(currentHomophone ? currentHomophone.answer : current.word);
+ if(btn){
+   if(normalize(word)===normalize(target)){
+     btn.classList.add("auto-good");
+   } else {
+     btn.classList.add("auto-bad");
+   }
+ }
+ setTimeout(()=>checkAnswer(),320);
+}
+
+
+
+function pickSoundItem(){
+ const item=SOUND_ITEMS[Math.floor(Math.random()*SOUND_ITEMS.length)];
+ return item;
+}
+
+function renderSoundGame(){
+ currentSound=pickSoundItem();
+ const choices=shuffleArray(currentSound.choices);
+ let html="<div class='clue soundtitle'><strong>Écoute le mot :</strong> clique sur le son entendu dans le mot.</div>";
+ html+="<div class='choices'>";
+ choices.forEach((s,i)=>{
+   html+="<button type='button' class='choicebtn' id='sound_"+i+"' onclick='chooseSound("+JSON.stringify(s)+","+i+")'>"+s+"</button>";
+ });
+ html+="</div>";
+ displayBox.innerHTML=html;
+ answer.value="";
+}
+
+
+const SOUND_EXAMPLES = {
+ "bonjour":"Bonjour monsieur.",
+ "maison":"La maison est grande.",
+ "ballon":"Le ballon est rond.",
+ "bonbon":"Je mange un bonbon.",
+ "maman":"Ma maman arrive.",
+ "enfant":"L’enfant joue.",
+ "orange":"Je mange une orange.",
+ "chambre":"La chambre est grande.",
+ "matin":"Le matin, je lis.",
+ "main":"Je lève la main.",
+ "pain":"Je veux du pain.",
+ "train":"Je prends le train.",
+ "faim":"J’ai faim.",
+ "copain":"Mon copain arrive.",
+ "coin":"Le sac est dans le coin.",
+ "loin":"Le lycée est loin.",
+ "moins":"Il y a moins de bruit.",
+ "point":"Je mets un point.",
+ "bouche":"J’ouvre la bouche.",
+ "douche":"Je prends une douche.",
+ "rouge":"Le stylo est rouge.",
+ "souris":"La souris est petite.",
+ "bus":"Je prends le bus.",
+ "rue":"Je marche dans la rue.",
+ "lune":"La lune est belle.",
+ "pull":"Je porte un pull."
+};
+
+function chooseSound(s,i){
+ const btn=document.getElementById("sound_"+i);
+ document.querySelectorAll("[id^='sound_']").forEach(b=>b.classList.remove("selected","auto-good","auto-bad"));
+ if(btn) btn.classList.add("selected");
+
+ total++;
+ roundAsked++;
+
+ if(s===currentSound.sound){
+   score++;
+   streak++;
+   if(btn) btn.classList.add("auto-good");
+   feedback.className="feedback good";
+   feedback.innerHTML="<strong>✅ Correct !</strong><br>Mot entendu : <strong>"+currentSound.word+"</strong><br>Son : <strong>"+currentSound.sound+"</strong><br><em>"+(SOUND_EXAMPLES[currentSound.word]||"")+"</em>";
+ } else {
+   streak=0;
+   if(btn) btn.classList.add("auto-bad");
+   feedback.className="feedback bad";
+   feedback.innerHTML="<strong>❌ Pas encore.</strong><br>Mot entendu : <strong>"+currentSound.word+"</strong><br>Son attendu : <strong>"+currentSound.sound+"</strong><br><em>"+(SOUND_EXAMPLES[currentSound.word]||"")+"</em>";
+ }
+
+ updateStats();
+
+ setTimeout(()=>{
+   if(roundAsked>=roundLimit){endRound();return;}
+   renderSoundGame();
+ },1100);
+}
+
+function renderMatchGame(){
+ selectedVerb=null;
+ selectedObject=null;
+
+ const shuffled = shuffleArray([...MATCHES]);
+ const sample = [];
+ const usedVerbs = new Set();
+ const usedObjects = new Set();
+
+ for(const pair of shuffled){
+   if(sample.length>=5) break;
+   if(!usedVerbs.has(pair[0]) && !usedObjects.has(pair[1])){
+     sample.push(pair);
+     usedVerbs.add(pair[0]);
+     usedObjects.add(pair[1]);
+   }
+ }
+
+ while(sample.length<5){
+   const p=shuffled[Math.floor(Math.random()*shuffled.length)];
+   if(!sample.some(x=>x[0]===p[0] && x[1]===p[1])) sample.push(p);
+ }
+
+ currentMatchPairs = sample;
+ remainingMatches = sample.length;
+
+ const verbs = shuffleArray(sample.map(x=>x[0]));
+ const objs = shuffleArray(sample.map(x=>x[1]));
+
+ let html = "<div class='matchgrid'>";
+ html += "<div class='matchcol'><h3>Verbes</h3>";
+ verbs.forEach((v,i)=>{
+   html += "<button class='matchitem matchverb' id='verb_"+i+"' onclick='selectVerb("+JSON.stringify(v)+", "+i+")'>"+v+"</button>";
+ });
+ html += "</div>";
+
+ html += "<div class='matchcol'><h3>Compléments</h3>";
+ objs.forEach((o,i)=>{
+   html += "<button class='matchitem matchobj' id='obj_"+i+"' onclick='selectObject("+JSON.stringify(o)+", "+i+")'>"+o+"</button>";
+ });
+ html += "</div></div>";
+
+ displayBox.innerHTML = html;
+ answer.value='';
+}
+
+function selectVerb(v,i){
+ selectedVerb=v;
+ document.querySelectorAll("[id^='verb_']").forEach(x=>x.classList.remove("selected"));
+ const b=document.getElementById("verb_"+i);
+ selectedVerbBtn=b;
+ if(b) b.classList.add("selected");
+ tryMatch();
+}
+
+function selectObject(o,i){
+ selectedObject=o;
+ document.querySelectorAll("[id^='obj_']").forEach(x=>x.classList.remove("selected"));
+ const b=document.getElementById("obj_"+i);
+ selectedObjectBtn=b;
+ if(b) b.classList.add("selected");
+ tryMatch();
+}
+
+function tryMatch(){
+ if(!selectedVerb || !selectedObject) return;
+
+ const validList = VALID_MATCHES[selectedVerb] || [];
+ const ok = validList.includes(selectedObject);
+
+ const verbBtn = selectedVerbBtn;
+ const objBtn = selectedObjectBtn;
+
+ total++;
+ roundAsked++;
+
+ if(ok){
+   score++;
+   streak++;
+   if(verbBtn) verbBtn.classList.add("good");
+   if(objBtn) objBtn.classList.add("good");
+   feedback.className="feedback good";
+   feedback.innerHTML="<strong>✅ Bonne association :</strong> "+selectedVerb+" "+selectedObject;
+
+   setTimeout(()=>{
+     if(verbBtn) verbBtn.classList.add("hidden-match");
+     if(objBtn) objBtn.classList.add("hidden-match");
+     remainingMatches--;
+     selectedVerb=null; selectedObject=null; selectedVerbBtn=null; selectedObjectBtn=null;
+     document.querySelectorAll(".matchitem").forEach(x=>x.classList.remove("selected","good","wrong"));
+     if(roundAsked>=roundLimit){endRound(); return;}
+     if(remainingMatches<=0){renderMatchGame();}
+   },650);
+
+ } else {
+   streak=0;
+   if(verbBtn) verbBtn.classList.add("wrong");
+   if(objBtn) objBtn.classList.add("wrong");
+   feedback.className="feedback bad";
+   const examples=validList.slice(0,2).join(" / ");
+   feedback.innerHTML="<strong>❌ Essaie encore.</strong>"+(examples ? "<br>Avec <strong>"+selectedVerb+"</strong>, on peut dire : <strong>"+examples+"</strong>" : "");
+
+   setTimeout(()=>{
+     if(verbBtn) verbBtn.classList.remove("selected","wrong");
+     if(objBtn) objBtn.classList.remove("selected","wrong");
+     selectedVerb=null; selectedObject=null; selectedVerbBtn=null; selectedObjectBtn=null;
+   },800);
+ }
+
+ updateStats();
+}
+function populateThemes(){themeSelect.innerHTML="";Object.keys(DATA.A1).forEach(t=>{const o=document.createElement("option");o.value=t;o.textContent=t;themeSelect.appendChild(o);});}
+function setGameMode(m){
+ gameMode=m;
+ modeListen.classList.toggle("active",m==="listen");
+ modeImage.classList.toggle("active",m==="image");
+ modeAnagram.classList.toggle("active",m==="anagram");
+ modeSentence.classList.toggle("active",m==="sentence");
+ const mm=document.getElementById("modeMatch"); if(mm) mm.classList.toggle("active",m==="match");
+ const ms=document.getElementById("modeSound"); if(ms) ms.classList.toggle("active",m==="sound");
+ startRound();
+}
+function setRoundLimit(){roundLimit=parseInt(roundSelect.value,10);roundCount.textContent=roundAsked+"/"+roundLimit;}
+
+function startRound(){
+ score=0;total=0;streak=0;roundAsked=0;used=[];recentWords=[];missed=[];
+ clearInterval(timerInterval);
+ challenge=false;
+ if(typeof timer!=="undefined"){timer.classList.add("hidden");timer.textContent="60";}
+ setRoundLimit();updateBoxes();updateStats();newGame(true);
+}
+function pickWord(){
+ const pool=getPool();
+ if(missed.length){
+  const safeMissed=missed.filter(x=>!recentWords.includes(x.word));
+  if(safeMissed.length && Math.random()<0.30){
+   const item=safeMissed[Math.floor(Math.random()*safeMissed.length)];
+   missed=missed.filter(x=>x.word!==item.word);
+   remember(item.word);return item;
+  }
+ }
+ if(used.length>=pool.length){used=[];}
+ let available=pool.filter(x=>!used.includes(x.word)&&!recentWords.includes(x.word));
+ if(!available.length){recentWords=[];available=pool.filter(x=>!used.includes(x.word));}
+ if(!available.length){used=[];available=pool;}
+ let item=available[Math.floor(Math.random()*available.length)];
+ used.push(item.word);remember(item.word);return item;
+}
+function remember(w){recentWords.push(w);if(recentWords.length>10)recentWords.shift();}
+
+
+function updateControlsForMode(){
+ const noTyping = (gameMode==="match" || gameMode==="listen" || gameMode==="sentence" || gameMode==="image" || gameMode==="sound");
+ answer.style.display = noTyping ? "none" : "block";
+ validateBtn.style.display = "none";
+ audioBtn.style.display = (gameMode==="match") ? "none" : "inline-block";
+ hintBtn.style.display = (gameMode==="match" || gameMode==="sound") ? "none" : "inline-block";
+ skipBtn.style.display = (gameMode==="match" || gameMode==="sound") ? "none" : "inline-block";
+}
+
+function newGame(force=false){
+ updateControlsForMode();
+ if(roundAsked>=roundLimit && !force){endRound();return;}
+ current=pickWord();
+ category.textContent=current.cat;
+ displayBox.className="display";
+ displayBox.style.display="block";
+ answer.value="";
+ answer.classList.remove("auto-good","auto-bad");
+ answer.placeholder = (gameMode==="sentence"||gameMode==="listen") ? "La réponse apparaît ici automatiquement..." : "Écris ici...";
+ answer.readOnly = (gameMode==="sentence"||gameMode==="listen");
+ feedback.className="feedback";
+ if(gameMode==="anagram"){
+  clue.textContent=current.clue;
+  if(hasSyllableClickMode(current)){
+    renderSyllableClickMode(current);
+    feedback.innerHTML="Clique sur les syllabes dans le bon ordre. Pas besoin de taper.";
+  } else {
+    displayBox.innerHTML=makeSyllableDisplay(current);
+    answer.style.display="block";
+    feedback.innerHTML="Mot court : écris le mot.";
+  }
+ } else if(gameMode==="listen"){
+  clue.textContent=isHomophoneWord(current.word) ? "Écoute la phrase, puis choisis le bon homophone." : "Écoute le mot, puis clique sur la bonne proposition.";
+  renderChoices();
+  feedback.innerHTML=isHomophoneWord(current.word) ? "Écoute la phrase puis clique sur le bon mot. Pas besoin de taper." : "Écoute puis clique sur la bonne réponse. Pas besoin de taper.";
+ } else if(gameMode==="image"){
+  clue.textContent="Regarde l’image puis clique sur le bon mot.";
+  renderImageChoices();
+  feedback.innerHTML="Choisis la bonne réponse. Pas besoin de taper.";
+ } else if(gameMode==="sound"){
+  category.textContent="Sons proches et sons nasaux";
+  clue.textContent="Écoute le mot, puis clique sur l’étiquette qui correspond au son entendu dans le mot.";
+  renderSoundGame();
+  feedback.innerHTML="Rien à écrire : écoute et choisis le son."; 
+ } else if(gameMode==="match"){
+  category.textContent="Associer";
+  clue.textContent="Associe les paires. Les bonnes réponses disparaissent pour voir ce qu’il reste.";
+  renderMatchGame();
+  feedback.innerHTML="Clique sur un verbe rouge puis sur un complément bleu. Les paires réussies disparaissent.";
+ } else {
+  currentSentence=pickSentence();
+  category.textContent="Phrase A1";
+  clue.textContent="Clique sur les étiquettes dans l’ordre puis clique sur Valider.";
+  renderSentenceTiles();
+  feedback.innerHTML="Vert = bien placé. Orange = à déplacer.";
+ }
+ if(gameMode!=="match"){answer.focus();}
+}
+
+
+function autoCheck(){
+ if(gameMode==="match") return;
+
+ if(gameMode==="listen"){
+   if(selectedChoice){checkAnswer();}
+   return;
+ }
+
+ const val=answer.value.trim();
+
+ if(gameMode==="sentence"){
+   return;
+ }
+
+ if(gameMode==="anagram" && answer.style.display!=="none"){
+   const target=current.word;
+   if(normalize(val)===normalize(target)){
+      answer.classList.add("auto-good");
+      setTimeout(()=>checkAnswer(),250);
+   } else if(val.length>=Math.max(3,target.length)){
+      answer.classList.add("auto-bad");
+      setTimeout(()=>{
+        checkAnswer();
+      },250);
+   }
+ }
+}
+
+
+function validateSentenceOrder(){
+ if(gameMode!=="sentence" || !currentSentence) return;
+
+ const expected = currentSentence.trim().split(/\s+/);
+ const chosen = selectedWords.slice();
+
+ const line = document.getElementById("answerLine");
+ const chosenChips = line ? line.querySelectorAll(".tile") : [];
+
+ let allGood = chosen.length===expected.length;
+
+ chosenChips.forEach((chip,index)=>{
+   chip.classList.remove("phrase-good","phrase-wrong");
+   if(chosen[index]===expected[index]){
+     chip.classList.add("phrase-good");
+   } else {
+     chip.classList.add("phrase-wrong");
+     allGood=false;
+   }
+ });
+
+ if(chosen.length<expected.length){
+   allGood=false;
+ }
+
+ total++;
+ roundAsked++;
+
+ if(allGood){
+   score++;
+   streak++;
+   unlockedSet.add(currentSentence);
+   feedback.className="feedback good";
+   feedback.innerHTML="<strong>✅ Bonne phrase !</strong><br>"+currentSentence;
+   updateBoxes();updateStats();
+
+   setTimeout(()=>{
+     if(challenge && timeLeft<=0){endRound();return;}
+     newGame(false);
+   },900);
+ } else {
+   streak=0;
+   feedback.className="feedback bad";
+   feedback.innerHTML="<strong>🟠 Ordre à corriger.</strong><br>Les étiquettes orange ne sont pas à la bonne place.";
+   updateStats();
+ }
+}
+
+function checkAnswer(){
+ if(gameMode==="sentence"){validateSentenceOrder();return;}
+ if(!current){newGame();return;}
+ if((gameMode==="listen" || gameMode==="image") && !selectedChoice){
+  feedback.className="feedback hint";
+  feedback.innerHTML="Clique d’abord sur une proposition.";
+  return;
+ }
+ const target=gameMode==="sentence"?currentSentence:(gameMode==="listen" && currentHomophone ? currentHomophone.answer : current.word);
+ let ans=normalize(answer.value), good=normalize(target);
+ if(gameMode==="sentence"){
+   ans=answer.value.trim().replace(/\s+([.!?])/g,"$1").replace(/\s+/g," ");
+   good=currentSentence.trim();
+ }
+ total++;roundAsked++;
+ if(ans===good){
+  score++;streak++;unlockedSet.add(current.word);
+  feedback.className="feedback good";
+  feedback.innerHTML= gameMode==="sentence" ? "<strong>✅ Bravo !</strong><br>"+currentSentence : "<strong>✅ Bravo !</strong><br><strong>"+current.word+"</strong><br>"+current.phrase;
+ } else {
+  streak=0;missed.push(current);
+  feedback.className="feedback bad";
+  feedback.innerHTML="<strong>❌ Pas encore.</strong> Le mot reviendra plus tard.<br>Réponse attendue : <strong>"+target+"</strong>"+(currentHomophone ? "<br>Phrase : "+(currentHomophone.phrase||currentHomophone.audio) : "");
+ }
+ updateBoxes();updateStats();setTimeout(()=>newGame(false),1200);
+}
+
+
+function getCleanHint(){
+ if(!current) return "";
+ if(gameMode==="sentence"){
+   return "💡 Indice : premier mot : <strong>"+getSentenceWords()[0]+"</strong><br>Ponctuation finale : <strong>"+getSentencePunctuation()+"</strong>";
+ }
+ if(gameMode==="listen"){
+   return currentHomophone ? "💡 Écoute l’exemple complet : le contexte aide à choisir." : "💡 Indice : catégorie <strong>"+current.cat+"</strong>. Écoute encore puis choisis le bon mot.";
+ }
+ const target=current.word;
+ const syll=(current.syll||"").split("/").filter(Boolean);
+ if(syll.length>=2){
+   return "💡 Indice : catégorie <strong>"+current.cat+"</strong><br>Première syllabe : <strong>"+syll[0]+"</strong><br>Nombre de syllabes : <strong>"+syll.length+"</strong>";
+ }
+ return "💡 Indice : catégorie <strong>"+current.cat+"</strong><br>Commence par : <strong>"+firstLetters(target)+"...</strong><br>Longueur : <strong>"+target.length+"</strong>";
+}
+
+function speechSafeText(text){
+ return (text||"")
+   .replace(/sœur/g,"seur")
+   .replace(/Sœur/g,"Seur")
+   .replace(/œ/g,"eu")
+   .replace(/Œ/g,"Eu");
+}
+function showHint(){
+ if(gameMode==="sound"){return;}
+ if(!current)return;
+ feedback.className="feedback hint";
+ feedback.innerHTML=getCleanHint();
+}
+
+
+function skipWord(){
+ if(!current)return;
+ const target=gameMode==="sentence"?currentSentence:(gameMode==="listen" && currentHomophone ? currentHomophone.answer : current.word);
+ total++;roundAsked++;streak=0;missed.push(current);
+ feedback.className="feedback hint";
+ feedback.innerHTML="Réponse : <strong>"+target+"</strong><br>"+current.phrase+"<br>Le mot reviendra plus tard.";
+ updateBoxes();updateStats();setTimeout(()=>newGame(false),1100);
+}
+
+function playAudio(){
+ if(!current)return;
+ if(!("speechSynthesis" in window)){alert("Audio indisponible sur ce navigateur.");return;}
+ speechSynthesis.cancel();
+ let text=current.word;
+ if(gameMode==="sentence") text=currentSentence;
+ if(gameMode==="listen" && currentHomophone) text=currentHomophone.audio;
+ if(gameMode==="sound" && currentSound) text=currentSound.word;
+ const u=new SpeechSynthesisUtterance(speechSafeText(text));
+ u.lang="fr-FR";u.rate=.82;u.pitch=1.02;
+ speechSynthesis.speak(u);
+}
+
+function updateBoxes(){
+ unlocked.innerHTML="";Array.from(unlockedSet).slice(-24).forEach(w=>{let d=document.createElement("div");d.className="word-chip unlocked-chip";d.textContent=w;unlocked.appendChild(d);});
+ missedBox.innerHTML="";missed.slice(0,12).forEach(x=>{let d=document.createElement("div");d.className="word-chip missed-chip";d.textContent=x.word;missedBox.appendChild(d);});
+}
+function updateStats(){
+ const pct=total?Math.round(score/total*100):0;
+ document.getElementById("score").textContent=score+" / "+total;
+ percent.textContent=pct+"%";document.getElementById("streak").textContent=streak;
+ roundCount.textContent=roundAsked+"/"+roundLimit;
+ let b="Début";if(pct>=90&&total>=6)b="🏆 Très bien";else if(pct>=75&&total>=5)b="🌟 Solide";else if(pct>=55&&total>=4)b="🟡 En progrès";else if(total>=3)b="🟠 Continue";
+ badge.textContent=b;progressFill.style.width=Math.min(100,roundAsked/roundLimit*100)+"%";
+ finalText.innerHTML="<strong>"+b+"</strong><br>Réussite : <strong>"+pct+"%</strong><br>Mots réussis : <strong>"+unlockedSet.size+"</strong><br>Objectif : écouter, lire, écrire et mémoriser les mots utiles.";
+}
+function endRound(){clearInterval(timerInterval);challenge=false;feedback.className="feedback good";feedback.innerHTML="<strong>🏁 Partie terminée !</strong><br>Tu peux recommencer avec un autre mode ou un autre thème.";updateStats();}
+
+function startChallenge(){
+  startRound();
+  challenge=true;
+  timeLeft=60;
+  timer.classList.remove("hidden");
+  timer.textContent="⏱️ "+timeLeft+" s";
+
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    timer.textContent="⏱️ "+timeLeft+" s";
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      challenge=false;
+      timer.textContent="⏱️ terminé";
+      endRound();
+    }
+  },1000);
+}
+
+function resetAll(){unlockedSet.clear();startRound();}
+window.addEventListener("load",()=>{populateThemes();startRound();});
+</script>
+
+
+<footer style="margin-top:30px;padding:18px;text-align:center;
+font-size:0.95rem;color:#475569;border-top:2px solid #dbeafe">
+© Arcade FLE – Fanny Dupuy<br>
+Création pédagogique originale FLE.<br>
+Reproduction ou diffusion interdites sans autorisation.
+</footer>
+
+<!--
+© Arcade FLE – Fanny Dupuy
+Création pédagogique originale FLE.
+Reproduction, diffusion ou modification interdites sans autorisation.
+-->
+
+
+</body>
+</html>
