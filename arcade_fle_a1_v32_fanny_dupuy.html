@@ -52,7 +52,7 @@ button:hover{filter:brightness(.95)}.secondary{background:#64748b}.success{backg
 .match-controls-hidden{display:none}
 
 .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0}
-.choicebtn{background:#fff;color:#102033;border:3px solid #cbd5e1;border-radius:16px;padding:16px 18px;line-height:1.7;font-size:1.25rem;font-weight:bold;cursor:pointer}
+.choicebtn{background:#fff;color:#102033;border:3px solid #cbd5e1;border-radius:16px;padding:14px;line-height:1.7;font-size:1.08rem;font-weight:700;cursor:pointer}
 .choicebtn:hover{border-color:#2563eb;background:#eff6ff}
 .choicebtn.selected{border-color:#16a34a;background:#dcfce7;color:#166534}
 
@@ -64,27 +64,8 @@ button:hover{filter:brightness(.95)}.secondary{background:#64748b}.success{backg
 
 @media(max-width:600px){.display{font-size:1.25rem}.imagebox{font-size:3.5rem}.container{padding:15px}button{width:100%}.matchgrid{grid-template-columns:1fr}.matchitem{font-size:1rem;padding:11px 8px}}
 
-.choices{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin-top:18px
-}
-.choicebtn{
-padding:14px;
-border-radius:16px;
-border:3px solid #cbd5e1;
-background:white;
-font-size:1.08rem;
-font-weight:700;
-cursor:pointer
-}
-.choicebtn:hover{
-transform:scale(1.01)
-}
-@media(max-width:600px){
-.choices{grid-template-columns:1fr}
-}
+.choicebtn:hover{transform:scale(1.01)}
+@media(max-width:600px){.choices{grid-template-columns:1fr}}
 
 
 .syllable.chosen{background:#dcfce7;color:#166534;border-color:#16a34a}
@@ -4206,6 +4187,8 @@ const SOUND_ITEMS = [
  {word:"pull", sound:"u", choices:["u","ou","on/om","in/im/ain/ein"]}
 ];
 let currentSound=null;
+let audioReady=false;
+let frVoice=null;
 let selectedVerb=null;
 let selectedObject=null;
 let selectedVerbBtn=null;
@@ -4442,10 +4425,15 @@ function renderChoices(){
  answer.classList.remove("auto-good","auto-bad");
 }
 
+function clearChoiceStates(prefix){
+ const selector=prefix ? "[id^='"+prefix+"']" : ".choicebtn";
+ displayBox.querySelectorAll(selector).forEach(b=>b.classList.remove("selected","auto-good","auto-bad"));
+}
+
 function chooseAnswer(word,index){
  selectedChoice=word;
  answer.value=word;
- document.querySelectorAll(".choicebtn").forEach(b=>b.classList.remove("selected","auto-good","auto-bad"));
+ clearChoiceStates();
  const btn=document.getElementById("choice_"+index);
  if(btn) btn.classList.add("selected");
 
@@ -4512,7 +4500,7 @@ const SOUND_EXAMPLES = {
 
 function chooseSound(s,i){
  const btn=document.getElementById("sound_"+i);
- document.querySelectorAll("[id^='sound_']").forEach(b=>b.classList.remove("selected","auto-good","auto-bad"));
+ clearChoiceStates("sound_");
  if(btn) btn.classList.add("selected");
 
  total++;
@@ -4587,7 +4575,7 @@ function renderMatchGame(){
 
 function selectVerb(v,i){
  selectedVerb=v;
- document.querySelectorAll("[id^='verb_']").forEach(x=>x.classList.remove("selected"));
+ displayBox.querySelectorAll("[id^='verb_']").forEach(x=>x.classList.remove("selected"));
  const b=document.getElementById("verb_"+i);
  selectedVerbBtn=b;
  if(b) b.classList.add("selected");
@@ -4596,7 +4584,7 @@ function selectVerb(v,i){
 
 function selectObject(o,i){
  selectedObject=o;
- document.querySelectorAll("[id^='obj_']").forEach(x=>x.classList.remove("selected"));
+ displayBox.querySelectorAll("[id^='obj_']").forEach(x=>x.classList.remove("selected"));
  const b=document.getElementById("obj_"+i);
  selectedObjectBtn=b;
  if(b) b.classList.add("selected");
@@ -4628,7 +4616,7 @@ function tryMatch(){
      if(objBtn) objBtn.classList.add("hidden-match");
      remainingMatches--;
      selectedVerb=null; selectedObject=null; selectedVerbBtn=null; selectedObjectBtn=null;
-     document.querySelectorAll(".matchitem").forEach(x=>x.classList.remove("selected","good","wrong"));
+     displayBox.querySelectorAll(".matchitem").forEach(x=>x.classList.remove("selected","good","wrong"));
      if(roundAsked>=roundLimit){endRound(); return;}
      if(remainingMatches<=0){renderMatchGame();}
    },650);
@@ -4782,8 +4770,8 @@ function autoCheck(){
 function validateSentenceOrder(){
  if(gameMode!=="sentence" || !currentSentence) return;
 
- const expected = currentSentence.trim().split(/\s+/);
- const chosen = selectedWords.slice();
+ const expected = currentSentence.trim().replace(/[.!?]/g,"").split(/\s+/).filter(Boolean);
+ const chosen = selectedWords.map(w=>w.replace(/[.!?]/g,"")).filter(Boolean);
 
  const line = document.getElementById("answerLine");
  const chosenChips = line ? line.querySelectorAll(".tile") : [];
@@ -4898,13 +4886,20 @@ function skipWord(){
 function playAudio(){
  if(!current)return;
  if(!("speechSynthesis" in window)){alert("Audio indisponible sur ce navigateur.");return;}
+ if(!audioReady){
+   audioReady=true;
+   speechSynthesis.getVoices();
+ }
  speechSynthesis.cancel();
  let text=current.word;
  if(gameMode==="sentence") text=currentSentence;
  if(gameMode==="listen" && currentHomophone) text=currentHomophone.audio;
  if(gameMode==="sound" && currentSound) text=currentSound.word;
  const u=new SpeechSynthesisUtterance(speechSafeText(text));
- u.lang="fr-FR";u.rate=.82;u.pitch=1.02;
+ const voices=speechSynthesis.getVoices();
+ if(!frVoice){frVoice=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith("fr"))||null;}
+ if(frVoice){u.voice=frVoice;}
+ u.lang="fr-FR";u.rate=.86;u.pitch=1.0;
  speechSynthesis.speak(u);
 }
 
@@ -4944,7 +4939,13 @@ function startChallenge(){
 }
 
 function resetAll(){unlockedSet.clear();startRound();}
-window.addEventListener("load",()=>{populateThemes();startRound();});
+window.addEventListener("load",()=>{
+ populateThemes();
+ startRound();
+ if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged=()=>{frVoice=null;};
+ }
+});
 </script>
 
 
